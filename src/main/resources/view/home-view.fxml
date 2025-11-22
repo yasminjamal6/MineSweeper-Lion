@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/23"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="main.controller.HomeController"
+            stylesheets="@../css/home.css"
+            styleClass="root-pane"
+            prefWidth="1200.0" prefHeight="800.0">
+
+    <children>
+        <VBox alignment="TOP_CENTER"
+              spacing="40.0"
+              AnchorPane.topAnchor="0.0"
+              AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0">
+
+            <!-- Top banner -->
+            <StackPane styleClass="top-banner">
+                <children>
+                    <VBox alignment="CENTER" spacing="4.0">
+                        <children>
+                            <Label text="TEAM LION" styleClass="banner-title"/>
+                            <Label text='"Hakuna Matata - No Worries"' styleClass="banner-subtitle"/>
+                        </children>
+                    </VBox>
+                </children>
+            </StackPane>
+
+            <!-- Center section -->
+            <VBox alignment="CENTER" spacing="18.0">
+                <children>
+                    <Label text="Mine Sweeper" styleClass="main-title"/>
+                    <Label text="Smart trivia minesweeper adventure" styleClass="main-subtitle"/>
+
+                    <Button text="Start Adventure"
+                            styleClass="primary-btn"
+                            onAction="#onStartAdventure"/>
+
+                    <HBox alignment="CENTER" spacing="16.0">
+                        <children>
+                            <Button text="History"
+                                    styleClass="secondary-btn"
+                                    onAction="#onHistory"/>
+                            <Button text="Question Manager"
+                                    styleClass="secondary-btn"
+                                    onAction="#onManageQuestions"/>
+                        </children>
+                    </HBox>
+                </children>
+            </VBox>
+
+            <!-- Cards section -->
+            <HBox alignment="CENTER" spacing="24.0">
+                <children>
+                    <VBox styleClass="info-card" spacing="6.0" alignment="CENTER">
+                        <children>
+                            <Label text="Circle of Life" styleClass="card-title"/>
+                            <Label text="Collect points" styleClass="card-subtitle"/>
+                        </children>
+                    </VBox>
+
+                    <VBox styleClass="info-card" spacing="6.0" alignment="CENTER">
+                        <children>
+                            <Label text="Pride Rock" styleClass="card-title"/>
+                            <Label text="Test your knowledge" styleClass="card-subtitle"/>
+                        </children>
+                    </VBox>
+
+                    <VBox styleClass="info-card" spacing="6.0" alignment="CENTER">
+                        <children>
+                            <Label text="Lion King Mode" styleClass="card-title"/>
+                            <Label text="Only the brave survive" styleClass="card-subtitle"/>
+                        </children>
+                    </VBox>
+                </children>
+            </HBox>
+
+            <!-- Footer -->
+            <VBox alignment="CENTER" spacing="6.0">
+                <children>
+                    <Label text='"Remember who you are"' styleClass="footer-quote"/>
+                    <Label text="Team Lion - Roaring Since 2025" styleClass="footer-signature"/>
+                </children>
+            </VBox>
+
+        </VBox>
+    </children>
+</AnchorPane>
