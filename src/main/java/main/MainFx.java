@@ -1,6 +1,7 @@
 package main;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -8,12 +9,18 @@ import javafx.stage.Stage;
 
 public class MainFx extends Application {
     @Override
-    public void start(Stage stage) {
-        Label label = new Label("Hello JavaFX 23 on Java 23!");
-        StackPane root = new StackPane(label);
-        Scene scene = new Scene(root, 400, 200);
+    public void start(Stage stage) throws Exception {
+        // Load the home screen FXML
+        FXMLLoader fxmlLoader = new FXMLLoader(
+                MainFx.class.getResource("/view/home-view.fxml")
+        );
+
+        Scene scene = new Scene(fxmlLoader.load(), 900, 600);
+        scene.getStylesheets().add(
+                MainFx.class.getResource("/css/home.css").toExternalForm()
+        );
+        stage.setTitle("Mine Sweeper Lion");
         stage.setScene(scene);
-        stage.setTitle("MineSweeper Test");
         stage.show();
     }
 
