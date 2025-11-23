@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23"
+            fx:controller="main.MainFx">
+
+    <top>
+        <ToolBar>
+            <Button text="New" />
+            <Button text="Edit" />
+            <Button text="Save" />
+        </ToolBar>
+    </top>
+
+    <center>
+        <VBox alignment="CENTER" spacing="10">
+            <Label style="-fx-font-size: 24px;" text="Welcome!" />
+            <TextField promptText="Write something..." />
+            <Button text="OK" />
+        </VBox>
+    </center>
+
+</BorderPane>
