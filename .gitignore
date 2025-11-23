@@ -1,0 +1,35 @@
+# ===== Java =====
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# ===== Maven =====
+target/
+dependency-reduced-pom.xml
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+
+# ===== IntelliJ IDEA =====
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# ===== macOS =====
+.DS_Store
+
+# ===== Logs =====
+logs/
+
+# ===== Build Artifacts =====
+bin/
+build/
+dist/
+
+# ===== JavaFX Cache =====
+.cache/
