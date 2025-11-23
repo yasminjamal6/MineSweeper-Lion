@@ -1,7 +1,9 @@
 package main.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -44,9 +46,20 @@ public class GameSetupController {
     }
 
     @FXML
-    private void onBack() {
-        switchScene("home-view.fxml");
+    private void onBack(ActionEvent event) {
+        System.out.println(">> Back clicked");
+
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/view/Home-view.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 1200, 750));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+
 
     @FXML
     private void onStart() {

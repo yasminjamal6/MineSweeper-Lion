@@ -34,20 +34,44 @@
                             <Label styleClass="subtitle-label" text="Get your lions ready for the challenge!" />
                         </VBox>
 
+                        <!-- Hearts -->
+                        <VBox alignment="CENTER" spacing="6">
+                            <HBox alignment="CENTER" spacing="4">
+                                <Label styleClass="heart-icon" text="♥️" />
+                                <Label styleClass="heart-icon" text="♥️" />
+                                <Label styleClass="heart-icon" text="♥️" />
+                                <Label styleClass="heart-icon" text="♥️" />
+                                <Label styleClass="heart-icon" text="♥️" />
+                                <Label styleClass="heart-icon" text="♥️" />
+                                <Label styleClass="heart-icon" text="♥️" />
+                                <Label styleClass="heart-icon" text="♥️" />
+                                <Label styleClass="heart-icon" text="♥️" />
+                                <Label styleClass="heart-icon" text="♥️" />
+                            </HBox>
+                            <Label styleClass="hearts-label" text="Shared Hearts: 10 / 10" />
+                        </VBox>
+
 
 
                         <!-- Difficulty -->
                         <VBox alignment="CENTER" spacing="10">
                             <Label styleClass="section-title" text="Choose the challenge level" />
                             <HBox alignment="CENTER" spacing="14">
-                                <ToggleButton fx:id="easyBtn" styleClass="difficulty-btn" text="Easy">
-                           <toggleGroup>
-                              <ToggleGroup fx:id="difficultyGroup" />
-                           </toggleGroup></ToggleButton>
-                                <ToggleButton fx:id="mediumBtn" styleClass="difficulty-btn" text="Medium" toggleGroup="$difficultyGroup" />
-                                <ToggleButton fx:id="hardBtn" styleClass="difficulty-btn" text="Hard" toggleGroup="$difficultyGroup" />
+                                <ToggleButton fx:id="easyBtn"
+                                              styleClass="difficulty-btn"
+                                              text="Easy"
+                                              toggleGroup="$difficultyGroup" />
+                                <ToggleButton fx:id="mediumBtn"
+                                              styleClass="difficulty-btn"
+                                              text="Medium"
+                                              toggleGroup="$difficultyGroup" />
+                                <ToggleButton fx:id="hardBtn"
+                                              styleClass="difficulty-btn"
+                                              text="Hard"
+                                              toggleGroup="$difficultyGroup" />
                             </HBox>
                         </VBox>
+
 
                         <!-- Start button -->
                         <HBox alignment="CENTER" spacing="20">
