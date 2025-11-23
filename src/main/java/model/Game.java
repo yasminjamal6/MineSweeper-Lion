@@ -1,5 +1,7 @@
 package model;
 
+import java.time.LocalDateTime;
+
 public class Game {
 
     private final Difficulty difficulty;
@@ -11,10 +13,10 @@ public class Game {
     private int lives;
     private int score;
     private GameState state;
+    private LocalDateTime startedAt;
+    private LocalDateTime endedAt;
 
-    public Game(Difficulty difficulty,
-                Player playerA,
-                Player playerB) {
+    public Game(Difficulty difficulty, Player playerA, Player playerB) {
 
         this.difficulty = difficulty;
         this.playerA = playerA;
