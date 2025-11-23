@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane fx:id="root" prefHeight="750" prefWidth="1200" stylesheets="@/css/game-setup.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.GameSetupController">
+
+    <fx:define>
+        <!-- קבוצת טוגל משותפת לרמות קושי -->
+        <ToggleGroup fx:id="difficultyGroup" />
+    </fx:define>
+
+    <children>
+        <AnchorPane styleClass="background-pane">
+            <children>
+                <VBox alignment="TOP_CENTER" spacing="24" AnchorPane.bottomAnchor="40" AnchorPane.leftAnchor="80" AnchorPane.rightAnchor="80" AnchorPane.topAnchor="40">
+
+                    <!-- כרטיס מרכזי -->
+                    <VBox alignment="TOP_CENTER" maxWidth="900" spacing="14" styleClass="card-main">
+
+                        <!-- שורת עליונה: כפתור Back בצד ימין -->
+                        <HBox alignment="CENTER_RIGHT">
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button
+                                    onAction="#onBack"
+                                    styleClass="secondary-action-btn small-back-btn"
+                                    text="Back to Home" />
+                        </HBox>
+
+
+                        <!-- כותרת + תת כותרת -->
+                        <VBox alignment="CENTER" spacing="6">
+                            <Label styleClass="title-label" text="Prepare the Den" />
+                            <Label styleClass="subtitle-label" text="Get your lions ready for the challenge!" />
+                        </VBox>
+
+
+
+                        <!-- Difficulty -->
+                        <VBox alignment="CENTER" spacing="10">
+                            <Label styleClass="section-title" text="Choose the challenge level" />
+                            <HBox alignment="CENTER" spacing="14">
+                                <ToggleButton fx:id="easyBtn" styleClass="difficulty-btn" text="Easy">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="difficultyGroup" />
+                           </toggleGroup></ToggleButton>
+                                <ToggleButton fx:id="mediumBtn" styleClass="difficulty-btn" text="Medium" toggleGroup="$difficultyGroup" />
+                                <ToggleButton fx:id="hardBtn" styleClass="difficulty-btn" text="Hard" toggleGroup="$difficultyGroup" />
+                            </HBox>
+                        </VBox>
+
+                        <!-- Start button -->
+                        <HBox alignment="CENTER" spacing="20">
+                            <Button onAction="#onStart" styleClass="primary-action-btn" text="Start the Adventure 🦁" />
+                        </HBox>
+
+                    </VBox>
+                </VBox>
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>
