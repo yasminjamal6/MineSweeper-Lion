@@ -62,24 +62,33 @@ public class HomeController {
     }
 
     @FXML
-    private void openSettings() {
+    private void openSettings(javafx.event.ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/view/settings-view.fxml")
             );
             Parent popup = loader.load();
 
-            Stage stage = new Stage();
-            stage.setTitle("Settings");
-            stage.setScene(new Scene(popup));
-            stage.setResizable(false);
-            stage.initModality(Modality.APPLICATION_MODAL); // חוסם את המסך הראשי עד שסוגרים
-            stage.show();
+            Stage settingsStage = new Stage();
+            settingsStage.setTitle("Settings");
+            settingsStage.setScene(new Scene(popup));
+
+            Stage mainStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            settingsStage.initOwner(mainStage);
+
+            settingsStage.initModality(Modality.WINDOW_MODAL);
+            settingsStage.setResizable(false);
+            settingsStage.setFullScreen(false); // مهم
+            settingsStage.sizeToScene();
+            settingsStage.centerOnScreen();
+
+            settingsStage.show();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     @FXML
     private void onHistory() {
