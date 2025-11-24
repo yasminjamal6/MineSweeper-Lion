@@ -42,7 +42,6 @@ public class SettingsController {
                 // כאן אפשר בהמשך לחבר לפול-סקרין
             });
         }
-        // Volume
 
         if (volumeSlider != null) {
             volumeSlider.setMin(0);
