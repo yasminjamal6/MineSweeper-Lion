@@ -11,6 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 import model.Difficulty;
+import model.QuestionBank;
+import model.QuestionLevel;
+
 import javafx.scene.layout.HBox;
 
 
@@ -31,6 +34,8 @@ public class GameController {
 
     private int lives = 10;
     private int score = 0;
+    private final QuestionBank questionBank = new QuestionBank();
+
 
     @FXML
     private void initialize() {
@@ -121,6 +126,17 @@ public class GameController {
             case HARD   -> 44;
         };
     }
+
+    private QuestionLevel getLevelFromSetup() {
+        GameSetupController.Difficulty d = GameSetupController.selectedDifficulty;
+
+        return switch (d) {
+            case EASY -> QuestionLevel.EASY;
+            case MEDIUM -> QuestionLevel.MEDIUM;
+            case HARD -> QuestionLevel.HARD;
+        };
+    }
+
 
     /**
      * בניית לוח בגודל קבוע שנראה טוב על המסך.
