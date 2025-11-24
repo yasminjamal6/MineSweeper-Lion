@@ -97,7 +97,8 @@ public class GameSetupController {
         selectedPlayerAName = a;
         selectedPlayerBName = b;
 
-        switchScene("main-view.fxml");
+        switchScene("game.fxml");
+
     }
 
     private void switchScene(String fxmlName) {
