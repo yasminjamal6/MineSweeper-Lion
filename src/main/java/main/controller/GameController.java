@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
+import model.Difficulty;
 
 public class GameController {
 
@@ -43,6 +44,9 @@ public class GameController {
         playerAMinesLabel.setText(String.valueOf(mines));
         playerBMinesLabel.setText(String.valueOf(mines));
 
+        // Board size according to difficulty
+        model.Difficulty diff = DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
+     /*   int size = diff.getRows();*/
 
         // גודל לוח לפי קושי
         int size = getBoardSize(GameSetupController.selectedDifficulty);
