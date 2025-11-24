@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
+import model.Difficulty;
 
 public class GameController {
 
@@ -43,7 +44,8 @@ public class GameController {
         scoreLabel.setText("Score: " + score + " 🏆");
 
         // Board size according to difficulty
-        int size = getBoardSize(GameSetupController.selectedDifficulty);
+        model.Difficulty diff = DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
+        int size = diff.getRows();
 
         // Build both boards with the same size
         buildBoardGrid(boardAGrid, size, true);   // golden style
