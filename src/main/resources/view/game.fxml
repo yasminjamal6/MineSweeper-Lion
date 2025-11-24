@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/23"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="main.controller.GameController"
+            prefWidth="1200.0" prefHeight="800.0"
+            stylesheets="@../css/game.css"
+            styleClass="game-root">
+
+    <children>
+        <VBox spacing="10"
+              AnchorPane.topAnchor="10.0"
+              AnchorPane.bottomAnchor="10.0"
+              AnchorPane.leftAnchor="10.0"
+              AnchorPane.rightAnchor="10.0">
+
+            <!-- TOP BAR: Score (left) + Lives (right) -->
+            <HBox spacing="10" alignment="CENTER_LEFT" styleClass="top-bar">
+                <Label fx:id="scoreLabel"
+                       text="Score: 0 🏆"
+                       styleClass="score-label"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Label fx:id="livesLabel"
+                       text="10 / 10 ❤️"
+                       styleClass="lives-label"/>
+            </HBox>
+
+            <!-- PLAYERS CARDS -->
+            <HBox spacing="12">
+                <!-- Player A -->
+                <VBox spacing="4"
+                      HBox.hgrow="ALWAYS"
+                      styleClass="player-card player-a-card">
+                    <HBox alignment="CENTER_LEFT" spacing="6">
+                        <Label fx:id="playerAIcon" text="👑" styleClass="player-icon"/>
+                        <Label fx:id="playerANameLabel"
+                               text="Player A"
+                               styleClass="player-name"/>
+                    </HBox>
+                    <Label fx:id="playerAMinesLabel"
+                           text="💣 10"
+                           styleClass="mines-remaining"/>
+                </VBox>
+
+                <!-- Player B -->
+                <VBox spacing="4"
+                      HBox.hgrow="ALWAYS"
+                      styleClass="player-card player-b-card">
+                    <HBox alignment="CENTER_LEFT" spacing="6">
+                        <Label fx:id="playerBIcon" text="🦁" styleClass="player-icon"/>
+                        <Label fx:id="playerBNameLabel"
+                               text="Player B"
+                               styleClass="player-name"/>
+                    </HBox>
+                    <Label fx:id="playerBMinesLabel"
+                           text="💣 10"
+                           styleClass="mines-remaining"/>
+                </VBox>
+            </HBox>
+
+            <!-- BOARDS -->
+            <HBox spacing="14" VBox.vgrow="ALWAYS">
+                <!-- Board A -->
+                <VBox spacing="6" HBox.hgrow="ALWAYS">
+                    <Label fx:id="boardATitle"
+                           text="Board A"
+                           styleClass="board-title"/>
+                    <StackPane styleClass="board-container">
+                        <GridPane fx:id="boardAGrid"
+                                  hgap="2" vgap="2"
+                                  alignment="CENTER"/>
+                    </StackPane>
+                </VBox>
+
+                <!-- Board B -->
+                <VBox spacing="6" HBox.hgrow="ALWAYS">
+                    <Label fx:id="boardBTitle"
+                           text="Board B"
+                           styleClass="board-title"/>
+                    <StackPane styleClass="board-container">
+                        <GridPane fx:id="boardBGrid"
+                                  hgap="2" vgap="2"
+                                  alignment="CENTER"/>
+                    </StackPane>
+                </VBox>
+            </HBox>
+
+            <!-- BACK BUTTON -->
+            <HBox alignment="CENTER">
+                <Button fx:id="backHomeBtn"
+                        text="Back to Home"
+                        onAction="#onBackToHome"
+                        styleClass="back-home-btn"/>
+            </HBox>
+
+        </VBox>
+    </children>
+</AnchorPane>
