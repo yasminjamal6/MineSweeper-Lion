@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="main.controller.QuestionController"
+           stylesheets="@/css/question.css"
+           prefWidth="700" prefHeight="520">
+
+    <AnchorPane styleClass="question-root">
+
+        <!-- X close -->
+        <Button text="✕" onAction="#onClose"
+                styleClass="close-btn"
+                AnchorPane.topAnchor="16" AnchorPane.leftAnchor="16"/>
+
+        <!-- header -->
+        <VBox alignment="CENTER" spacing="6"
+              AnchorPane.topAnchor="20" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+            <Label text="שאלת טריוויה ⚡" styleClass="title"/>
+            <Label fx:id="categoryLabel" text="" styleClass="category"/>
+        </VBox>
+
+        <!-- timer -->
+        <Label fx:id="timerLabel" text="30"
+               styleClass="timer"
+               AnchorPane.topAnchor="20" AnchorPane.rightAnchor="20"/>
+
+        <!-- question text -->
+        <Label fx:id="questionLabel" wrapText="true"
+               styleClass="question-text"
+               AnchorPane.topAnchor="110" AnchorPane.leftAnchor="60" AnchorPane.rightAnchor="60"/>
+
+        <!-- answers -->
+        <VBox spacing="14"
+              AnchorPane.topAnchor="230" AnchorPane.leftAnchor="70" AnchorPane.rightAnchor="70">
+
+            <Button fx:id="ansBtn0" onAction="#onAnswerClick" styleClass="answer-btn"/>
+            <Button fx:id="ansBtn1" onAction="#onAnswerClick" styleClass="answer-btn"/>
+            <Button fx:id="ansBtn2" onAction="#onAnswerClick" styleClass="answer-btn"/>
+            <Button fx:id="ansBtn3" onAction="#onAnswerClick" styleClass="answer-btn"/>
+
+        </VBox>
+
+    </AnchorPane>
+</StackPane>
