@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/23"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="main.controller.HowToPlayController"
+            prefWidth="900" prefHeight="650"
+            stylesheets="@../css/home.css"
+            styleClass="how-root">
+
+    <children>
+
+        <VBox spacing="12.0"
+              AnchorPane.topAnchor="10.0"
+              AnchorPane.leftAnchor="10.0"
+              AnchorPane.rightAnchor="10.0"
+              AnchorPane.bottomAnchor="10.0"
+              styleClass="how-card">
+
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+                <Label text="🦁" style="-fx-font-size: 26;"/>
+                <Label text="How to Play?" styleClass="how-header-title"/>
+
+                <!-- Spacer pushes the X button to the right -->
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Close X button -->
+                <Button text="✕"
+                        styleClass="how-close-btn"
+                        onAction="#onCloseHowToPlay"/>
+            </HBox>
+
+            <Region prefHeight="3.0" styleClass="how-header-line"/>
+
+            <!-- Scrollable content -->
+            <ScrollPane fitToWidth="true"
+                        hbarPolicy="NEVER"
+                        vbarPolicy="AS_NEEDED"
+                        styleClass="how-scroll">
+                <content>
+                    <VBox spacing="18.0">
+                        <padding>
+                            <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                        </padding>
+
+                        <!-- Objective -->
+                        <VBox spacing="10.0" styleClass="objective-box">
+                            <Label text="🎯  Objective"
+                                   styleClass="how-section-title"/>
+                            <Label wrapText="true"
+                                   styleClass="how-box-text"
+                                   text="Clear all safe tiles without hitting hidden bombs! Two players share 10 hearts – stay sharp and protect your lives together."/>
+                        </VBox>
+
+                        <!-- Game Elements title -->
+                        <VBox spacing="8.0">
+                            <Label text="📦  Game Elements:"
+                                   styleClass="how-section-title"/>
+                        </VBox>
+
+                        <!-- Bombs -->
+                        <VBox spacing="8.0" styleClass="bomb-box">
+                            <Label text="💣 Bombs" styleClass="how-box-title"/>
+                            <Label wrapText="true"
+                                   styleClass="how-box-text"
+                                   text="Avoid bombs — revealing one loses hearts.
+Flagging a real bomb gives points.
+"/>
+                        </VBox>
+
+                        <!-- Trivia questions -->
+                        <VBox spacing="8.0" styleClass="trivia-box">
+                            <Label text="❓ Trivia Questions" styleClass="how-box-title"/>
+                            <Label wrapText="true"
+                                   styleClass="how-box-text"
+                                   text="Trivia questions give rewards for correct answers and penalties for wrong ones.
+The impact changes by difficulty level.
+"/>
+                        </VBox>
+
+                        <!-- Surprises -->
+                        <VBox spacing="8.0" styleClass="surprise-box">
+                            <Label text="🎁 Surprises" styleClass="how-box-title"/>
+                            <Label wrapText="true"
+                                   styleClass="how-box-text"
+                                   text="Surprise tiles give a random good or bad effect.They can add or remove hearts or points.Each surprise can be used once, and the effect depends on the game difficulty.
+"/>
+                        </VBox>
+
+                        <!-- Numbers -->
+                        <VBox spacing="8.0" styleClass="numbers-box">
+                            <Label text="🔢 Numbers" styleClass="how-box-title"/>
+                            <Label wrapText="true"
+                                   styleClass="how-box-text"
+                                   text="Numbers show how many bombs are around the tile. Use them to plan your moves."/>
+                        </VBox>
+
+
+                        <!-- How to play steps -->
+                        <VBox spacing="10.0" styleClass="how-howplay-box">
+                            <Label text="⚡ How to Play"
+                                   styleClass="how-section-title"/>
+                            <VBox spacing="4.0" styleClass="how-list">
+                                <Label text="1. Each player has their own board and plays on their turn."/>
+                                <Label text="2. Left click = reveal a tile."/>
+                                <Label text="3. Right click = place or remove a flag on a suspected bomb."/>
+                                <Label text="4. Try to keep the shared 10 hearts alive as long as possible."/>
+                                <Label text="5. The winner is the player who correctly marks all bombs first."/>
+                            </VBox>
+                        </VBox>
+
+                        <!-- Tips -->
+                        <VBox spacing="10.0" styleClass="how-tips-box">
+                            <Label text="🏁 Tips to Win"
+                                   styleClass="how-section-title"/>
+                            <VBox spacing="4.0" styleClass="how-list">
+                                <Label text="• Use the numbers to deduce where bombs are hidden."/>
+                                <Label text="• Think before you click — one mistake can cost a heart."/>
+                                <Label text="• Prepare for trivia questions to gain extra points."/>
+                                <Label text="• Surprises can turn the game around, so be ready!"/>
+                            </VBox>
+                        </VBox>
+
+                        <!-- Bottom button -->
+                        <HBox alignment="CENTER">
+                            <padding>
+                                <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                            </padding>
+                            <Button text="Got it, let's start! 🦁"
+                                    styleClass="how-start-btn"/>
+                        </HBox>
+
+                    </VBox>
+                </content>
+            </ScrollPane>
+
+        </VBox>
+
+    </children>
+
+</AnchorPane>
