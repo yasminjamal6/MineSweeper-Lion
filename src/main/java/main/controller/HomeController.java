@@ -6,19 +6,53 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javafx.animation.FadeTransition;
+import javafx.util.Duration;
 
 public class HomeController {
 
     @FXML
     private void onStartAdventure(ActionEvent event) {
         System.out.println(">> onStartAdventure clicked");
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/game-setup-view.fxml")
+            );
+            Parent newRoot = loader.load();
+
+            Scene scene = ((Node) event.getSource()).getScene();
+
+            newRoot.setOpacity(0);
+            scene.setRoot(newRoot);
+
+            FadeTransition ft = new FadeTransition(Duration.millis(250), newRoot);
+            ft.setToValue(1);
+            ft.play();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void onHowToPlay(ActionEvent event) {
+        System.out.println(">> How to Play clicked");
 
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/view/game-setup-view.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 1200, 750));
-            stage.show();
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/how-to-play.fxml")
+            );
+            Parent newRoot = loader.load();
+
+            Scene scene = ((Node) event.getSource()).getScene();
+
+            newRoot.setOpacity(0);
+            scene.setRoot(newRoot);
+
+            FadeTransition ft = new FadeTransition(Duration.millis(250), newRoot);
+            ft.setToValue(1);
+            ft.play();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
