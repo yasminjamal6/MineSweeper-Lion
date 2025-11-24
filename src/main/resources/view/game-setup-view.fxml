@@ -37,20 +37,20 @@
                         <!-- Hearts -->
                         <VBox alignment="CENTER" spacing="6">
                             <HBox alignment="CENTER" spacing="4">
-                                <Label styleClass="heart-icon" text="♥️" />
-                                <Label styleClass="heart-icon" text="♥️" />
-                                <Label styleClass="heart-icon" text="♥️" />
-                                <Label styleClass="heart-icon" text="♥️" />
-                                <Label styleClass="heart-icon" text="♥️" />
-                                <Label styleClass="heart-icon" text="♥️" />
-                                <Label styleClass="heart-icon" text="♥️" />
-                                <Label styleClass="heart-icon" text="♥️" />
-                                <Label styleClass="heart-icon" text="♥️" />
-                                <Label styleClass="heart-icon" text="♥️" />
+                                <Label text="♥" styleClass="heart-icon"/>
+                                <Label text="♥" styleClass="heart-icon"/>
+                                <Label text="♥" styleClass="heart-icon"/>
+                                <Label text="♥" styleClass="heart-icon"/>
+                                <Label text="♥" styleClass="heart-icon"/>
+                                <Label text="♥" styleClass="heart-icon"/>
+                                <Label text="♥" styleClass="heart-icon"/>
+                                <Label text="♥" styleClass="heart-icon"/>
+                                <Label text="♥" styleClass="heart-icon"/>
+                                <Label text="♥" styleClass="heart-icon"/>
                             </HBox>
-                            <Label styleClass="hearts-label" text="Shared Hearts: 10 / 10" />
+                            <Label text="Shared Hearts: 10 / 10"
+                                   styleClass="hearts-label"/>
                         </VBox>
-
                         <!-- Players -->
                         <HBox alignment="CENTER" spacing="22">
 
