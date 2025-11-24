@@ -34,8 +34,10 @@
                AnchorPane.topAnchor="110" AnchorPane.leftAnchor="60" AnchorPane.rightAnchor="60"/>
 
         <!-- answers -->
-        <VBox spacing="14"
-              AnchorPane.topAnchor="230" AnchorPane.leftAnchor="70" AnchorPane.rightAnchor="70">
+        <VBox spacing="20" alignment="CENTER"
+              AnchorPane.topAnchor="220"
+              AnchorPane.leftAnchor="0"
+              AnchorPane.rightAnchor="0">
 
             <Button fx:id="ansBtn0" onAction="#onAnswerClick" styleClass="answer-btn"/>
             <Button fx:id="ansBtn1" onAction="#onAnswerClick" styleClass="answer-btn"/>
@@ -43,6 +45,8 @@
             <Button fx:id="ansBtn3" onAction="#onAnswerClick" styleClass="answer-btn"/>
 
         </VBox>
+
+
 
     </AnchorPane>
 </StackPane>
