@@ -3,7 +3,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane fx:id="root" prefHeight="750" prefWidth="1200" stylesheets="@/css/game-setup.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.GameSetupController">
+<StackPane fx:id="root"
+           prefWidth="1200" prefHeight="800"
+           maxHeight="Infinity"
+           maxWidth="Infinity"
+           minHeight="0"
+           minWidth="0"
+           stylesheets="@/css/game-setup.css"
+           xmlns="http://javafx.com/javafx/17.0.12"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="main.controller.GameSetupController">
 
     <fx:define>
         <!-- קבוצת טוגל משותפת לרמות קושי -->
@@ -11,14 +20,33 @@
     </fx:define>
 
     <children>
-        <AnchorPane styleClass="background-pane">
-            <children>
-                <VBox alignment="TOP_CENTER" spacing="24" AnchorPane.bottomAnchor="40" AnchorPane.leftAnchor="80" AnchorPane.rightAnchor="80" AnchorPane.topAnchor="40">
+        <AnchorPane styleClass="background-pane"
+                    AnchorPane.topAnchor="0"
+                    AnchorPane.bottomAnchor="0"
+                    AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0"
+                    maxHeight="Infinity"
+                    minHeight="0">
 
-                    <!-- כרטיס מרכזי -->
-                    <VBox alignment="TOP_CENTER" maxWidth="900" spacing="14" styleClass="card-main">
 
-                        <!-- שורת עליונה: כפתור Back בצד ימין -->
+        <children>
+            <VBox alignment="CENTER"
+                  spacing="24"
+                  AnchorPane.topAnchor="0"
+                  AnchorPane.bottomAnchor="0"
+                  AnchorPane.leftAnchor="0"
+                  AnchorPane.rightAnchor="0"
+                  style="-fx-padding: 10 80 10 80;">
+
+
+
+            <!-- כרטיס מרכזי -->
+                <VBox alignment="TOP_CENTER"
+                      spacing="14"
+                      styleClass="card-main">
+
+
+                <!-- שורת עליונה: כפתור Back בצד ימין -->
                         <HBox alignment="CENTER_RIGHT">
                             <Region HBox.hgrow="ALWAYS" />
                             <Button
