@@ -131,7 +131,9 @@ The impact changes by difficulty level.
                                 <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
                             </padding>
                             <Button text="Got it, let's start! 🦁"
-                                    styleClass="how-start-btn"/>
+                                    styleClass="how-start-btn"
+                                    onAction="#onStartGame"/>
+
                         </HBox>
 
                     </VBox>
