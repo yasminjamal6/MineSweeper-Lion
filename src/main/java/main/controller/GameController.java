@@ -30,49 +30,62 @@ public class GameController {
 
     @FXML
     private void initialize() {
-        // Set player names from setup screen
+        // שמות שחקנים מהמסך הקודם
         playerANameLabel.setText(GameSetupController.selectedPlayerAName);
         playerBNameLabel.setText(GameSetupController.selectedPlayerBName);
 
-        // Mines count based on difficulty
+        // מספר מוקשים לפי רמת קושי
         int mines = getMinesForDifficulty(GameSetupController.selectedDifficulty);
         playerAMinesLabel.setText("💣 " + mines);
         playerBMinesLabel.setText("💣 " + mines);
 
-        // Initial top bar values
-        livesLabel.setText(lives + " / 10 ❤️");
-        scoreLabel.setText("Score: " + score + " 🏆");
+        // ערכי בר עליון
+        livesLabel.setText(lives + " / 10");
+        playerAMinesLabel.setText(String.valueOf(mines));
+        playerBMinesLabel.setText(String.valueOf(mines));
 
         // Board size according to difficulty
         model.Difficulty diff = DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
-        int size = diff.getRows();
+     /*   int size = diff.getRows();*/
 
-        // Build both boards with the same size
-        buildBoardGrid(boardAGrid, size, true);   // golden style
-        buildBoardGrid(boardBGrid, size, false);  // orange style
+        // גודל לוח לפי קושי
+        int size = getBoardSize(GameSetupController.selectedDifficulty);
+        int cellSize = getCellSize(GameSetupController.selectedDifficulty);
+
+        // בניית לוחות
+        buildBoardGrid(boardAGrid, size, cellSize, true);   // לוח A – זהוב
+        buildBoardGrid(boardBGrid, size, cellSize, false);  // לוח B – כתום/אדום
     }
 
     private int getBoardSize(GameSetupController.Difficulty diff) {
         return switch (diff) {
-            case EASY -> 9;
+            case EASY   -> 9;
             case MEDIUM -> 13;
-            case HARD -> 16;
+            case HARD   -> 16;
+        };
+    }
+
+    // גודל המשבצת – מותאם כך שכל הלוח יישב נוח במסך
+    private int getCellSize(GameSetupController.Difficulty diff) {
+        return switch (diff) {
+            case EASY   -> 44;  // לוח קטן – משבצת גדולה
+            case MEDIUM -> 36;
+            case HARD   -> 28;  // לוח גדול – משבצת קטנה כדי לא לגלוש
         };
     }
 
     private int getMinesForDifficulty(GameSetupController.Difficulty diff) {
         return switch (diff) {
-            case EASY -> 10;
+            case EASY   -> 10;
             case MEDIUM -> 26;
-            case HARD -> 44;
+            case HARD   -> 44;
         };
     }
 
     /**
-     * Build a fixed-size grid of square buttons.
-     * This is only UI – game logic can be added later.
+     * בניית לוח בגודל קבוע שנראה טוב על המסך.
      */
-    private void buildBoardGrid(GridPane grid, int size, boolean isBoardA) {
+    private void buildBoardGrid(GridPane grid, int size, int cellSize, boolean isBoardA) {
         grid.getChildren().clear();
         grid.getColumnConstraints().clear();
         grid.getRowConstraints().clear();
@@ -80,20 +93,19 @@ public class GameController {
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
                 Button cell = new Button();
-
                 cell.getStyleClass().add("cell-button");
+
                 if (isBoardA) {
                     cell.getStyleClass().add("golden-cell");
                 } else {
                     cell.getStyleClass().add("orange-cell");
                 }
 
-                // Make sure cell stays square with fixed size
-                cell.setPrefSize(32, 32);
-                cell.setMinSize(32, 32);
-                cell.setMaxSize(32, 32);
+                // גודל ריבוע קבוע לפי קושי – לא משתנה עם Resize
+                cell.setPrefSize(cellSize, cellSize);
+                cell.setMinSize(cellSize, cellSize);
+                cell.setMaxSize(cellSize, cellSize);
 
-                // TODO: later you can set onAction for game logic
                 grid.add(cell, col, row);
             }
         }
