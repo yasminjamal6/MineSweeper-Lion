@@ -196,3 +196,8 @@
 .back-home-btn:hover {
     -fx-background-color: linear-gradient(to right, #1f2937, #374151);
 }
+
+.heart-lost {
+    -fx-opacity: 0.3;
+}
+
