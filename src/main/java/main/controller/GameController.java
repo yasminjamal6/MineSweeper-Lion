@@ -11,6 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 import model.Difficulty;
+import javafx.scene.layout.HBox;
+
 
 public class GameController {
 
@@ -25,37 +27,75 @@ public class GameController {
     @FXML private GridPane boardAGrid;
     @FXML private GridPane boardBGrid;
 
+    @FXML private HBox heartsBox;
+
     private int lives = 10;
     private int score = 0;
 
     @FXML
     private void initialize() {
-        // שמות שחקנים מהמסך הקודם
         playerANameLabel.setText(GameSetupController.selectedPlayerAName);
         playerBNameLabel.setText(GameSetupController.selectedPlayerBName);
 
-        // מספר מוקשים לפי רמת קושי
         int mines = getMinesForDifficulty(GameSetupController.selectedDifficulty);
         playerAMinesLabel.setText("💣 " + mines);
         playerBMinesLabel.setText("💣 " + mines);
 
-        // ערכי בר עליון
-        livesLabel.setText(lives + " / 10");
-        playerAMinesLabel.setText(String.valueOf(mines));
-        playerBMinesLabel.setText(String.valueOf(mines));
-
-        // Board size according to difficulty
         model.Difficulty diff = DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
-     /*   int size = diff.getRows();*/
 
-        // גודל לוח לפי קושי
+        lives = diff.getInitialLives();
+        score = 0;
+
+        buildHearts(diff);
+
+        updateLivesUI(diff);
+
         int size = getBoardSize(GameSetupController.selectedDifficulty);
         int cellSize = getCellSize(GameSetupController.selectedDifficulty);
 
-        // בניית לוחות
-        buildBoardGrid(boardAGrid, size, cellSize, true);   // לוח A – זהוב
-        buildBoardGrid(boardBGrid, size, cellSize, false);  // לוח B – כתום/אדום
+        buildBoardGrid(boardAGrid, size, cellSize, true);
+        buildBoardGrid(boardBGrid, size, cellSize, false);
     }
+
+
+    private void buildHearts(model.Difficulty diff) {
+        heartsBox.getChildren().clear();
+
+        int total = diff.getInitialLives();
+
+        for (int i = 0; i < total; i++) {
+            Label heart = new Label("❤");
+            heart.getStyleClass().add("heart-icon");
+            heartsBox.getChildren().add(heart);
+        }
+    }
+
+    private void updateLivesUI(model.Difficulty diff) {
+        livesLabel.setText(lives + " / " + diff.getInitialLives());
+
+        int total = diff.getInitialLives();
+
+        for (int i = 0; i < heartsBox.getChildren().size(); i++) {
+            Node node = heartsBox.getChildren().get(i);
+            if (node instanceof Label heart) {
+                if (i < lives) {
+                    heart.getStyleClass().remove("heart-lost");
+                } else {
+                    if (!heart.getStyleClass().contains("heart-lost")) {
+                        heart.getStyleClass().add("heart-lost");
+                    }
+                }
+            }
+        }
+    }
+
+    private void loseLife(model.Difficulty diff) {
+        if (lives > 0) {
+            lives--;
+            updateLivesUI(diff);
+        }
+    }
+
 
     private int getBoardSize(GameSetupController.Difficulty diff) {
         return switch (diff) {

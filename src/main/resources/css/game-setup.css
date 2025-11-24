@@ -188,3 +188,17 @@
     -fx-scale-y: 1.05;
     -fx-effect: dropshadow(gaussian, rgba(255,80,55,0.85), 34, 0.55, 0, 8);
 }
+
+.board-frame {
+    -fx-background-color: transparent;
+    -fx-padding: 6;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: rgba(250,204,21,0.9); /* إطار ذهبي */
+    -fx-border-width: 2;
+}
+
+.board-container {
+    -fx-background-color: transparent;
+}
+
