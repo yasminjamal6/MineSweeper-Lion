@@ -12,86 +12,114 @@
             styleClass="game-root">
 
     <children>
-        <VBox spacing="10"
+        <VBox spacing="12"
               AnchorPane.topAnchor="10.0"
               AnchorPane.bottomAnchor="10.0"
               AnchorPane.leftAnchor="10.0"
               AnchorPane.rightAnchor="10.0">
 
-            <!-- TOP BAR: Score (left) + Lives (right) -->
-            <HBox spacing="10" alignment="CENTER_LEFT" styleClass="top-bar">
+            <!-- ===== TOP BAR ===== -->
+            <HBox spacing="10" alignment="CENTER" styleClass="top-bar">
+
+                <!-- Score בצד שמאל -->
                 <Label fx:id="scoreLabel"
                        text="Score: 0 🏆"
                        styleClass="score-label"/>
 
                 <Region HBox.hgrow="ALWAYS"/>
 
+                <!-- 10 לבבות באמצע -->
+                <HBox alignment="CENTER" spacing="3" styleClass="hearts-row">
+                    <Label styleClass="heart-icon" text="❤"/>
+                    <Label styleClass="heart-icon" text="❤"/>
+                    <Label styleClass="heart-icon" text="❤"/>
+                    <Label styleClass="heart-icon" text="❤"/>
+                    <Label styleClass="heart-icon" text="❤"/>
+                    <Label styleClass="heart-icon" text="❤"/>
+                    <Label styleClass="heart-icon" text="❤"/>
+                    <Label styleClass="heart-icon" text="❤"/>
+                    <Label styleClass="heart-icon" text="❤"/>
+                    <Label styleClass="heart-icon" text="❤"/>
+                </HBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- מונה החיים בצד ימין -->
                 <Label fx:id="livesLabel"
-                       text="10 / 10 ❤️"
-                       styleClass="lives-label"/>
+                       text="10 / 10"
+                       styleClass="lives-counter"/>
             </HBox>
 
-            <!-- PLAYERS CARDS -->
-            <HBox spacing="12">
-                <!-- Player A -->
-                <VBox spacing="4"
-                      HBox.hgrow="ALWAYS"
-                      styleClass="player-card player-a-card">
-                    <HBox alignment="CENTER_LEFT" spacing="6">
-                        <Label fx:id="playerAIcon" text="👑" styleClass="player-icon"/>
-                        <Label fx:id="playerANameLabel"
-                               text="Player A"
-                               styleClass="player-name"/>
-                    </HBox>
-                    <Label fx:id="playerAMinesLabel"
-                           text="💣 10"
-                           styleClass="mines-remaining"/>
-                </VBox>
+            <!-- ===== BOARDS ===== -->
+            <HBox spacing="16" VBox.vgrow="ALWAYS">
 
-                <!-- Player B -->
-                <VBox spacing="4"
-                      HBox.hgrow="ALWAYS"
-                      styleClass="player-card player-b-card">
-                    <HBox alignment="CENTER_LEFT" spacing="6">
-                        <Label fx:id="playerBIcon" text="🦁" styleClass="player-icon"/>
-                        <Label fx:id="playerBNameLabel"
-                               text="Player B"
-                               styleClass="player-name"/>
-                    </HBox>
-                    <Label fx:id="playerBMinesLabel"
-                           text="💣 10"
-                           styleClass="mines-remaining"/>
-                </VBox>
-            </HBox>
+                <!-- ==== צד שמאל – Player A + Board A ==== -->
+                <VBox spacing="10" HBox.hgrow="ALWAYS">
 
-            <!-- BOARDS -->
-            <HBox spacing="14" VBox.vgrow="ALWAYS">
-                <!-- Board A -->
-                <VBox spacing="6" HBox.hgrow="ALWAYS">
-                    <Label fx:id="boardATitle"
-                           text="Board A"
-                           styleClass="board-title"/>
-                    <StackPane styleClass="board-container">
+                    <!-- כותרת שחקן A ומוקשים באמצע מעל הלוח -->
+                    <VBox alignment="CENTER" spacing="6">
+                        <HBox alignment="CENTER" spacing="8"
+                              styleClass="player-header player-header-a">
+                            <Label text="👑" styleClass="player-icon"/>
+                            <Label fx:id="playerANameLabel"
+                                   text="Player A"
+                                   styleClass="player-name"/>
+                        </HBox>
+
+                        <HBox alignment="CENTER" spacing="6"
+                              styleClass="mines-chip">
+                            <Label text="💣" styleClass="mines-icon"/>
+                            <Label fx:id="playerAMinesLabel"
+                                   text="10"
+                                   styleClass="mines-count"/>
+                            <Label text="MINES" styleClass="mines-text"/>
+                        </HBox>
+                    </VBox>
+
+                    <Label text="Board A" styleClass="board-title"/>
+
+                    <StackPane styleClass="board-container" VBox.vgrow="ALWAYS">
                         <GridPane fx:id="boardAGrid"
                                   hgap="2" vgap="2"
                                   alignment="CENTER"/>
                     </StackPane>
                 </VBox>
 
-                <!-- Board B -->
-                <VBox spacing="6" HBox.hgrow="ALWAYS">
-                    <Label fx:id="boardBTitle"
-                           text="Board B"
-                           styleClass="board-title"/>
-                    <StackPane styleClass="board-container">
+                <!-- ==== צד ימין – Player B + Board B ==== -->
+                <VBox spacing="10" HBox.hgrow="ALWAYS">
+
+                    <!-- כותרת שחקן B ומוקשים באמצע מעל הלוח -->
+                    <VBox alignment="CENTER" spacing="6">
+                        <HBox alignment="CENTER" spacing="8"
+                              styleClass="player-header player-header-b">
+                            <Label text="🦁" styleClass="player-icon"/>
+                            <Label fx:id="playerBNameLabel"
+                                   text="Player B"
+                                   styleClass="player-name"/>
+                        </HBox>
+
+                        <HBox alignment="CENTER" spacing="6"
+                              styleClass="mines-chip">
+                            <Label text="💣" styleClass="mines-icon"/>
+                            <Label fx:id="playerBMinesLabel"
+                                   text="10"
+                                   styleClass="mines-count"/>
+                            <Label text="MINES" styleClass="mines-text"/>
+                        </HBox>
+                    </VBox>
+
+                    <Label text="Board B" styleClass="board-title"/>
+
+                    <StackPane styleClass="board-container" VBox.vgrow="ALWAYS">
                         <GridPane fx:id="boardBGrid"
                                   hgap="2" vgap="2"
                                   alignment="CENTER"/>
                     </StackPane>
                 </VBox>
+
             </HBox>
 
-            <!-- BACK BUTTON -->
+            <!-- ===== BACK BUTTON ===== -->
             <HBox alignment="CENTER">
                 <Button fx:id="backHomeBtn"
                         text="Back to Home"
