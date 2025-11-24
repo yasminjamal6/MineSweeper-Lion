@@ -1,5 +1,6 @@
 package main.controller;
 
+import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +15,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class GameSetupController {
 
@@ -50,14 +52,26 @@ public class GameSetupController {
         System.out.println(">> Back clicked");
 
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/view/Home-view.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 1200, 750));
-            stage.show();
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/home-view.fxml")
+            );
+            Parent newRoot = loader.load();
+
+
+            Scene scene = ((Node) event.getSource()).getScene();
+
+            newRoot.setOpacity(0);
+            scene.setRoot(newRoot);
+
+            FadeTransition ft = new FadeTransition(Duration.millis(250), newRoot);
+            ft.setToValue(1);
+            ft.play();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
 
 
