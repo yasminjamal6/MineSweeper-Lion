@@ -3,6 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.shape.Rectangle?>
+
 
 <AnchorPane xmlns="http://javafx.com/javafx/23"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -28,19 +30,10 @@
 
                 <Region HBox.hgrow="ALWAYS"/>
 
-                <!-- 10 לבבות באמצע -->
-                <HBox alignment="CENTER" spacing="3" styleClass="hearts-row">
-                    <Label styleClass="heart-icon" text="❤"/>
-                    <Label styleClass="heart-icon" text="❤"/>
-                    <Label styleClass="heart-icon" text="❤"/>
-                    <Label styleClass="heart-icon" text="❤"/>
-                    <Label styleClass="heart-icon" text="❤"/>
-                    <Label styleClass="heart-icon" text="❤"/>
-                    <Label styleClass="heart-icon" text="❤"/>
-                    <Label styleClass="heart-icon" text="❤"/>
-                    <Label styleClass="heart-icon" text="❤"/>
-                    <Label styleClass="heart-icon" text="❤"/>
-                </HBox>
+                <HBox fx:id="heartsBox"
+                      alignment="CENTER"
+                      spacing="3"
+                      styleClass="hearts-row"/>
 
                 <Region HBox.hgrow="ALWAYS"/>
 
@@ -83,6 +76,7 @@
                                   hgap="2" vgap="2"
                                   alignment="CENTER"/>
                     </StackPane>
+
                 </VBox>
 
                 <!-- ==== צד ימין – Player B + Board B ==== -->
@@ -115,6 +109,7 @@
                                   hgap="2" vgap="2"
                                   alignment="CENTER"/>
                     </StackPane>
+
                 </VBox>
 
             </HBox>

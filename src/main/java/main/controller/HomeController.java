@@ -78,7 +78,7 @@ public class HomeController {
 
             settingsStage.initModality(Modality.WINDOW_MODAL);
             settingsStage.setResizable(false);
-            settingsStage.setFullScreen(false); // مهم
+            settingsStage.setFullScreen(false);
             settingsStage.sizeToScene();
             settingsStage.centerOnScreen();
 
