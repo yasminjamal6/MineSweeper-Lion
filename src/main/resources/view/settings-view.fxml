@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="main.controller.SettingsController"
+            prefWidth="420" prefHeight="360"
+            stylesheets="@../css/home.css"
+            styleClass="settings-root">
+
+
+    <center>
+        <VBox spacing="20" alignment="CENTER">
+
+            <Label text="Settings ⚙" styleClass="settings-title"/>
+
+            <!-- SOUND -->
+            <HBox spacing="12" alignment="CENTER">
+                <Label text="Sound:" styleClass="settings-label"/>
+                <ToggleButton fx:id="soundToggle" text="ON" styleClass="toggle-setting"/>
+            </HBox>
+
+            <!-- VOLUME -->
+            <VBox alignment="CENTER" spacing="6">
+                <Label text="Volume" styleClass="settings-label"/>
+                <Slider fx:id="volumeSlider" min="0" max="100" value="70" prefWidth="260"/>
+            </VBox>
+
+            <!-- FULLSCREEN -->
+            <HBox spacing="12" alignment="CENTER">
+                <Label text="Full Screen:" styleClass="settings-label"/>
+                <ToggleButton fx:id="fullscreenToggle" text="OFF" styleClass="toggle-setting"/>
+            </HBox>
+
+            <Button text="Close" onAction="#closeSettings" styleClass="close-settings-btn"/>
+
+        </VBox>
+    </center>
+
+</BorderPane>

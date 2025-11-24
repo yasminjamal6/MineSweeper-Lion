@@ -104,6 +104,15 @@
                 <Insets top="18" left="18"/>
             </StackPane.margin>
         </Button>
+        <Button text="⚙"
+                fx:id="settingsBtn"
+                styleClass="settings-btn"
+                onAction="#openSettings"
+                StackPane.alignment="TOP_RIGHT">
+            <StackPane.margin>
+                <Insets top="18" right="18"/>
+            </StackPane.margin>
+        </Button>
 
     </children>
 
