@@ -84,7 +84,8 @@ public class GameSetupController {
 
 
     @FXML
-    private void onStart() {
+    private void onStart(ActionEvent event) {
+
         String a = playerAName.getText() == null ? "" : playerAName.getText().trim();
         String b = playerBName.getText() == null ? "" : playerBName.getText().trim();
 
@@ -105,20 +106,31 @@ public class GameSetupController {
         selectedPlayerAName = a;
         selectedPlayerBName = b;
 
-        switchScene("game.fxml");
+        switchSceneWithFade(event, "/view/game.fxml");
 
     }
 
-    private void switchScene(String fxmlName) {
+    private void switchSceneWithFade(ActionEvent event, String fxmlPath) {
         try {
-            Stage stage = (Stage) playerAName.getScene().getWindow();
-            Parent root = FXMLLoader.load(getClass().getResource("/view/" + fxmlName));
-            stage.setScene(new Scene(root));
-            stage.show();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent newRoot = loader.load();
+
+            Scene scene = ((Node) event.getSource()).getScene();
+
+            newRoot.setOpacity(0);
+            scene.setRoot(newRoot);
+
+            FadeTransition ft = new FadeTransition(Duration.millis(300), newRoot);
+            ft.setFromValue(0.0);
+            ft.setToValue(1.0);
+            ft.play();
+
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
+
+
 
     private void showAlert(String msg) {
         Alert alert = new Alert(Alert.AlertType.WARNING, msg, ButtonType.OK);

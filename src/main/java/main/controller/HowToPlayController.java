@@ -32,4 +32,27 @@ public class HowToPlayController {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void onStartGame(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/game-setup-view.fxml")
+            );
+            Parent newRoot = loader.load();
+
+            Scene scene = ((Node) event.getSource()).getScene();
+
+            newRoot.setOpacity(0);
+            scene.setRoot(newRoot);
+
+            FadeTransition ft = new FadeTransition(Duration.millis(250), newRoot);
+            ft.setToValue(1);
+            ft.play();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
