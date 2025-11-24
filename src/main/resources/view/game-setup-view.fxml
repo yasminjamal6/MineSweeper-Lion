@@ -62,8 +62,14 @@
 
                                 <Label styleClass="field-label" text="Board style" />
                                 <HBox alignment="CENTER_LEFT" spacing="8">
-                                    <Button styleClass="board-style-pill board-gold" text="Royal Gold" />
-                                    <Button styleClass="board-style-pill board-savanna" text="Savanna Sunset" />
+                                    <Button fx:id="aGoldBtn"
+                                            styleClass="board-style-pill board-gold"
+                                            text="Royal Gold"
+                                            onAction="#onChooseGoldA"/>
+                                    <Button fx:id="aSavannaBtn"
+                                            styleClass="board-style-pill board-savanna"
+                                            text="Savanna Sunset"
+                                            onAction="#onChooseSavannaA"/>
                                 </HBox>
                             </VBox>
 
@@ -75,14 +81,17 @@
 
                                 <Label styleClass="field-label" text="Board style" />
                                 <HBox alignment="CENTER_LEFT" spacing="8">
-                                    <Button styleClass="board-style-pill board-gold" text="Royal Gold" />
-                                    <Button styleClass="board-style-pill board-savanna" text="Savanna Sunset" />
+                                    <Button fx:id="bGoldBtn"
+                                            styleClass="board-style-pill board-gold"
+                                            text="Royal Gold"
+                                            onAction="#onChooseGoldB"/>
+                                    <Button fx:id="bSavannaBtn"
+                                            styleClass="board-style-pill board-savanna"
+                                            text="Savanna Sunset"
+                                            onAction="#onChooseSavannaB"/>
                                 </HBox>
                             </VBox>
                         </HBox>
-
-
-
 
 
 
