@@ -70,4 +70,17 @@ public class GameHistory {
         }
         return Duration.between(startedAt, endedAt);
     }
+
+    // duration in minutes for the table
+    public long getDurationMinutes() {
+        return getDuration().toMinutes();
+    }
+
+    public String getResult() {
+        return success ? "Win" : "Loss";
+    }
+    // difficulty as String (Easy / Medium / Hard)
+    public String getDifficultyString() {
+        return (difficulty == null) ? "" : difficulty.name();
+    }
 }
