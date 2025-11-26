@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/17.0.12"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="main.controller.GameHistoryController"
+           stylesheets="@../css/game-history.css"
+           prefWidth="1200" prefHeight="800">
+
+    <children>
+
+        <!-- FULL BACKGROUND -->
+        <AnchorPane styleClass="gh-background"
+                    AnchorPane.topAnchor="0"
+                    AnchorPane.bottomAnchor="0"
+                    AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0" />
+
+        <!-- MAIN CONTENT -->
+        <VBox spacing="20"
+              styleClass="gh-root"
+              maxWidth="1100"
+              StackPane.alignment="TOP_CENTER">
+
+            <!-- HEADER ROW -->
+            <HBox fx:id="headerRow"
+                  spacing="16"
+                  styleClass="gh-header">
+
+                <!-- LEFT: TITLE + ICON -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <StackPane styleClass="gh-header-icon">
+                        <Label text="🏆" styleClass="gh-header-icon-emoji"/>
+                    </StackPane>
+
+                    <VBox spacing="4" alignment="CENTER_LEFT">
+                        <Label text="Game History" styleClass="gh-header-title"/>
+                        <Label text="Records and champions" styleClass="gh-header-subtitle"/>
+                    </VBox>
+                </HBox>
+
+                <!-- SPACER -->
+                <Pane HBox.hgrow="ALWAYS"/>
+
+                <!-- RIGHT: BUTTONS -->
+                <HBox spacing="8" alignment="CENTER_RIGHT">
+                    <Button text="New Game"
+                            onAction="#onNewGame"
+                            styleClass="gh-btn-primary"/>
+                    <Button text="Home Page"
+                            onAction="#onBackToHome"
+                            styleClass="gh-btn-secondary"/>
+                </HBox>
+
+            </HBox>
+
+            <!-- STATS CARDS ROW -->
+            <HBox fx:id="statsRow"
+                  spacing="16"
+                  styleClass="gh-stats-row">
+
+                <!-- TOTAL GAMES -->
+                <VBox alignment="CENTER"
+                      spacing="6"
+                      styleClass="gh-stat-card gh-stat-total"
+                      HBox.hgrow="ALWAYS">
+                    <Label text="🎮" styleClass="gh-stat-icon"/>
+                    <Label fx:id="totalGamesLabel" text="0" styleClass="gh-stat-value"/>
+                    <Label text="Total Games" styleClass="gh-stat-label"/>
+                </VBox>
+
+                <!-- EASY GAMES -->
+                <VBox alignment="CENTER"
+                      spacing="6"
+                      styleClass="gh-stat-card gh-stat-easy"
+                      HBox.hgrow="ALWAYS">
+                    <Label text="🌱" styleClass="gh-stat-icon"/>
+                    <Label fx:id="easyGamesLabel" text="0" styleClass="gh-stat-value"/>
+                    <Label text="Easy Games" styleClass="gh-stat-label"/>
+                </VBox>
+
+                <!-- MEDIUM GAMES -->
+                <VBox alignment="CENTER"
+                      spacing="6"
+                      styleClass="gh-stat-card gh-stat-medium"
+                      HBox.hgrow="ALWAYS">
+                    <Label text="⚡" styleClass="gh-stat-icon"/>
+                    <Label fx:id="mediumGamesLabel" text="0" styleClass="gh-stat-value"/>
+                    <Label text="Medium Games" styleClass="gh-stat-label"/>
+                </VBox>
+
+                <!-- HARD GAMES -->
+                <VBox alignment="CENTER"
+                      spacing="6"
+                      styleClass="gh-stat-card gh-stat-hard"
+                      HBox.hgrow="ALWAYS">
+                    <Label text="🔥" styleClass="gh-stat-icon"/>
+                    <Label fx:id="hardGamesLabel" text="0" styleClass="gh-stat-value"/>
+                    <Label text="Hard Games" styleClass="gh-stat-label"/>
+                </VBox>
+
+            </HBox>
+
+            <!-- TABLE CARD -->
+            <VBox fx:id="tableCard"
+                  spacing="10"
+                  styleClass="gh-table-wrapper"
+                  VBox.vgrow="ALWAYS">
+
+                <!-- TABLE TITLE -->
+                <HBox alignment="CENTER_LEFT" spacing="6">
+                    <Label text="All Games" styleClass="gh-table-title"/>
+                    <Label text="👑" styleClass="gh-table-title-icon"/>
+                </HBox>
+
+                <!-- TABLE -->
+                <TableView fx:id="historyTable"
+                           styleClass="gh-table"
+                           VBox.vgrow="ALWAYS">
+
+                    <columns>
+                        <TableColumn fx:id="startedAtCol"
+                                     text="Date"
+                                     prefWidth="170"/>
+                        <TableColumn fx:id="playerACol"
+                                     text="Player A"
+                                     prefWidth="130"/>
+                        <TableColumn fx:id="playerBCol"
+                                     text="Player B"
+                                     prefWidth="130"/>
+                        <TableColumn fx:id="difficultyCol"
+                                     text="Difficulty"
+                                     prefWidth="100"/>
+                        <TableColumn fx:id="scoreCol"
+                                     text="Shared Score"
+                                     prefWidth="130"/>
+                        <TableColumn fx:id="resultCol"
+                                     text="Result"
+                                     prefWidth="140"/>
+                        <TableColumn fx:id="livesCol"
+                                     text="Hearts"
+                                     prefWidth="90"/>
+                    </columns>
+
+                </TableView>
+
+            </VBox>
+
+        </VBox>
+
+    </children>
+
+</StackPane>
