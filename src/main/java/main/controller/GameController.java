@@ -34,6 +34,7 @@ public class GameController {
 
     private int lives = 10;
     private int score = 0;
+    private boolean isPlayerATurn = true;
     private final QuestionBank questionBank = new QuestionBank();
 
 
@@ -58,9 +59,40 @@ public class GameController {
         int size = getBoardSize(GameSetupController.selectedDifficulty);
         int cellSize = getCellSize(GameSetupController.selectedDifficulty);
 
+        // בניית לוחות
+        buildBoardGrid(boardAGrid, size, cellSize, true);   // לוח A – זהוב
+        buildBoardGrid(boardBGrid, size, cellSize, false);  // לוח B – כתום/אדום
+        updateBoardHighlight();
         buildBoardGrid(boardAGrid, size, cellSize, true);
         buildBoardGrid(boardBGrid, size, cellSize, false);
     }
+
+    private void updateBoardHighlight() {
+        if (isPlayerATurn) {
+            //  A
+            boardAGrid.getStyleClass().add("active-board");
+            boardAGrid.getStyleClass().remove("inactive-board");
+
+            boardBGrid.getStyleClass().add("inactive-board");
+            boardBGrid.getStyleClass().remove("active-board");
+        } else {
+            //  B
+            boardBGrid.getStyleClass().add("active-board");
+            boardBGrid.getStyleClass().remove("inactive-board");
+
+            boardAGrid.getStyleClass().add("inactive-board");
+            boardAGrid.getStyleClass().remove("active-board");
+        }
+    }
+    private void handleCellClick(Button cell, boolean isBoardA) {
+
+        if (isPlayerATurn && !isBoardA) return;
+        if (!isPlayerATurn && isBoardA) return;
+        System.out.println("Player clicked on: " + (isBoardA ? "A" : "B"));
+        isPlayerATurn = !isPlayerATurn;
+        updateBoardHighlight();
+    }
+
 
 
     private void buildHearts(model.Difficulty diff) {
@@ -156,6 +188,7 @@ public class GameController {
                 } else {
                     cell.getStyleClass().add("orange-cell");
                 }
+                cell.setOnAction(e -> handleCellClick(cell, isBoardA));
 
                 // גודל ריבוע קבוע לפי קושי – לא משתנה עם Resize
                 cell.setPrefSize(cellSize, cellSize);

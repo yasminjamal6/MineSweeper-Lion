@@ -201,3 +201,14 @@
     -fx-opacity: 0.3;
 }
 
+.active-board {
+    -fx-opacity: 1.0;
+    -fx-effect: dropshadow(gaussian, rgba(255, 215, 140, 0.55), 26, 0.35, 0, 0);
+    -fx-border-color: rgba(255, 214, 98, 0.65);
+    -fx-border-width: 1.6;
+}
+.inactive-board {
+    -fx-opacity: 0.55;
+    -fx-effect: none;
+    -fx-border-color: transparent;
+}
