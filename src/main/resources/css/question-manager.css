@@ -1,0 +1,62 @@
+.anchor-pane {
+    -fx-background-color: linear-gradient(to bottom right, #5a3d1e, #2c1a0f);
+}
+
+/* Title */
+.title-label {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f8e8c3;
+}
+
+/* Back button */
+.back-btn {
+    -fx-background-color: #dba83c;
+    -fx-text-fill: #2b1d00;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-padding: 6 14;
+    -fx-background-radius: 6;
+}
+
+/* Table */
+.question-table {
+    -fx-background-color: #fffaf0;
+    -fx-border-color: #c28e42;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 0, 4);
+}
+
+.table-column {
+    -fx-alignment: CENTER;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #c28e42;
+    -fx-background-radius: 12 12 0 0;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: #ffffff;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: #ffce73;
+}
+
+/* Buttons inside table */
+.edit-btn {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 3 8;
+}
+
+.delete-btn {
+    -fx-background-color: #e53935;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 3 8;
+}

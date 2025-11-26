@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/23"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="main.controller.QuestionManagerController"
+            stylesheets="@/css/question-manager.css"
+            prefWidth="1000" prefHeight="650"
+            style="-fx-background-color: linear-gradient(to bottom right, #5a3d1e, #2c1a0f);">
+
+    <!-- Back button -->
+    <Button text="← Back"
+            layoutX="40" layoutY="25"
+            styleClass="back-btn"
+            onAction="#onBack"/>
+
+    <!-- Title -->
+    <Label text="Question Manager"
+           layoutX="160" layoutY="25"
+           styleClass="title-label"/>
+
+    <!-- Center table -->
+    <StackPane layoutX="50" layoutY="100" prefWidth="900" prefHeight="480" alignment="CENTER">
+        <TableView fx:id="questionTable"
+                   prefWidth="880" prefHeight="460"
+                   styleClass="question-table">
+
+            <columns>
+                <TableColumn fx:id="colActions" text="Actions" prefWidth="90"/>
+                <TableColumn fx:id="colCorrect" text="Correct" prefWidth="70"/>
+                <TableColumn fx:id="colAnswers" text="Answers" prefWidth="300"/>
+                <TableColumn fx:id="colDifficulty" text="Difficulty" prefWidth="100"/>
+                <TableColumn fx:id="colQuestion" text="Question" prefWidth="320"/>
+            </columns>
+        </TableView>
+    </StackPane>
+
+</AnchorPane>
