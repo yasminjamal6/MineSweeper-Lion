@@ -107,7 +107,13 @@ public class HomeController {
 
 
     @FXML
-    private void onManageQuestions() {
-        System.out.println("Question Manager clicked");
-    }
-}
+    private void onQuestionManager(ActionEvent e) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/question-manager-view.fxml"));
+            Parent root = loader.load();
+            Scene scene = ((Node)e.getSource()).getScene();
+            scene.setRoot(root);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }}
