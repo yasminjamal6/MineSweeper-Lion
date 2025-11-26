@@ -91,9 +91,20 @@ public class HomeController {
 
 
     @FXML
-    private void onHistory() {
-        System.out.println("History clicked");
+    private void onHistory(javafx.event.ActionEvent event) {
+        try {
+            FXMLLoader loader =
+                    new FXMLLoader(getClass().getResource("/view/game-history.fxml"));
+            Parent root = loader.load();
+
+            Scene scene = ((Node) event.getSource()).getScene();
+            scene.setRoot(root);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
     @FXML
     private void onManageQuestions() {
