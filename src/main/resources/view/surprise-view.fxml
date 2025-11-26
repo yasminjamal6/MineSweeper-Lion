@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/17.0.12"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="main.controller.SurpriseController"
+           prefWidth="420" prefHeight="260"
+           stylesheets="@../css/game.css"
+           styleClass="surprise-root">
+
+    <children>
+        <VBox spacing="16" alignment="CENTER" padding="20">
+            <Label text="Surprise!"
+                   fx:id="titleLabel"
+                   styleClass="surprise-title"/>
+
+            <Label fx:id="messageLabel"
+                   text="Something unexpected happened..."
+                   wrapText="true"
+                   styleClass="surprise-message"/>
+
+            <Label fx:id="pointsLabel"
+                   text="Points: +0"
+                   styleClass="surprise-points"/>
+
+            <Label fx:id="livesLabel"
+                   text="Lives: +0"
+                   styleClass="surprise-lives"/>
+
+            <Button fx:id="okButton"
+                    text="Continue"
+                    onAction="#onClose"
+                    styleClass="primary-action-btn"/>
+        </VBox>
+    </children>
+</StackPane>
