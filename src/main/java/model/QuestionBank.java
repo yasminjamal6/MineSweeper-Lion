@@ -27,6 +27,8 @@ public class QuestionBank {
         loadFromCsv("/Questions.csv");
     }
 
+
+
     public void addQuestion(Question question) {
         if (question == null || question.getLevel() == null) {
             return;
@@ -119,6 +121,13 @@ public class QuestionBank {
             e.printStackTrace();
             throw new RuntimeException("Failed to load CSV", e);
         }
+    }
+    public List<Question> getAllQuestions() {
+        List<Question> all = new ArrayList<>();
+        for (List<Question> list : questionsByLevel.values()) {
+            all.addAll(list);
+        }
+        return all;
     }
 
 }
