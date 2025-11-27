@@ -3,7 +3,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <StackPane fx:id="root"
            prefWidth="1200" prefHeight="800"
            maxHeight="Infinity"
