@@ -21,14 +21,12 @@
               styleClass="how-card">
 
             <!-- Header -->
-            <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <HBox alignment="CENTER_LEFT" spacing="10.0" fx:id="headerRow">
                 <Label text="🦁" style="-fx-font-size: 26;"/>
                 <Label text="How to Play?" styleClass="how-header-title"/>
 
-                <!-- Spacer pushes the X button to the right -->
                 <Region HBox.hgrow="ALWAYS"/>
 
-                <!-- Close X button -->
                 <Button text="✕"
                         styleClass="how-close-btn"
                         onAction="#onCloseHowToPlay"/>
@@ -37,7 +35,8 @@
             <Region prefHeight="3.0" styleClass="how-header-line"/>
 
             <!-- Scrollable content -->
-            <ScrollPane fitToWidth="true"
+            <ScrollPane fx:id="contentCard"
+                        fitToWidth="true"
                         hbarPolicy="NEVER"
                         vbarPolicy="AS_NEEDED"
                         styleClass="how-scroll">
@@ -99,7 +98,6 @@ The impact changes by difficulty level.
                                    text="Numbers show how many bombs are around the tile. Use them to plan your moves."/>
                         </VBox>
 
-
                         <!-- How to play steps -->
                         <VBox spacing="10.0" styleClass="how-howplay-box">
                             <Label text="⚡ How to Play"
@@ -126,14 +124,13 @@ The impact changes by difficulty level.
                         </VBox>
 
                         <!-- Bottom button -->
-                        <HBox alignment="CENTER">
+                        <HBox alignment="CENTER" fx:id="actionsRow">
                             <padding>
                                 <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
                             </padding>
                             <Button text="Got it, let's start! 🦁"
                                     styleClass="how-start-btn"
                                     onAction="#onStartGame"/>
-
                         </HBox>
 
                     </VBox>
