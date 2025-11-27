@@ -167,4 +167,13 @@ public final class ScoreRules {
     private static ScoreChange randomOr(ScoreChange a, ScoreChange b) {
         return ThreadLocalRandom.current().nextBoolean() ? a : b;
     }
+
+    public static ScoreChange randomSurprise(Difficulty difficulty) {
+        SurpriseType type = ThreadLocalRandom.current().nextBoolean()
+                ? SurpriseType.GOOD
+                : SurpriseType.BAD;
+        return surpriseTriggered(difficulty, type);
+    }
+
+
 }
