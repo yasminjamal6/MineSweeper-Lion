@@ -2,40 +2,92 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/23"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="main.controller.QuestionManagerController"
             stylesheets="@/css/question-manager.css"
             prefWidth="1000" prefHeight="650"
-            style="-fx-background-color: linear-gradient(to bottom right, #5a3d1e, #2c1a0f);">
+            styleClass="gh-background">
 
-    <!-- Back button -->
-    <Button text="← Back"
-            layoutX="40" layoutY="25"
-            styleClass="back-btn"
-            onAction="#onBack"/>
+    <children>
+        <!-- Main content container on top of the gradient background -->
+        <VBox spacing="18"
+              AnchorPane.topAnchor="20"
+              AnchorPane.bottomAnchor="20"
+              AnchorPane.leftAnchor="20"
+              AnchorPane.rightAnchor="20"
+              styleClass="gh-root">
 
-    <!-- Title -->
-    <Label text="Question Manager"
-           layoutX="160" layoutY="25"
-           styleClass="title-label"/>
+            <!-- Header row with icon, title, and buttons -->
+            <HBox fx:id="headerRow"
+                  spacing="12"
+                  alignment="CENTER_LEFT"
+                  styleClass="gh-header">
 
-    <!-- Center table -->
-    <StackPane layoutX="50" layoutY="100" prefWidth="900" prefHeight="480" alignment="CENTER">
-        <TableView fx:id="questionTable"
-                   prefWidth="880" prefHeight="460"
-                   styleClass="question-table">
+                <!-- Icon + title -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <StackPane styleClass="gh-header-icon">
+                        <Label text="📚" styleClass="gh-header-icon-emoji"/>
+                    </StackPane>
 
-            <columns>
-                <TableColumn fx:id="colActions" text="Actions" prefWidth="90"/>
-                <TableColumn fx:id="colCorrect" text="Correct" prefWidth="70"/>
-                <TableColumn fx:id="colAnswers" text="Answers" prefWidth="300"/>
-                <TableColumn fx:id="colDifficulty" text="Difficulty" prefWidth="100"/>
-                <TableColumn fx:id="colQuestion" text="Question" prefWidth="320"/>
-            </columns>
-        </TableView>
-    </StackPane>
+                    <VBox spacing="2">
+                        <Label text="Question Manager"
+                               styleClass="gh-header-title"/>
+                        <Label text="Manage your trivia question bank"
+                               styleClass="gh-header-subtitle"/>
+                    </VBox>
+                </HBox>
 
+                <!-- Spacer -->
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Back button -->
+                <Button text="Back"
+                        onAction="#onBack"
+                        styleClass="gh-btn-secondary"/>
+
+                <!-- Add Question button -->
+                <Button text="Add Question"
+                        onAction="#onAddQuestion"
+                        styleClass="gh-btn-primary"/>
+            </HBox>
+
+            <!-- Table card section -->
+            <VBox spacing="10" VBox.vgrow="ALWAYS">
+                <HBox spacing="6" alignment="CENTER_LEFT">
+                    <Label text="📜" styleClass="gh-table-title-icon"/>
+                    <Label text="Questions List"
+                           styleClass="gh-table-title"/>
+                </HBox>
+
+                <StackPane fx:id="tableCard"
+                           styleClass="gh-table-wrapper"
+                           VBox.vgrow="ALWAYS">
+
+                    <TableView fx:id="questionTable"
+                               prefWidth="880"
+                               prefHeight="460"
+                               styleClass="gh-table">
+
+                        <columns>
+                            <TableColumn fx:id="colActions"
+                                         text="Actions" prefWidth="90"/>
+                            <TableColumn fx:id="colCorrect"
+                                         text="Correct" prefWidth="70"/>
+                            <TableColumn fx:id="colAnswers"
+                                         text="Answers" prefWidth="300"/>
+                            <TableColumn fx:id="colDifficulty"
+                                         text="Difficulty" prefWidth="100"/>
+                            <TableColumn fx:id="colQuestion"
+                                         text="Question" prefWidth="320"/>
+                        </columns>
+                    </TableView>
+
+                </StackPane>
+            </VBox>
+
+        </VBox>
+    </children>
 </AnchorPane>
