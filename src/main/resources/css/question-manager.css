@@ -1,62 +1,230 @@
-.anchor-pane {
-    -fx-background-color: linear-gradient(to bottom right, #5a3d1e, #2c1a0f);
+/* =========================
+   GLOBAL FONT
+   ========================= */
+.gh-root, .gh-background {
+    -fx-font-family: "Segoe UI", "Arial";
 }
 
-/* Title */
-.title-label {
-    -fx-font-size: 28px;
+/* =========================
+   BACKGROUND GRADIENT (PAGE)
+   ========================= */
+.gh-background {
+    -fx-background-color: linear-gradient(
+        #7c3aed 0%,
+        #a855f7 35%,
+        #f97316 70%,
+        #1f0b3a 100%
+    );
+}
+
+/* =========================
+   MAIN LAYOUT CONTAINER
+   ========================= */
+.gh-root {
+    -fx-padding: 20 32 32 32;
+    -fx-alignment: top_center;
+}
+
+/* =========================
+   HEADER AREA
+   ========================= */
+.gh-header {
+    -fx-alignment: center_left;
+}
+
+/* Icon background for header */
+.gh-header-icon {
+    -fx-background-color: linear-gradient(#a855f7, #f97316);
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: rgba(255,255,255,0.6);
+    -fx-border-width: 1.5;
+    -fx-padding: 6;
+}
+
+.gh-header-icon-emoji {
+    -fx-font-size: 22;
+}
+
+/* Header title + subtitle */
+.gh-header-title {
+    -fx-text-fill: #fde68a;
+    -fx-font-size: 22;
     -fx-font-weight: bold;
-    -fx-text-fill: #f8e8c3;
 }
 
-/* Back button */
-.back-btn {
-    -fx-background-color: #dba83c;
-    -fx-text-fill: #2b1d00;
+.gh-header-subtitle {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 12;
+}
+
+/* =========================
+   BUTTONS
+   ========================= */
+
+/* Primary button: used for "Add Question" */
+.gh-btn-primary {
+    -fx-background-color: linear-gradient(#facc15, #f97316);
+    -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-font-size: 15px;
-    -fx-padding: 6 14;
-    -fx-background-radius: 6;
+    -fx-font-size: 12;
+    -fx-padding: 6 18;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: rgba(250,250,250,0.5);
+    -fx-border-width: 1.5;
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+    -fx-cursor: hand;
 }
 
-/* Table */
-.question-table {
-    -fx-background-color: #fffaf0;
-    -fx-border-color: #c28e42;
-    -fx-border-width: 2;
-    -fx-border-radius: 12;
-    -fx-background-radius: 12;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 0, 4);
+.gh-btn-primary:hover {
+    -fx-background-color: linear-gradient(#fde047, #fb923c);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
 }
 
-.table-column {
+/* Secondary button: used for "Back" */
+.gh-btn-secondary {
+    -fx-background-color: rgba(0,0,0,0.45);
+    -fx-text-fill: #facc15;
+    -fx-border-color: rgba(250,204,21,0.7);
+    -fx-border-width: 1.4;
+    -fx-font-weight: bold;
+    -fx-font-size: 12;
+    -fx-padding: 6 18;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-cursor: hand;
+}
+
+.gh-btn-secondary:hover {
+    -fx-background-color: rgba(0,0,0,0.7);
+}
+
+/* =========================
+   TABLE CARD WRAPPER
+   ========================= */
+.gh-table-wrapper {
+    -fx-background-color: linear-gradient(#020617, #0f172a, #1e293b);
+    -fx-background-radius: 26;
+    -fx-border-radius: 26;
+    -fx-border-color: #a855f7;
+    -fx-border-width: 3;
+    -fx-padding: 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 25, 0.6, 0, 10);
+}
+
+/* Title above the table */
+.gh-table-title {
+    -fx-text-fill: #f9fafb;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+}
+
+.gh-table-title-icon {
+    -fx-text-fill: #facc15;
+    -fx-font-size: 18;
+}
+
+/* =========================
+   TABLEVIEW HEADER (GH TABLE)
+   ========================= */
+
+.gh-table .column-header-background,
+.gh-table .column-header-background .filler,
+.gh-table .corner {
+    -fx-background-insets: 0;
+    -fx-background-radius: 8 8 0 0;
+    -fx-padding: 0;
+    -fx-background-color: linear-gradient(#4c1d95, #1e40af);
+    -fx-border-color: transparent;
+}
+
+.gh-table .column-header,
+.gh-table .column-header .label {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
     -fx-alignment: CENTER;
 }
 
-.table-view .column-header-background {
-    -fx-background-color: #c28e42;
-    -fx-background-radius: 12 12 0 0;
+/* =========================
+   TABLEVIEW ROWS
+   ========================= */
+.table-view {
+    -fx-background-color: transparent;
 }
 
 .table-view .table-row-cell {
-    -fx-background-color: #ffffff;
+    -fx-border-color: transparent;
 }
 
-.table-view .table-row-cell:selected {
-    -fx-background-color: #ffce73;
+.table-view .table-row-cell:odd {
+    -fx-background-color: rgba(15,23,42,0.95);
 }
 
-/* Buttons inside table */
+.table-view .table-row-cell:even {
+    -fx-background-color: rgba(30,64,175,0.25);
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: rgba(147,51,234,0.40);
+}
+
+/* Table cells */
+.table-view .table-cell {
+    -fx-text-fill: #f9fafb;
+    -fx-font-size: 13;
+    -fx-padding: 6 10;
+}
+
+/* =========================
+   SEARCH FIELD (OPTIONAL)
+   ========================= */
+.gh-search-field {
+    -fx-background-radius: 14;
+    -fx-padding: 6 12;
+    -fx-background-color: rgba(17,24,39,0.9);
+    -fx-text-fill: #e5e7eb;
+    -fx-prompt-text-fill: #6b7280;
+    -fx-border-color: rgba(251,191,36,0.7);
+    -fx-border-radius: 14;
+    -fx-border-width: 1;
+}
+
+/* =========================
+   ACTION BUTTONS INSIDE TABLE
+   (Edit / Delete)
+   ========================= */
 .edit-btn {
-    -fx-background-color: #4CAF50;
-    -fx-text-fill: white;
-    -fx-background-radius: 6;
-    -fx-padding: 3 8;
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(59, 130, 246, 0.7);
+    -fx-border-width: 1.2;
+    -fx-text-fill: #bfdbfe;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-padding: 4 8;
+    -fx-cursor: hand;
+}
+
+.edit-btn:hover {
+    -fx-background-color: rgba(37, 99, 235, 0.3);
 }
 
 .delete-btn {
-    -fx-background-color: #e53935;
-    -fx-text-fill: white;
-    -fx-background-radius: 6;
-    -fx-padding: 3 8;
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(248, 113, 113, 0.7);
+    -fx-border-width: 1.2;
+    -fx-text-fill: #fecaca;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-padding: 4 8;
+    -fx-cursor: hand;
+}
+
+.delete-btn:hover {
+    -fx-background-color: rgba(239, 68, 68, 0.35);
 }
