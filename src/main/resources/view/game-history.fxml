@@ -109,11 +109,21 @@
                   styleClass="gh-table-wrapper"
                   VBox.vgrow="ALWAYS">
 
-                <!-- TABLE TITLE -->
+                <!-- TABLE TITLE + SEARCH -->
                 <HBox alignment="CENTER_LEFT" spacing="6">
                     <Label text="All Games" styleClass="gh-table-title"/>
                     <Label text="👑" styleClass="gh-table-title-icon"/>
+
+                    <!-- SPACER -->
+                    <Pane HBox.hgrow="ALWAYS"/>
+
+                    <!-- SEARCH FIELD -->
+                    <TextField fx:id="searchField"
+                               promptText="Search by player, difficulty, result..."
+                               prefWidth="260"
+                               styleClass="gh-search-field"/>
                 </HBox>
+
 
                 <!-- TABLE -->
                 <TableView fx:id="historyTable"
