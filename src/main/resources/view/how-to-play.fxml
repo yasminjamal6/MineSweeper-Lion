@@ -52,7 +52,7 @@
                                    styleClass="how-section-title"/>
                             <Label wrapText="true"
                                    styleClass="how-box-text"
-                                   text="Clear all safe tiles without hitting hidden bombs! Two players share 10 hearts – stay sharp and protect your lives together."/>
+                                   text="Clear all safe tiles without hitting hidden bombs! Two players share hearts – stay sharp and protect your lives together."/>
                         </VBox>
 
                         <!-- Game Elements title -->
@@ -106,7 +106,7 @@ The impact changes by difficulty level.
                                 <Label text="1. Each player has their own board and plays on their turn."/>
                                 <Label text="2. Left click = reveal a tile."/>
                                 <Label text="3. Right click = place or remove a flag on a suspected bomb."/>
-                                <Label text="4. Try to keep the shared 10 hearts alive as long as possible."/>
+                                <Label text="4. Try to keep the shared hearts alive as long as possible."/>
                                 <Label text="5. The winner is the player who correctly marks all bombs first."/>
                             </VBox>
                         </VBox>
