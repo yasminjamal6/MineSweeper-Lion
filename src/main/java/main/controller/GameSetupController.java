@@ -112,6 +112,17 @@ public class GameSetupController {
             showAlert("Player names must be different.");
             return;
         }
+        // Letters/numbers only
+        if (!a.matches("[A-Za-z0-9א-ת ]+") || !b.matches("[A-Za-z0-9א-ת ]+")) {
+            showAlert("Names must contain only letters and numbers.");
+            return;
+        }
+
+        //   Length validation
+        if (a.length() < 2 || a.length() > 12 || b.length() < 2 || b.length() > 12) {
+            showAlert("Names must be 2 to 12 characters long.");
+            return;
+        }
 
         Difficulty diff = Difficulty.EASY;
         if (mediumBtn.isSelected()) diff = Difficulty.MEDIUM;
