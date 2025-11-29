@@ -17,7 +17,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import model.GameHistory;
 import model.GameHistoryManager;
 import model.Difficulty;
@@ -28,11 +27,13 @@ import javafx.util.Duration;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 
-
+/**
+ * Controller for the Game History view. Manages loading, displaying, filtering,
+ * and summarizing game history records from the GameHistoryManager.
+ */
 public class GameHistoryController {
 
     @FXML private TableView<GameHistory> historyTable;
-
     @FXML private TableColumn<GameHistory, String> startedAtCol;
     @FXML private TableColumn<GameHistory, String> playerACol;
     @FXML private TableColumn<GameHistory, String> playerBCol;
@@ -40,7 +41,7 @@ public class GameHistoryController {
     @FXML private TableColumn<GameHistory, Number> scoreCol;
     @FXML private TableColumn<GameHistory, Number> livesCol;
     @FXML private TableColumn<GameHistory, String> resultCol;
-    @FXML private TableColumn<GameHistory, Number> durationCol;
+    @FXML private TableColumn<GameHistory, Number> durationCol;  //not yet implemented in this iteration
     @FXML private TextField searchField;
 
     private ObservableList<GameHistory> masterData;
@@ -56,9 +57,17 @@ public class GameHistoryController {
     @FXML private HBox statsRow;
     @FXML private VBox tableCard;
 
+
+
     private final DateTimeFormatter formatter =
             DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
+
+
+    /**
+     * Initializes the controller: loads game history, calculates stats,
+     * sets up table columns, implements search functionality, and plays entrance animations.
+     */
     @FXML
     private void initialize() {
         List<GameHistory> history = GameHistoryManager.getHistory();
@@ -125,7 +134,7 @@ public class GameHistoryController {
             }
         });
 
-        // Styled Result column with emoji
+        // Custom cell factory for styled result display (emoji + color)
         resultCol.setCellFactory(column -> new TableCell<GameHistory, String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -158,10 +167,10 @@ public class GameHistoryController {
         if (searchField != null) {
             searchField.textProperty().addListener((obs, oldValue, newValue) -> {
                 String filter = (newValue == null) ? "" : newValue.toLowerCase().trim();
-
+                // Predicate defines the criteria for which elements are visible
                 filteredData.setPredicate(g -> {
                     if (filter.isEmpty()) {
-                        return true; // No filtering
+                        return true; // Show all
                     }
 
                     // Prepare all values as strings
@@ -182,8 +191,9 @@ public class GameHistoryController {
             });
         }
 
-        // 3) SortedList – supports table column sorting
+        // 3) SortedList: Wraps filtered data and enables column sorting
         SortedList<GameHistory> sortedData = new SortedList<>(filteredData);
+        // Bind the table's sorting property to the sorted list
         sortedData.comparatorProperty().bind(historyTable.comparatorProperty());
 
         historyTable.setItems(sortedData);
@@ -192,13 +202,15 @@ public class GameHistoryController {
         playEntranceAnimations();
     }
 
+        // --- UI/Animation Logic ---
 
-
+    /**
+     * Plays the coordinated entrance animations (Fade and Slide) for the main UI components.
+     */
     private void playEntranceAnimations() {
         if (headerRow == null || statsRow == null || tableCard == null) return;
 
-        // start invisible & slightly moved
-        headerRow.setOpacity(0);
+       //Set initial state (invisible and offset)        headerRow.setOpacity(0);
         statsRow.setOpacity(0);
         tableCard.setOpacity(0);
 
@@ -240,6 +252,7 @@ public class GameHistoryController {
         tableMove.setInterpolator(Interpolator.EASE_OUT);
         tableMove.setDelay(Duration.millis(300));
 
+        // Group all transitions to play simultaneously
         ParallelTransition all = new ParallelTransition(
                 headerFade, headerMove,
                 statsFade, statsMove,
@@ -249,6 +262,12 @@ public class GameHistoryController {
         all.play();
     }
 
+
+    // --- Navigation Handlers ---
+
+    /**
+     * Loads the Home View, navigating away from the history screen.
+     */
     @FXML
     private void onBackToHome(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(
@@ -258,6 +277,9 @@ public class GameHistoryController {
         scene.setRoot(root);
     }
 
+    /**
+     * Loads the Game Setup View to start a new game.
+     */
     @FXML
     private void onNewGame(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(
