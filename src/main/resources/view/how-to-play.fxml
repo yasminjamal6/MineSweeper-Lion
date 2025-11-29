@@ -9,7 +9,8 @@
             fx:controller="main.controller.HowToPlayController"
             prefWidth="900" prefHeight="650"
             stylesheets="@../css/home.css"
-            styleClass="how-root">
+            styleClass="how-root"
+            fx:id="rootPane">
 
     <children>
 
@@ -23,11 +24,14 @@
             <!-- Header -->
             <HBox alignment="CENTER_LEFT" spacing="10.0" fx:id="headerRow">
                 <Label text="🦁" style="-fx-font-size: 26;"/>
-                <Label text="How to Play?" styleClass="how-header-title"/>
+                <Label fx:id="titleLabel"
+                       text="How to Play?"
+                       styleClass="how-header-title"/>
 
                 <Region HBox.hgrow="ALWAYS"/>
 
-                <Button text="✕"
+                <Button fx:id="closeButton"
+                        text="✕"
                         styleClass="how-close-btn"
                         onAction="#onCloseHowToPlay"/>
             </HBox>
@@ -48,78 +52,99 @@
 
                         <!-- Objective -->
                         <VBox spacing="10.0" styleClass="objective-box">
-                            <Label text="🎯  Objective"
+                            <Label fx:id="objectiveTitleLabel"
+                                   text="🎯  Objective"
                                    styleClass="how-section-title"/>
-                            <Label wrapText="true"
+                            <Label fx:id="objectiveTextLabel"
+                                   wrapText="true"
                                    styleClass="how-box-text"
                                    text="Clear all safe tiles without hitting hidden bombs! Two players share hearts – stay sharp and protect your lives together."/>
                         </VBox>
 
                         <!-- Game Elements title -->
                         <VBox spacing="8.0">
-                            <Label text="📦  Game Elements:"
+                            <Label fx:id="elementsTitleLabel"
+                                   text="📦  Game Elements:"
                                    styleClass="how-section-title"/>
                         </VBox>
 
                         <!-- Bombs -->
                         <VBox spacing="8.0" styleClass="bomb-box">
-                            <Label text="💣 Bombs" styleClass="how-box-title"/>
-                            <Label wrapText="true"
+                            <Label fx:id="bombsTitleLabel"
+                                   text="💣 Bombs"
+                                   styleClass="how-box-title"/>
+                            <Label fx:id="bombsTextLabel"
+                                   wrapText="true"
                                    styleClass="how-box-text"
-                                   text="Avoid bombs — revealing one loses hearts.
-Flagging a real bomb gives points.
-"/>
+                                   text="Avoid bombs — revealing one loses hearts. Flagging a real bomb gives points."/>
                         </VBox>
 
                         <!-- Trivia questions -->
                         <VBox spacing="8.0" styleClass="trivia-box">
-                            <Label text="❓ Trivia Questions" styleClass="how-box-title"/>
-                            <Label wrapText="true"
+                            <Label fx:id="triviaTitleLabel"
+                                   text="❓ Trivia Questions"
+                                   styleClass="how-box-title"/>
+                            <Label fx:id="triviaTextLabel"
+                                   wrapText="true"
                                    styleClass="how-box-text"
-                                   text="Trivia questions give rewards for correct answers and penalties for wrong ones.
-The impact changes by difficulty level.
-"/>
+                                   text="Trivia questions give rewards for correct answers and penalties for wrong ones. The impact changes by difficulty level."/>
                         </VBox>
 
                         <!-- Surprises -->
                         <VBox spacing="8.0" styleClass="surprise-box">
-                            <Label text="🎁 Surprises" styleClass="how-box-title"/>
-                            <Label wrapText="true"
+                            <Label fx:id="surprisesTitleLabel"
+                                   text="🎁 Surprises"
+                                   styleClass="how-box-title"/>
+                            <Label fx:id="surprisesTextLabel"
+                                   wrapText="true"
                                    styleClass="how-box-text"
-                                   text="Surprise tiles give a random good or bad effect.They can add or remove hearts or points.Each surprise can be used once, and the effect depends on the game difficulty.
-"/>
+                                   text="Surprise tiles give a random good or bad effect. They can add or remove hearts or points. Each surprise can be used once, and the effect depends on the game difficulty."/>
                         </VBox>
 
                         <!-- Numbers -->
                         <VBox spacing="8.0" styleClass="numbers-box">
-                            <Label text="🔢 Numbers" styleClass="how-box-title"/>
-                            <Label wrapText="true"
+                            <Label fx:id="numbersTitleLabel"
+                                   text="🔢 Numbers"
+                                   styleClass="how-box-title"/>
+                            <Label fx:id="numbersTextLabel"
+                                   wrapText="true"
                                    styleClass="how-box-text"
                                    text="Numbers show how many bombs are around the tile. Use them to plan your moves."/>
                         </VBox>
 
                         <!-- How to play steps -->
                         <VBox spacing="10.0" styleClass="how-howplay-box">
-                            <Label text="⚡ How to Play"
+                            <Label fx:id="howPlayTitleLabel"
+                                   text="⚡ How to Play"
                                    styleClass="how-section-title"/>
                             <VBox spacing="4.0" styleClass="how-list">
-                                <Label text="1. Each player has their own board and plays on their turn."/>
-                                <Label text="2. Left click = reveal a tile."/>
-                                <Label text="3. Right click = place or remove a flag on a suspected bomb."/>
-                                <Label text="4. Try to keep the shared hearts alive as long as possible."/>
-                                <Label text="5. The winner is the player who correctly marks all bombs first."/>
+                                <Label fx:id="step1Label"
+                                       text="1. Each player has their own board and plays on their turn."/>
+                                <Label fx:id="step2Label"
+                                       text="2. Left click = reveal a tile."/>
+                                <Label fx:id="step3Label"
+                                       text="3. Right click = place or remove a flag on a suspected bomb."/>
+                                <Label fx:id="step4Label"
+                                       text="4. Try to keep the shared hearts alive as long as possible."/>
+                                <Label fx:id="step5Label"
+                                       text="5. The winner is the player who correctly marks all bombs first."/>
                             </VBox>
                         </VBox>
 
                         <!-- Tips -->
                         <VBox spacing="10.0" styleClass="how-tips-box">
-                            <Label text="🏁 Tips to Win"
+                            <Label fx:id="tipsTitleLabel"
+                                   text="🏁 Tips to Win"
                                    styleClass="how-section-title"/>
                             <VBox spacing="4.0" styleClass="how-list">
-                                <Label text="• Use the numbers to deduce where bombs are hidden."/>
-                                <Label text="• Think before you click — one mistake can cost a heart."/>
-                                <Label text="• Prepare for trivia questions to gain extra points."/>
-                                <Label text="• Surprises can turn the game around, so be ready!"/>
+                                <Label fx:id="tip1Label"
+                                       text="• Use the numbers to deduce where bombs are hidden."/>
+                                <Label fx:id="tip2Label"
+                                       text="• Think before you click — one mistake can cost a heart."/>
+                                <Label fx:id="tip3Label"
+                                       text="• Prepare for trivia questions to gain extra points."/>
+                                <Label fx:id="tip4Label"
+                                       text="• Surprises can turn the game around, so be ready!"/>
                             </VBox>
                         </VBox>
 
@@ -128,7 +153,8 @@ The impact changes by difficulty level.
                             <padding>
                                 <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
                             </padding>
-                            <Button text="Got it, let's start! 🦁"
+                            <Button fx:id="startButton"
+                                    text="Got it, let's start! 🦁"
                                     styleClass="how-start-btn"
                                     onAction="#onStartGame"/>
                         </HBox>

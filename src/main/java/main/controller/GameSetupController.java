@@ -48,7 +48,8 @@ public class GameSetupController {
      */
     @FXML
     private void initialize() {
-        // Sets 'Easy' as the default selection when the view loads.
+        SettingsController.applyThemeToRoot(root);
+
         easyBtn.setSelected(true);
 
         System.out.println("Root = " + root);
@@ -61,6 +62,7 @@ public class GameSetupController {
         rebuildPicker(themePickerA, selectedThemeA, true);
         rebuildPicker(themePickerB, selectedThemeB, false);
     }
+
 
 
     /**
