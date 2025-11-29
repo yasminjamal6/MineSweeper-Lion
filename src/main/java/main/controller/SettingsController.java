@@ -27,10 +27,10 @@ public class SettingsController {
     private ToggleButton fullscreenToggle;
 
     @FXML
-    private ToggleButton themeToggle;        // LIGHT / DARK
+    private ToggleButton themeToggle;
 
     @FXML
-    private ToggleButton languageToggle;     // עברית / English
+    private ToggleButton languageToggle;
 
     @FXML
     private Slider volumeSlider;
@@ -39,22 +39,15 @@ public class SettingsController {
     private Slider brightnessSlider;
 
     @FXML
-    private Parent settingsRoot;             // BorderPane עם fx:id="settingsRoot"
+    private Parent settingsRoot;
 
     private static Clip bgClip = null;
     private static boolean soundOn = false;
     private static double volume = 0.7;
-
-    // false = LIGHT, true = DARK
-    private static boolean darkMode = true;
-
-    // false = English, true = Hebrew
+    private static boolean darkMode = false;
     private static boolean hebrew = false;
-
-    // בהירות בין -0.5 ל-0.5 (0 = רגיל)
     private static double brightnessLevel = 0.0;
 
-    /* ---------- פונקציות סטטיות ---------- */
 
     public static boolean isDarkMode() {
         return darkMode;

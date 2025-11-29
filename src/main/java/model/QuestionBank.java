@@ -25,9 +25,7 @@ import java.util.*;
  */
 public class QuestionBank {
 
-    // Source CSV file (read-only, located under resources)
     private static final String RESOURCE_CSV = "/Questions.csv";
-// The “live” CSV file we read from and save to during the game
     private static final String DATA_CSV_PATH = "data/Questions.csv";
 
     private final Map<QuestionLevel, List<Question>> questionsByLevel =
@@ -41,13 +39,9 @@ public class QuestionBank {
             questionsByLevel.put(level, new ArrayList<>());
         }
 
-        ensureDataCsvExists();   // אם אין data/Questions.csv – מעתיק מ-/Questions.csv
-        loadFromDataCsv();       // טוען את כל השאלות מהקובץ החי
+        ensureDataCsvExists();
+        loadFromDataCsv();
     }
-
-    /* ============================
-       === PUBLIC – ADD/REMOVE/UPDATE (שומרות ל-CSV) ===
-       ============================ */
 
     public void addQuestion(Question question) {
         if (question == null || question.getLevel() == null) return;
@@ -85,8 +79,6 @@ public class QuestionBank {
         if (oldQ == null || newQ == null || newQ.getLevel() == null) return;
 
         QuestionLevel newLevel = newQ.getLevel();
-
-        // מחפשים את השאלה הישנה לפי רפרנס כמו שהוא מגיע מהטבלה
         QuestionLevel foundLevel = null;
         int foundIndex = -1;
 
@@ -105,7 +97,6 @@ public class QuestionBank {
         }
 
         if (foundIndex == -1) {
-            // לא מצאנו – מוסיפים חדשה
             questionsByLevel.get(newLevel).add(newQ);
         } else {
             if (foundLevel == newLevel) {
@@ -119,9 +110,6 @@ public class QuestionBank {
         saveToDataCsv();
     }
 
-    /* ============================
-       ===      GETTERS          ===
-       ============================ */
 
     public Question getRandomQuestion(QuestionLevel level) {
         List<Question> list = questionsByLevel.get(level);
@@ -151,15 +139,11 @@ public class QuestionBank {
         return total;
     }
 
-    /* ============================
-       ===  יצירת data/Questions.csv  ===
-       ============================ */
-
     private void ensureDataCsvExists() {
         try {
             Path dataPath = Paths.get(DATA_CSV_PATH);
             if (Files.exists(dataPath)) {
-                return; // כבר יש קובץ נתונים
+                return;
             }
 
             if (dataPath.getParent() != null) {
