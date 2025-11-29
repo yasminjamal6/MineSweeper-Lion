@@ -25,9 +25,9 @@ import java.util.*;
  */
 public class QuestionBank {
 
-    // קובץ המקור בקריאה בלבד מתוך resources
+    // Source CSV file (read-only, located under resources)
     private static final String RESOURCE_CSV = "/Questions.csv";
-    // הקובץ "החי" שבו שומרים וממנו טוענים
+// The “live” CSV file we read from and save to during the game
     private static final String DATA_CSV_PATH = "data/Questions.csv";
 
     private final Map<QuestionLevel, List<Question>> questionsByLevel =

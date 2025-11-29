@@ -774,7 +774,7 @@
     -fx-text-fill: #ffe9cf;
 }
 
-/* ========= חלון ההגדרות – DARK ========= */
+/* =========   DARK ========= */
 
 .settings-root.dark-mode {
     -fx-background-color: linear-gradient(
@@ -799,7 +799,6 @@
     -fx-text-fill: #ffedd5;
 }
 
-/* טוגלים בחלון ההגדרות */
 .settings-root.dark-mode .toggle-setting {
     -fx-background-color: linear-gradient(
             from 0% 0% to 100% 100%,
@@ -819,7 +818,7 @@
     );
 }
 
-/* כפתור Close */
+/*  Close */
 .settings-root.dark-mode .close-settings-btn {
     -fx-background-color: linear-gradient(
             from 0% 0% to 100% 100%,

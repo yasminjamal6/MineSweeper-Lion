@@ -4,13 +4,11 @@
     -fx-font-family: "Segoe UI", "Arial";
 }
 
-/* النص */
 .lion-alert .label {
     -fx-text-fill: #fef3c7;
     -fx-font-size: 14px;
 }
 
-/* الزر OK */
 .lion-alert .button {
     -fx-background-color: linear-gradient(to right, #fbbf24, #f59e0b);
     -fx-text-fill: #1f2937;
