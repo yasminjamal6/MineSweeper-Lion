@@ -12,40 +12,46 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 import model.Difficulty;
-import model.QuestionBank;
-import model.QuestionLevel;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import model.ScoreRules;
 import model.SurpriseType;
-
 import javafx.scene.layout.HBox;
 
 
+
+/**
+ * Main controller for the game view. Handles UI initialization, game flow logic,
+ * cell interactions, and transitions.
+ */
 public class GameController {
 
     @FXML private Label livesLabel;
     @FXML private Label scoreLabel;
-
     @FXML private Label playerANameLabel;
     @FXML private Label playerBNameLabel;
     @FXML private Label playerAMinesLabel;
     @FXML private Label playerBMinesLabel;
-
     @FXML private GridPane boardAGrid;
     @FXML private GridPane boardBGrid;
-
     @FXML private HBox heartsBox;
 
+
+    // Game State Variables
     private int lives = 10;
     private int score = 0;
     private boolean isPlayerATurn = true;
-    private final QuestionBank questionBank = new QuestionBank();
 
 
+
+
+    /**
+     * Initializes the controller after its root element has been completely processed by the FXMLLoader.
+     * Sets player names, initial lives, and builds the two game boards.
+     */
     @FXML
     private void initialize() {
+        // Set player names and mines based on setup
         playerANameLabel.setText(GameSetupController.selectedPlayerAName);
         playerBNameLabel.setText(GameSetupController.selectedPlayerBName);
 
@@ -53,36 +59,43 @@ public class GameController {
         playerAMinesLabel.setText(String.valueOf(mines));
         playerBMinesLabel.setText(String.valueOf(mines));
 
+        // Initialize game state based on difficulty model
         model.Difficulty diff = DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
 
         lives = diff.getInitialLives();
         score = 0;
 
+        // Build UI elements
         buildHearts(diff);
-
         updateLivesUI(diff);
 
+        // Calculate board parameters
         int size = getBoardSize(GameSetupController.selectedDifficulty);
         int cellSize = getCellSize(GameSetupController.selectedDifficulty);
 
-        // בניית לוחות
-        buildBoardGrid(boardAGrid, size, cellSize, true);   // לוח A – זהוב
-        buildBoardGrid(boardBGrid, size, cellSize, false);  // לוח B – כתום/אדום
+        // Building the game boards
+        buildBoardGrid(boardAGrid, size, cellSize, true);
+        buildBoardGrid(boardBGrid, size, cellSize, false);
         updateBoardHighlight();
         buildBoardGrid(boardAGrid, size, cellSize, true);
         buildBoardGrid(boardBGrid, size, cellSize, false);
     }
 
+
+    /**
+     * Updates the visual style of the boards (active/inactive) based on the current player's turn.
+     */
     private void updateBoardHighlight() {
         if (isPlayerATurn) {
-            //  A
+
+            // Highlight Player A's board
             boardAGrid.getStyleClass().add("active-board");
             boardAGrid.getStyleClass().remove("inactive-board");
 
             boardBGrid.getStyleClass().add("inactive-board");
             boardBGrid.getStyleClass().remove("active-board");
         } else {
-            //  B
+            // Highlight Player B's board
             boardBGrid.getStyleClass().add("active-board");
             boardBGrid.getStyleClass().remove("inactive-board");
 
@@ -97,6 +110,7 @@ public class GameController {
         System.out.println("Player clicked on: " + (isBoardA ? "A" : "B"));
         isPlayerATurn = !isPlayerATurn;
         updateBoardHighlight();
+        // TODO: Implement game logic (reveal cell, check mine, update score/lives)
     }
 
     private void toggleFlag(Button cell) {
@@ -144,14 +158,6 @@ public class GameController {
         }
     }
 
-    private void loseLife(model.Difficulty diff) {
-        if (lives > 0) {
-            lives--;
-            updateLivesUI(diff);
-        }
-    }
-
-
     private int getBoardSize(GameSetupController.Difficulty diff) {
         return switch (diff) {
             case EASY   -> 9;
@@ -160,12 +166,12 @@ public class GameController {
         };
     }
 
-    // גודל המשבצת – מותאם כך שכל הלוח יישב נוח במסך
+    // Defines the cell size to ensure the board layout scales properly to the screen
     private int getCellSize(GameSetupController.Difficulty diff) {
         return switch (diff) {
-            case EASY   -> 44;  // לוח קטן – משבצת גדולה
+            case EASY   -> 44;  // Small board – larger tiles
             case MEDIUM -> 36;
-            case HARD   -> 28;  // לוח גדול – משבצת קטנה כדי לא לגלוש
+            case HARD   -> 28;  // Large board – smaller tiles to fit on screen
         };
     }
 
@@ -177,16 +183,11 @@ public class GameController {
         };
     }
 
-    private QuestionLevel getLevelFromSetup() {
-        GameSetupController.Difficulty d = GameSetupController.selectedDifficulty;
 
-        return switch (d) {
-            case EASY -> QuestionLevel.EASY;
-            case MEDIUM -> QuestionLevel.MEDIUM;
-            case HARD -> QuestionLevel.HARD;
-        };
-    }
-
+    /**
+     * Handles random in-game surprise events based on difficulty level, updating score and lives.
+     * Note: The waiting button and its frontend functionality are not yet implemented in this iteration.
+     */
     private void triggerRandomSurprise() {
         Difficulty diff = DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
         boolean good = Math.random() < 0.5;
@@ -203,7 +204,6 @@ public class GameController {
         updateLivesUI(diff);
         showSurprisePopup(change);
     }
-
 
     private void showSurprisePopup(ScoreRules.ScoreChange change) {
         try {
@@ -231,7 +231,7 @@ public class GameController {
 
 
     /**
-     * בניית לוח בגודל קבוע שנראה טוב על המסך.
+     * Builds a fixed-size game board that looks visually balanced on the screen.
      */
     private void buildBoardGrid(GridPane grid, int size, int cellSize, boolean isBoardA) {
         grid.getChildren().clear();
@@ -256,7 +256,7 @@ public class GameController {
                     }
                 });
 
-                // גודל ריבוע קבוע לפי קושי – לא משתנה עם Resize
+                // Fixed cell size per difficulty, not affected by resizing
                 cell.setPrefSize(cellSize, cellSize);
                 cell.setMinSize(cellSize, cellSize);
                 cell.setMaxSize(cellSize, cellSize);
