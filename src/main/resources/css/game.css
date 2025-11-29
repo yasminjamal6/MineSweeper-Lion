@@ -212,3 +212,28 @@
     -fx-effect: none;
     -fx-border-color: transparent;
 }
+
+.hint-text {
+    -fx-text-fill: #FFD700;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.legend-text {
+    -fx-text-fill: #FFD700;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.legend-flag-icon {
+    -fx-text-fill: #FFD700;
+    -fx-font-size: 20px;
+}
+
+.paw-flag {
+    -fx-text-fill: #FFD700;
+    -fx-font-size: 20px;
+}
+
+
+
