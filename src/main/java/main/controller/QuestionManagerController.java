@@ -13,6 +13,14 @@ import model.QuestionBank;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Node;
+import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.ParallelTransition;
+import javafx.animation.TranslateTransition;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
+
 
 public class QuestionManagerController {
 
@@ -22,6 +30,9 @@ public class QuestionManagerController {
     @FXML private TableColumn<Question, QuestionLevel> colDifficulty;
     @FXML private TableColumn<Question, String> colAnswers;
     @FXML private TableColumn<Question, Void> colActions;
+    @FXML private HBox headerRow;     // top header row
+    @FXML private StackPane tableCard; // wrapper around the table card
+
 
     private final QuestionBank questionBank = new QuestionBank();
 
@@ -48,6 +59,8 @@ public class QuestionManagerController {
         // Load all questions from CSV automatically
         questionTable.getItems().setAll(questionBank.getAllQuestions());
         System.out.println("✅ Loaded " + questionBank.getAllQuestions().size() + " questions from CSV.");
+        // Play entrance animations for header + table card
+        playEntranceAnimations();
     }
 
     /**
@@ -110,4 +123,49 @@ public class QuestionManagerController {
     private void onAddQuestion(ActionEvent e) {
         System.out.println(">> Add question clicked (to be implemented later)");
     }
+    /**
+     * Smooth entrance animations for the header and the table card.
+     */
+    private void playEntranceAnimations() {
+        if (headerRow == null || tableCard == null) {
+            return;
+        }
+
+        // Initial state: invisible and slightly shifted
+        headerRow.setOpacity(0);
+        tableCard.setOpacity(0);
+
+        headerRow.setTranslateY(-30);
+        tableCard.setTranslateY(40);
+
+        // Header: fade + move down
+        FadeTransition headerFade = new FadeTransition(Duration.millis(500), headerRow);
+        headerFade.setFromValue(0);
+        headerFade.setToValue(1);
+
+        TranslateTransition headerMove = new TranslateTransition(Duration.millis(500), headerRow);
+        headerMove.setFromY(-30);
+        headerMove.setToY(0);
+        headerMove.setInterpolator(Interpolator.EASE_OUT);
+
+        // Table card: fade + move up (with slight delay)
+        FadeTransition tableFade = new FadeTransition(Duration.millis(600), tableCard);
+        tableFade.setFromValue(0);
+        tableFade.setToValue(1);
+        tableFade.setDelay(Duration.millis(200));
+
+        TranslateTransition tableMove = new TranslateTransition(Duration.millis(600), tableCard);
+        tableMove.setFromY(40);
+        tableMove.setToY(0);
+        tableMove.setInterpolator(Interpolator.EASE_OUT);
+        tableMove.setDelay(Duration.millis(200));
+
+        ParallelTransition all = new ParallelTransition(
+                headerFade, headerMove,
+                tableFade, tableMove
+        );
+
+        all.play();
+    }
+
 }
