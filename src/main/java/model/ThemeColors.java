@@ -12,19 +12,20 @@ public class ThemeColors {
                     "-fx-background-color: #fff7ed; -fx-border-color: #fed7aa;"
             ),
             new Theme(
-                    "prideRock",
-                    "Pride Rock",
-                    "-fx-background-color: linear-gradient(to bottom right, #78716c, #44403c);",
-                    "-fx-background-color: linear-gradient(to bottom right, #78716c, #44403c);",
-                    "-fx-background-color: #f5f5f4; -fx-border-color: #d6d3d1;"
+                    "lionKing",
+                    "Lion King",
+                    "-fx-background-color: linear-gradient(to bottom right, #fbbf24, #b45309, #78350f);",
+                    "-fx-background-color: linear-gradient(to bottom right, #fbbf24, #b45309, #78350f);",
+                    "-fx-background-color: #fef9c3; -fx-border-color: #fcd34d;"
             ),
             new Theme(
-                    "jungle",
-                    "Jungle",
-                    "-fx-background-color: linear-gradient(to bottom right, #22c55e, #065f46);",
-                    "-fx-background-color: linear-gradient(to bottom right, #22c55e, #065f46);",
-                    "-fx-background-color: #ecfdf5; -fx-border-color: #a7f3d0;"
+                    "royalTwilight",
+                    "Royal Twilight",
+                    "-fx-background-color: linear-gradient(to bottom right, #a855f7, #ec4899);",
+                    "-fx-background-color: linear-gradient(to bottom right, #a855f7, #ec4899);",
+                    "-fx-background-color: #fdf2f8; -fx-border-color: #fbcfe8;"
             ),
+
             new Theme(
                     "sunset",
                     "Sunset",

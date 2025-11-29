@@ -16,12 +16,10 @@ import model.QuestionBank;
 import model.QuestionLevel;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import model.ScoreRules;
 import model.SurpriseType;
-
 import javafx.scene.layout.HBox;
-
+import model.Theme;
 
 public class GameController {
 
@@ -42,12 +40,17 @@ public class GameController {
     private int score = 0;
     private boolean isPlayerATurn = true;
     private final QuestionBank questionBank = new QuestionBank();
+    private Theme playerATheme;
+    private Theme playerBTheme;
 
 
     @FXML
     private void initialize() {
         playerANameLabel.setText(GameSetupController.selectedPlayerAName);
         playerBNameLabel.setText(GameSetupController.selectedPlayerBName);
+
+        playerATheme = GameSetupController.selectedThemeA;
+        playerBTheme = GameSetupController.selectedThemeB;
 
         int mines = getMinesForDifficulty(GameSetupController.selectedDifficulty);
         playerAMinesLabel.setText(String.valueOf(mines));
@@ -59,18 +62,15 @@ public class GameController {
         score = 0;
 
         buildHearts(diff);
-
         updateLivesUI(diff);
 
         int size = getBoardSize(GameSetupController.selectedDifficulty);
         int cellSize = getCellSize(GameSetupController.selectedDifficulty);
 
-        // בניית לוחות
-        buildBoardGrid(boardAGrid, size, cellSize, true);   // לוח A – זהוב
-        buildBoardGrid(boardBGrid, size, cellSize, false);  // לוח B – כתום/אדום
+        buildBoardGrid(boardAGrid, size, cellSize, true);   // לוח A – לפי playerATheme
+        buildBoardGrid(boardBGrid, size, cellSize, false);  // לוח B – לפי playerBTheme
+
         updateBoardHighlight();
-        buildBoardGrid(boardAGrid, size, cellSize, true);
-        buildBoardGrid(boardBGrid, size, cellSize, false);
     }
 
     private void updateBoardHighlight() {
@@ -160,12 +160,11 @@ public class GameController {
         };
     }
 
-    // גודל המשבצת – מותאם כך שכל הלוח יישב נוח במסך
     private int getCellSize(GameSetupController.Difficulty diff) {
         return switch (diff) {
-            case EASY   -> 44;  // לוח קטן – משבצת גדולה
+            case EASY   -> 44;
             case MEDIUM -> 36;
-            case HARD   -> 28;  // לוח גדול – משבצת קטנה כדי לא לגלוש
+            case HARD   -> 28;
         };
     }
 
@@ -243,11 +242,15 @@ public class GameController {
                 Button cell = new Button();
                 cell.getStyleClass().add("cell-button");
 
-                if (isBoardA) {
-                    cell.getStyleClass().add("golden-cell");
-                } else {
-                    cell.getStyleClass().add("orange-cell");
+                Theme theme = isBoardA ? playerATheme : playerBTheme;
+
+                if (theme != null) {
+                    cell.setStyle(
+                            theme.cellStyle +
+                                    " -fx-background-radius: 8; -fx-border-radius: 8;"
+                    );
                 }
+
                 cell.setOnAction(e -> handleCellClick(cell, isBoardA));
 
                 cell.setOnMouseClicked(event -> {
@@ -256,7 +259,6 @@ public class GameController {
                     }
                 });
 
-                // גודל ריבוע קבוע לפי קושי – לא משתנה עם Resize
                 cell.setPrefSize(cellSize, cellSize);
                 cell.setMinSize(cellSize, cellSize);
                 cell.setMaxSize(cellSize, cellSize);

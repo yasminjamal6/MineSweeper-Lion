@@ -14,7 +14,6 @@
            fx:controller="main.controller.GameSetupController">
 
     <fx:define>
-        <!-- קבוצת טוגל משותפת לרמות קושי -->
         <ToggleGroup fx:id="difficultyGroup" />
     </fx:define>
 
@@ -39,13 +38,11 @@
 
 
 
-            <!-- כרטיס מרכזי -->
                 <VBox alignment="TOP_CENTER"
                       spacing="14"
                       styleClass="card-main">
 
 
-                <!-- שורת עליונה: כפתור Back בצד ימין -->
                         <HBox alignment="CENTER_RIGHT">
                             <Region HBox.hgrow="ALWAYS" />
                             <Button
@@ -55,7 +52,6 @@
                         </HBox>
 
 
-                        <!-- כותרת + תת כותרת -->
                         <VBox alignment="CENTER" spacing="6">
                             <Label styleClass="title-label" text="Prepare the Den" />
                             <Label styleClass="subtitle-label" text="Get your lions ready for the challenge!" />
@@ -70,16 +66,7 @@
                                 <TextField fx:id="playerAName" promptText="Enter name..." styleClass="name-field" />
 
                                 <Label styleClass="field-label" text="Board style" />
-                                <HBox alignment="CENTER_LEFT" spacing="8">
-                                    <Button fx:id="aGoldBtn"
-                                            styleClass="board-style-pill board-gold"
-                                            text="Royal Gold"
-                                            onAction="#onChooseGoldA"/>
-                                    <Button fx:id="aSavannaBtn"
-                                            styleClass="board-style-pill board-savanna"
-                                            text="Savanna Sunset"
-                                            onAction="#onChooseSavannaA"/>
-                                </HBox>
+                                <HBox fx:id="themePickerA" alignment="CENTER" spacing="10"/>
                             </VBox>
 
                             <!-- Player B -->
@@ -89,16 +76,7 @@
                                 <TextField fx:id="playerBName" promptText="Enter name..." styleClass="name-field" />
 
                                 <Label styleClass="field-label" text="Board style" />
-                                <HBox alignment="CENTER_LEFT" spacing="8">
-                                    <Button fx:id="bGoldBtn"
-                                            styleClass="board-style-pill board-gold"
-                                            text="Royal Gold"
-                                            onAction="#onChooseGoldB"/>
-                                    <Button fx:id="bSavannaBtn"
-                                            styleClass="board-style-pill board-savanna"
-                                            text="Savanna Sunset"
-                                            onAction="#onChooseSavannaB"/>
-                                </HBox>
+                                <HBox fx:id="themePickerB" alignment="CENTER" spacing="10"/>
                             </VBox>
                         </HBox>
 
