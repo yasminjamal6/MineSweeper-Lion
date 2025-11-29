@@ -115,10 +115,13 @@ public class GameSetupController {
             return;
         }
         // Letters/numbers only
-        if (!a.matches("[A-Za-z0-9א-ת ]+") || !b.matches("[A-Za-z0-9א-ת ]+")) {
+        if (!a.matches("[A-Za-z0-9א-ת\u0621-\u064A ]+") ||
+                !b.matches("[A-Za-z0-9א-ת\u0621-\u064A ]+")) {
+
             showAlert("Names must contain only letters and numbers.");
             return;
         }
+
 
         //   Length validation
         if (a.length() < 2 || a.length() > 12 || b.length() < 2 || b.length() > 12) {
