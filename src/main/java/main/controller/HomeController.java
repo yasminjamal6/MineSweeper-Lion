@@ -11,13 +11,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.scene.layout.StackPane;
-import javafx.fxml.FXML;
-
 
 public class HomeController {
 
@@ -26,12 +24,16 @@ public class HomeController {
     @FXML private HBox featuresRow;
     @FXML private VBox footerBox;
 
-    @FXML
-    private StackPane rootPane;   // אותו fx:id מה-FXML
+    @FXML private StackPane rootPane;   // root הראשי
 
     @FXML
     private void initialize() {
+        // DARK / LIGHT + Brightness
         SettingsController.applyThemeToRoot(rootPane);
+        // לעדכן טקסטים לפי השפה הנוכחית
+        SettingsController.refreshLanguageOnAllWindows();
+        // אנימציות
+        playEntranceAnimations();
     }
 
     private void playEntranceAnimations() {
@@ -50,7 +52,6 @@ public class HomeController {
         featuresRow.setTranslateY(40);
         footerBox.setTranslateY(50);
 
-        // 1) HERO
         FadeTransition heroFade = new FadeTransition(Duration.millis(550), heroSection);
         heroFade.setFromValue(0);
         heroFade.setToValue(1);
@@ -60,7 +61,6 @@ public class HomeController {
         heroMove.setToY(0);
         heroMove.setInterpolator(Interpolator.EASE_OUT);
 
-        // 2) BUTTONS
         FadeTransition buttonsFade = new FadeTransition(Duration.millis(580), buttonsSection);
         buttonsFade.setFromValue(0);
         buttonsFade.setToValue(1);
@@ -72,7 +72,6 @@ public class HomeController {
         buttonsMove.setInterpolator(Interpolator.EASE_OUT);
         buttonsMove.setDelay(Duration.millis(150));
 
-        // 3) FEATURES CARDS
         FadeTransition featuresFade = new FadeTransition(Duration.millis(610), featuresRow);
         featuresFade.setFromValue(0);
         featuresFade.setToValue(1);
@@ -84,7 +83,6 @@ public class HomeController {
         featuresMove.setInterpolator(Interpolator.EASE_OUT);
         featuresMove.setDelay(Duration.millis(280));
 
-        // 4) FOOTER
         FadeTransition footerFade = new FadeTransition(Duration.millis(640), footerBox);
         footerFade.setFromValue(0);
         footerFade.setToValue(1);
@@ -120,6 +118,9 @@ public class HomeController {
             newRoot.setOpacity(0);
             scene.setRoot(newRoot);
 
+            // ⭐ כאן – אחרי שה-root נכנס ל-Scene
+            SettingsController.applyThemeToRoot(newRoot);
+
             FadeTransition ft = new FadeTransition(Duration.millis(250), newRoot);
             ft.setFromValue(0);
             ft.setToValue(1);
@@ -130,18 +131,19 @@ public class HomeController {
         }
     }
 
+
     @FXML
     private void onHowToPlay(ActionEvent event) {
-        System.out.println(">> How to Play clicked");
-
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/view/how-to-play.fxml")
             );
             Parent newRoot = loader.load();
 
-            Scene scene = ((Node) event.getSource()).getScene();
+            SettingsController.applyThemeToRoot(newRoot);
+            SettingsController.refreshLanguageOnAllWindows();
 
+            Scene scene = ((Node) event.getSource()).getScene();
             newRoot.setOpacity(0);
             scene.setRoot(newRoot);
 
@@ -163,6 +165,9 @@ public class HomeController {
             );
             Parent popup = loader.load();
 
+            SettingsController.applyThemeToRoot(popup);
+            SettingsController.refreshLanguageOnAllWindows();
+
             Stage settingsStage = new Stage();
             settingsStage.setTitle("Settings");
             settingsStage.setScene(new Scene(popup));
@@ -172,8 +177,6 @@ public class HomeController {
 
             settingsStage.initModality(Modality.WINDOW_MODAL);
             settingsStage.setResizable(false);
-            settingsStage.setFullScreen(false);
-            settingsStage.sizeToScene();
             settingsStage.centerOnScreen();
 
             settingsStage.show();
@@ -190,6 +193,9 @@ public class HomeController {
                     new FXMLLoader(getClass().getResource("/view/game-history.fxml"));
             Parent root = loader.load();
 
+            SettingsController.applyThemeToRoot(root);
+            SettingsController.refreshLanguageOnAllWindows();
+
             Scene scene = ((Node) event.getSource()).getScene();
             scene.setRoot(root);
 
@@ -201,8 +207,14 @@ public class HomeController {
     @FXML
     private void onQuestionManager(ActionEvent e) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/question-manager-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/question-manager-view.fxml")
+            );
             Parent root = loader.load();
+
+            SettingsController.applyThemeToRoot(root);
+            SettingsController.refreshLanguageOnAllWindows();
+
             Scene scene = ((Node)e.getSource()).getScene();
             scene.setRoot(root);
         } catch (Exception ex) {
@@ -210,4 +222,3 @@ public class HomeController {
         }
     }
 }
-
