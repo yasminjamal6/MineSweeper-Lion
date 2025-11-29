@@ -146,8 +146,11 @@ public class GameSetupController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent newRoot = loader.load();
 
+            // Get current scene + stage
             Scene scene = ((Node) event.getSource()).getScene();
+            Stage stage = (Stage) scene.getWindow();
 
+            // Fade-in transition
             newRoot.setOpacity(0);
             scene.setRoot(newRoot);
 
@@ -155,6 +158,11 @@ public class GameSetupController {
             ft.setFromValue(0.0);
             ft.setToValue(1.0);
             ft.play();
+
+            //  Fix window size so it can't be smaller than the content
+            stage.sizeToScene();                    // fit window to newRoot size
+            stage.setMinWidth(stage.getWidth());    // don't allow smaller width
+            stage.setMinHeight(stage.getHeight());  // don't allow smaller height
 
         } catch (Exception e) {
             e.printStackTrace();
