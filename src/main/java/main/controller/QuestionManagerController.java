@@ -17,7 +17,6 @@ import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import javafx.collections.FXCollections;
@@ -31,9 +30,15 @@ import java.util.Optional;
 import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
 
-
-
-
+/**
+ * Controller for the Question Manager screen.
+ * <p>
+ * Responsible for displaying the question bank in a table,
+ * providing actions to add, edit, and delete questions, and
+ * orchestrating the animated entrance of the header and table card.
+ * It also manages the custom dialog used to create or edit questions.
+ * </p>
+ */
 
 public class QuestionManagerController {
 
@@ -51,7 +56,7 @@ public class QuestionManagerController {
 
     @FXML
     private void initialize() {
-        // Set up table columns (כבר יש אצלך)
+        // Set up table columns
         colQuestion.setCellValueFactory(new PropertyValueFactory<>("text"));
         colDifficulty.setCellValueFactory(new PropertyValueFactory<>("level"));
 
@@ -69,7 +74,6 @@ public class QuestionManagerController {
 
         addActionButtons();
 
-        // 🔹 טעינה מה־CSV לרשימה
         questionTable.setItems(FXCollections.observableArrayList(questionBank.getAllQuestions()));
         System.out.println("✅ Loaded " + questionBank.getAllQuestions().size() + " questions from CSV.");
 
@@ -93,10 +97,7 @@ public class QuestionManagerController {
                             Question oldQ = getTableView().getItems().get(getIndex());
                             Question updatedQ = openQuestionDialog(oldQ);
                             if (updatedQ != null) {
-                                // עדכון בבנק (כולל CSV)
                                 questionBank.updateQuestion(oldQ, updatedQ);
-
-                                // עדכון בטבלה
                                 getTableView().getItems().set(getIndex(), updatedQ);
                                 getTableView().refresh();
 
@@ -115,10 +116,7 @@ public class QuestionManagerController {
 
                             Optional<ButtonType> res = confirm.showAndWait();
                             if (res.isPresent() && res.get() == ButtonType.YES) {
-                                // מחיקה ממודל השאלות + CSV
                                 questionBank.removeQuestion(q);
-
-                                // מחיקה מהטבלה
                                 getTableView().getItems().remove(q);
                                 getTableView().refresh();
 
@@ -162,10 +160,7 @@ public class QuestionManagerController {
     private void onAddQuestion(ActionEvent e) {
         Question newQ = openQuestionDialog(null);
         if (newQ != null) {
-            // מוסיפים לבנק השאלות (וזה שומר ל־CSV)
             questionBank.addQuestion(newQ);
-
-            // מוסיפים גם לטבלה
             questionTable.getItems().add(newQ);
             questionTable.refresh();
 
@@ -220,23 +215,14 @@ public class QuestionManagerController {
     private Question openQuestionDialog(Question original) {
         Dialog<Question> dialog = new Dialog<>();
         dialog.setTitle(original == null ? "Add Question" : "Edit Question");
-        dialog.setHeaderText(null); // נשתמש ב-header שלנו מה-UI
-
+        dialog.setHeaderText(null);
         DialogPane dialogPane = dialog.getDialogPane();
-
-        // נטען את ה-CSS של העמוד שאליו כבר מחובר
         dialogPane.getStylesheets().add(
                 getClass().getResource("/css/question-manager.css").toExternalForm()
         );
-        // נוסיף סטייל לדיאלוג עצמו (רקע גרדיאנט, עיגול קצוות וכו')
         dialogPane.getStyleClass().add("qd-dialog-pane");
-
         ButtonType okButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
         dialogPane.getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
-
-        // ===== בניית ה-UI של החלון =====
-
-        // Header למעלה
         HBox header = new HBox(10);
         header.getStyleClass().add("qd-header");
 
@@ -255,7 +241,6 @@ public class QuestionManagerController {
 
         header.getChildren().addAll(iconWrapper, headerTexts);
 
-        // טופס השדות (GridPane)
         GridPane grid = new GridPane();
         grid.getStyleClass().add("qd-form-grid");
         grid.setPadding(new Insets(10, 0, 0, 0));
@@ -281,7 +266,6 @@ public class QuestionManagerController {
         cbLevel.getItems().addAll(QuestionLevel.values());
         cbLevel.getStyleClass().add("qd-choicebox");
 
-        // לייבלים
         Label lblQ = new Label("Question:");
         Label lblA = new Label("Answer A:");
         Label lblB = new Label("Answer B:");
@@ -298,7 +282,6 @@ public class QuestionManagerController {
         lblCorrect.getStyleClass().add("qd-label");
         lblLevel.getStyleClass().add("qd-label");
 
-        // הוספה לגריד
         int row = 0;
         grid.add(lblQ, 0, row);
         grid.add(txtQuestion, 1, row++, 2, 1);
@@ -321,19 +304,16 @@ public class QuestionManagerController {
         grid.add(lblLevel, 0, row);
         grid.add(cbLevel, 1, row);
 
-        // כרטיס פנימי
         VBox card = new VBox(14);
         card.getStyleClass().add("qd-card");
         card.getChildren().addAll(grid);
 
-        // root של הדיאלוג
         VBox root = new VBox(16);
         root.getStyleClass().add("qd-root");
         root.getChildren().addAll(header, card);
 
         dialogPane.setContent(root);
 
-        // ===== ערכי ברירת מחדל (אם זה עריכה) =====
         if (original != null) {
             txtQuestion.setText(original.getText());
             String[] opts = original.getOptions();
@@ -348,12 +328,9 @@ public class QuestionManagerController {
             cbLevel.setValue(QuestionLevel.EASY);
         }
 
-        // ===== סטייל לכפתורים (Save / Cancel) =====
-        // חייב לקרוא אחרי setContent ואחרי הוספת הכפתורים
         dialogPane.lookupButton(okButtonType).getStyleClass().add("gh-btn-primary");
         dialogPane.lookupButton(ButtonType.CANCEL).getStyleClass().add("gh-btn-secondary");
 
-        // ===== המרה של תוצאת הדיאלוג לאובייקט Question =====
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == okButtonType) {
                 if (txtQuestion.getText().isBlank() ||

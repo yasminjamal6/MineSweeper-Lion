@@ -17,43 +17,40 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
-
+/**
+ * Controller for the "How to Play" screen.
+ * <p>
+ * Applies the current theme and language, plays entrance animations,
+ * and handles navigation either back to the home screen or to the
+ * game setup screen.
+ * </p>
+ */
 public class HowToPlayController {
 
     @FXML private AnchorPane rootPane;
     @FXML private HBox headerRow;
     @FXML private ScrollPane contentCard;
     @FXML private HBox actionsRow;
-
     @FXML private Label titleLabel;
     @FXML private Button closeButton;
     @FXML private Button startButton;
-
-    // כל הטקסטים בפנים
     @FXML private Label objectiveTitleLabel;
     @FXML private Label objectiveTextLabel;
-
     @FXML private Label elementsTitleLabel;
-
     @FXML private Label bombsTitleLabel;
     @FXML private Label bombsTextLabel;
-
     @FXML private Label triviaTitleLabel;
     @FXML private Label triviaTextLabel;
-
     @FXML private Label surprisesTitleLabel;
     @FXML private Label surprisesTextLabel;
-
     @FXML private Label numbersTitleLabel;
     @FXML private Label numbersTextLabel;
-
     @FXML private Label howPlayTitleLabel;
     @FXML private Label step1Label;
     @FXML private Label step2Label;
     @FXML private Label step3Label;
     @FXML private Label step4Label;
     @FXML private Label step5Label;
-
     @FXML private Label tipsTitleLabel;
     @FXML private Label tip1Label;
     @FXML private Label tip2Label;
@@ -67,16 +64,18 @@ public class HowToPlayController {
         playEntranceAnimations();
     }
 
+    /**
+     * Applies the current language (Hebrew or English) to all labels and buttons,
+     * and adjusts node orientation for RTL/LTR layouts.
+     */
     private void applyLanguage() {
         boolean heb = SettingsController.isHebrew();
 
         if (heb) {
-            // כותרת + כפתורים
             if (titleLabel != null) titleLabel.setText("איך משחקים?");
             if (closeButton != null) closeButton.setText("סגור");
             if (startButton != null) startButton.setText("התחלת המשחק 🦁");
 
-            // טקסטים בעברית
             if (objectiveTitleLabel != null) objectiveTitleLabel.setText("🎯 מטרה");
             if (objectiveTextLabel != null)
                 objectiveTextLabel.setText("לנקות את כל המשבצות הבטוחות בלי לפגוע במוקשים! לשני השחקנים יש לבבות משותפים – שימו לב ושמרו על החיים שלכם.");
@@ -123,7 +122,6 @@ public class HowToPlayController {
             }
 
         } else {
-            // אנגלית – נשארים עם הטקסטים מה-FXML, רק כיוון
             if (titleLabel != null) titleLabel.setText("How to Play?");
             if (closeButton != null) closeButton.setText("✕");
             if (startButton != null) startButton.setText("Got it, let's start! 🦁");
