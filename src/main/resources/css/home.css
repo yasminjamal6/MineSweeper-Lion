@@ -252,7 +252,7 @@
     -fx-scale-y: 1.03;
 }
 
-/* -------- HOW TO PLAY WINDOW -------- */
+/* HOW TO PLAY WINDOW */
 
 .how-root {
     -fx-background-color: linear-gradient(
@@ -604,17 +604,12 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 8, 0.2, 0, 2);
 }
 
-/* =========================================================
-   DARK MODE – Black / Dark Brown / Bright Orange
-   (מופעל כשמוסיפים למחלקות root-pane, settings-root את dark-mode)
-   ========================================================= */
+/*  DARK MODE – Black / Dark Brown / Bright Orange  */
 
-/* רקע כללי של המסך הראשי */
 .root-pane.dark-mode {
     -fx-background-color: #050203;
 }
 
-/* שכבות – שחור וחום כהה */
 .root-pane.dark-mode .overlay-vertical {
     -fx-background-color: linear-gradient(
             from 50% 0% to 50% 100%,
@@ -633,7 +628,6 @@
     );
 }
 
-/* טקסטים ראשיים – עדיין זהובים אבל על רקע שחור */
 .root-pane.dark-mode .main-title {
     -fx-text-fill: linear-gradient(
             from 0% 50% to 100% 50%,
@@ -647,7 +641,6 @@
     -fx-text-fill: #ffd7a3;
 }
 
-/* כרטיסי מידע */
 .root-pane.dark-mode .info-card {
     -fx-background-color: rgba(20, 10, 6, 0.96);
     -fx-border-color: rgba(245, 158, 11, 0.85); /* כתום זהוב */
@@ -677,7 +670,7 @@
     -fx-text-fill: #fff3dd;
 }
 
-/* כפתור Start Adventure */
+/*  Start Adventure */
 .root-pane.dark-mode .primary-btn {
     -fx-text-fill: #fff7eb;
     -fx-background-color: linear-gradient(
@@ -698,7 +691,7 @@
     );
 }
 
-/* כפתורי secondary */
+/*  secondary */
 .root-pane.dark-mode .secondary-btn {
     -fx-text-fill: #ffeadd;
     -fx-background-color: linear-gradient(
@@ -738,7 +731,7 @@
     );
 }
 
-/* כפתור הגדרות */
+/* SETTING */
 .root-pane.dark-mode .settings-btn {
     -fx-background-color: linear-gradient(
             from 0% 0% to 100% 100%,
@@ -774,7 +767,7 @@
     -fx-text-fill: #ffe9cf;
 }
 
-/* ========= חלון ההגדרות – DARK ========= */
+/* DARK */
 
 .settings-root.dark-mode {
     -fx-background-color: linear-gradient(
@@ -799,7 +792,6 @@
     -fx-text-fill: #ffedd5;
 }
 
-/* טוגלים בחלון ההגדרות */
 .settings-root.dark-mode .toggle-setting {
     -fx-background-color: linear-gradient(
             from 0% 0% to 100% 100%,
@@ -819,7 +811,7 @@
     );
 }
 
-/* כפתור Close */
+/*  Close */
 .settings-root.dark-mode .close-settings-btn {
     -fx-background-color: linear-gradient(
             from 0% 0% to 100% 100%,

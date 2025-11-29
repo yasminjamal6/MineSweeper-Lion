@@ -1,13 +1,10 @@
-/* =========================
-   GLOBAL FONT
-   ========================= */
+/* GLOBAL FONT*/
+
 .gh-root, .gh-background {
     -fx-font-family: "Segoe UI", "Arial";
 }
 
-/* =========================
-   BACKGROUND
-   ========================= */
+/* BACKGROUND */
 .gh-background {
     -fx-background-color: linear-gradient(
         #7c3aed 0%,
@@ -17,17 +14,13 @@
     );
 }
 
-/* =========================
-   MAIN LAYOUT
-   ========================= */
+/* MAIN LAYOUT*/
 .gh-root {
     -fx-padding: 20 32 32 32;
     -fx-alignment: top_center;
 }
 
-/* =========================
-   HEADER
-   ========================= */
+/*HEADER*/
 .gh-header {
     -fx-alignment: center_left;
 }
@@ -56,9 +49,7 @@
     -fx-font-size: 12;
 }
 
-/* =========================
-   BUTTONS
-   ========================= */
+/*BUTTONS*/
 .gh-btn-primary {
     -fx-background-color: linear-gradient(#facc15, #f97316);
     -fx-text-fill: white;
@@ -94,9 +85,7 @@
     -fx-background-color: rgba(0,0,0,0.7);
 }
 
-/* =========================
-   STATS CARDS
-   ========================= */
+/* STATS CARDS*/
 .gh-stats-row {
     -fx-alignment: center;
 }
@@ -144,9 +133,7 @@
     -fx-font-weight: bold;
 }
 
-/* =========================
-   TABLE WRAPPER (BIG CARD)
-   ========================= */
+/* TABLE WRAPPER (BIG CARD)*/
 .gh-table-wrapper {
     -fx-background-color: linear-gradient(#020617, #0f172a, #1e293b);
     -fx-background-radius: 26;
@@ -168,9 +155,7 @@
     -fx-font-size: 18;
 }
 
-/* =========================
-   TABLEVIEW HEADER (GH TABLE)
-   ========================= */
+/*TABLEVIEW HEADER (GH TABLE)*/
 
 .gh-table .column-header-background,
 .gh-table .column-header-background .filler,
@@ -192,9 +177,7 @@
     -fx-alignment: CENTER;
 }
 
-/* =========================
-   TABLEVIEW ROWS
-   ========================= */
+/* TABLEVIEW ROWS*/
 .table-view {
     -fx-background-color: transparent;
 }
