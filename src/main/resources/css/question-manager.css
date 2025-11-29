@@ -6,14 +6,14 @@
 }
 
 /* =========================
-   BACKGROUND GRADIENT (PAGE)
+   PAGE BACKGROUND GRADIENT
    ========================= */
 .gh-background {
     -fx-background-color: linear-gradient(
-        #7c3aed 0%,
-        #a855f7 35%,
-        #f97316 70%,
-        #1f0b3a 100%
+            #7c3aed 0%,
+            #a855f7 35%,
+            #f97316 70%,
+            #1f0b3a 100%
     );
 }
 
@@ -32,7 +32,7 @@
     -fx-alignment: center_left;
 }
 
-/* Icon background for header */
+/* Header icon container */
 .gh-header-icon {
     -fx-background-color: linear-gradient(#a855f7, #f97316);
     -fx-background-radius: 16;
@@ -62,7 +62,7 @@
    BUTTONS
    ========================= */
 
-/* Primary button: used for "Add Question" */
+/* Primary button (used for "Add Question") */
 .gh-btn-primary {
     -fx-background-color: linear-gradient(#facc15, #f97316);
     -fx-text-fill: white;
@@ -84,7 +84,7 @@
     -fx-scale-y: 1.05;
 }
 
-/* Secondary button: used for "Back" */
+/* Secondary button (used for "Back") */
 .gh-btn-secondary {
     -fx-background-color: rgba(0,0,0,0.45);
     -fx-text-fill: #facc15;
@@ -115,7 +115,7 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 25, 0.6, 0, 10);
 }
 
-/* Title above the table */
+/* Table title text */
 .gh-table-title {
     -fx-text-fill: #f9fafb;
     -fx-font-size: 16;
@@ -128,7 +128,7 @@
 }
 
 /* =========================
-   TABLEVIEW HEADER (GH TABLE)
+   TABLEVIEW HEADER
    ========================= */
 
 .gh-table .column-header-background,
@@ -174,7 +174,6 @@
     -fx-background-color: rgba(147,51,234,0.40);
 }
 
-/* Table cells */
 .table-view .table-cell {
     -fx-text-fill: #f9fafb;
     -fx-font-size: 13;
@@ -182,7 +181,7 @@
 }
 
 /* =========================
-   SEARCH FIELD (OPTIONAL)
+   SEARCH FIELD
    ========================= */
 .gh-search-field {
     -fx-background-radius: 14;
@@ -196,8 +195,7 @@
 }
 
 /* =========================
-   ACTION BUTTONS INSIDE TABLE
-   (Edit / Delete)
+   ACTION BUTTONS (EDIT / DELETE)
    ========================= */
 .edit-btn {
     -fx-background-color: transparent;
@@ -228,11 +226,12 @@
 .delete-btn:hover {
     -fx-background-color: rgba(239, 68, 68, 0.35);
 }
+
 /* =========================
    QUESTION DIALOG (ADD / EDIT)
    ========================= */
 
-/* עיצוב כללי של ה-DialogPane */
+/* DialogPane styling */
 .dialog-pane.qd-dialog-pane {
     -fx-background-color: linear-gradient(
             #7c3aed 0%,
@@ -245,12 +244,12 @@
     -fx-padding: 18;
 }
 
-/* אזור התוכן בתוך הדיאלוג */
+/* Main content container of the dialog */
 .qd-root {
     -fx-spacing: 16;
 }
 
-/* כרטיס הפנימי (כמו ה-table-card) */
+/* Inner card (similar to table wrapper) */
 .qd-card {
     -fx-background-color: linear-gradient(#020617, #0f172a, #1e293b);
     -fx-background-radius: 20;
@@ -261,7 +260,7 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 20, 0.6, 0, 8);
 }
 
-/* Header קטן למעלה של הדיאלוג */
+/* Dialog header */
 .qd-header {
     -fx-alignment: center_left;
     -fx-spacing: 10;
@@ -291,7 +290,7 @@
     -fx-font-size: 11;
 }
 
-/* טופס השדות */
+/* Form grid */
 .qd-form-grid {
     -fx-hgap: 10;
     -fx-vgap: 10;
@@ -302,7 +301,7 @@
     -fx-font-size: 12;
 }
 
-/* שדות טקסט / טקסט-אריה */
+/* Text fields, text area, choice box */
 .qd-textfield,
 .qd-textarea,
 .qd-choicebox {
@@ -317,31 +316,23 @@
     -fx-font-size: 12;
 }
 
+/* Dark TextArea fix */
 .qd-textarea {
     -fx-min-height: 70;
-}
-/* =========================
-   FIX: TextArea שיהיה כהה ולא לבן
-   ========================= */
-.qd-textarea {
-    -fx-min-height: 70;
-    -fx-control-inner-background: rgba(15,23,42,0.9); /* מבטל את הרקע הלבן */
+    -fx-control-inner-background: rgba(15,23,42,0.9);
 }
 
-/* כל השכבות הפנימיות */
 .qd-textarea .scroll-pane,
 .qd-textarea .viewport,
 .qd-textarea .content {
     -fx-background-color: transparent;
 }
 
-/* צבע הטקסט בפנים */
 .qd-textarea .text {
     -fx-fill: #f9fafb;
 }
 
-/* ===== ChoiceBox style (Correct answer / Difficulty) ===== */
-
+/* ChoiceBox design */
 .qd-choicebox {
     -fx-background-color: rgba(15,23,42,0.95);
     -fx-background-radius: 10;
@@ -364,7 +355,7 @@
     -fx-background-color: #facc15;
 }
 
-/* popup של ה-ChoiceBox (התפריט שנפתח) */
+/* ChoiceBox popup menu */
 .context-menu {
     -fx-background-color: rgba(15,23,42,0.97);
     -fx-background-radius: 10;
@@ -373,7 +364,6 @@
     -fx-border-width: 1.2;
 }
 
-/* פריטי התפריט */
 .menu-item {
     -fx-text-fill: #e5e7eb;
     -fx-font-size: 12;
@@ -385,10 +375,12 @@
     -fx-text-fill: #f9fafb;
 }
 
-/* כפתורי OK/Cancel – משתמשים בסטיילים הקיימים */
+/* Dialog buttons (OK/Cancel) using existing button styles */
 .dialog-pane .button.gh-btn-primary {
     -fx-min-width: 80;
 }
+
+
 
 .dialog-pane .button.gh-btn-secondary {
     -fx-min-width: 80;
