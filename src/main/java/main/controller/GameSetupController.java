@@ -61,6 +61,12 @@ public class GameSetupController {
 
         rebuildPicker(themePickerA, selectedThemeA, true);
         rebuildPicker(themePickerB, selectedThemeB, false);
+        root.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                SettingsController.refreshLanguageOnAllWindows();
+            }
+        });
+
     }
 
 

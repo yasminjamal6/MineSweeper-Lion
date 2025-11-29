@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<StackPane fx:id="root"
+<StackPane fx:id="root" id="gameSetupRoot"
            prefWidth="1200" prefHeight="800"
            maxHeight="Infinity"
            maxWidth="Infinity"
@@ -43,40 +43,54 @@
                       styleClass="card-main">
 
 
-                        <HBox alignment="CENTER_RIGHT">
-                            <Region HBox.hgrow="ALWAYS" />
-                            <Button
-                                    onAction="#onBack"
-                                    styleClass="secondary-action-btn small-back-btn"
-                                    text="Back to Home" />
-                        </HBox>
+                    <HBox alignment="CENTER_RIGHT">
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button
+                                id="backToHomeButton"
+                        onAction="#onBack"
+                        styleClass="secondary-action-btn small-back-btn"
+                        text="Back to Home" />
+                    </HBox>
 
 
-                        <VBox alignment="CENTER" spacing="6">
-                            <Label styleClass="title-label" text="Prepare the Den" />
-                            <Label styleClass="subtitle-label" text="Get your lions ready for the challenge!" />
-                        </VBox>
+                    <VBox alignment="CENTER" spacing="6">
+                        <Label id="setupTitleLabel"
+                        styleClass="title-label"
+                        text="Prepare the Den" />
+                        <Label id="setupSubtitleLabel"
+                        styleClass="subtitle-label"
+                        text="Get your lions ready for the challenge!" />
+                    </VBox>
                         <!-- Players -->
                         <HBox alignment="CENTER" spacing="22">
 
                             <!-- Player A -->
                             <VBox spacing="10" styleClass="player-card">
-                                <Label styleClass="player-title" text="Player A 🦁" />
-                                <Label styleClass="field-label" text="Player name" />
+                                <Label id="playerATitleLabel"
+                                       styleClass="player-title" text="Player A 🦁" />
+                                <Label id="playerANameLabel"
+                                       styleClass="field-label" text="Player name" />
                                 <TextField fx:id="playerAName" promptText="Enter name..." styleClass="name-field" />
 
-                                <Label styleClass="field-label" text="Board style" />
-                                <HBox fx:id="themePickerA" alignment="CENTER" spacing="10"/>
+                                <Label id="playerABoardLabel"
+                                styleClass="field-label" text="Board style" />
+                                <HBox fx:id="themePickerA"
+                                      alignment="CENTER" spacing="10"/>
                             </VBox>
 
                             <!-- Player B -->
                             <VBox spacing="10" styleClass="player-card">
-                                <Label styleClass="player-title" text="Player B 🦁" />
-                                <Label styleClass="field-label" text="Player name" />
-                                <TextField fx:id="playerBName" promptText="Enter name..." styleClass="name-field" />
+                                <Label id="playerBTitleLabel" styleClass="player-title" text="Player B 🦁" />
+                                <Label id="playerBNameLabel"
+                                styleClass="field-label" text="Player name" />
+                                <TextField fx:id="playerBName"
+                                           promptText="Enter name..."
+                                           styleClass="name-field" />
 
-                                <Label styleClass="field-label" text="Board style" />
-                                <HBox fx:id="themePickerB" alignment="CENTER" spacing="10"/>
+                                <Label id="playerBBoardLabel"
+                                styleClass="field-label" text="Board style" />
+                                <HBox fx:id="themePickerB"
+                                      alignment="CENTER" spacing="10"/>
                             </VBox>
                         </HBox>
 
@@ -85,27 +99,30 @@
 
                         <!-- Difficulty -->
                         <VBox alignment="CENTER" spacing="10">
-                            <Label styleClass="section-title" text="Choose the challenge level" />
+                            <Label id="challengeTitleLabel"
+                                   styleClass="section-title" text="Choose the challenge level" />
                             <HBox alignment="CENTER" spacing="14">
-                                <ToggleButton fx:id="easyBtn"
+                                <ToggleButton fx:id="easyBtn" id="easyBtn"
                                               styleClass="difficulty-btn"
                                               text="Easy"
                                               toggleGroup="$difficultyGroup" />
-                                <ToggleButton fx:id="mediumBtn"
+                                <ToggleButton fx:id="mediumBtn" id="mediumBtn"
                                               styleClass="difficulty-btn"
                                               text="Medium"
                                               toggleGroup="$difficultyGroup" />
-                                <ToggleButton fx:id="hardBtn"
+                                <ToggleButton fx:id="hardBtn" id="hardBtn"
                                               styleClass="difficulty-btn"
                                               text="Hard"
                                               toggleGroup="$difficultyGroup" />
+
                             </HBox>
                         </VBox>
 
 
                         <!-- Start button -->
                         <HBox alignment="CENTER" spacing="20">
-                            <Button onAction="#onStart" styleClass="primary-action-btn" text="Start the Adventure 🦁" />
+                            <Button id="startAdventureButton"
+                                            onAction="#onStart" styleClass="primary-action-btn" text="Start the Adventure 🦁" />
                         </HBox>
 
                     </VBox>
