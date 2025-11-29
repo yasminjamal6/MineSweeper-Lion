@@ -10,7 +10,14 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Question;
-
+/**
+ * Controller for the single-question popup.
+ * <p>
+ * Displays a trivia question with four possible answers, manages
+ * a countdown timer, tracks whether the player answered in time,
+ * and visually highlights correct/incorrect choices before closing.
+ * </p>
+ */
 public class QuestionController {
 
     @FXML private Label questionLabel;
@@ -30,30 +37,24 @@ public class QuestionController {
     @FXML
     private void initialize() {
         answerButtons = new Button[]{ansBtn0, ansBtn1, ansBtn2, ansBtn3};
-
-        // נשמור אינדקס על כל כפתור
         for (int i = 0; i < answerButtons.length; i++) {
             answerButtons[i].setUserData(i);
         }
     }
 
-    /** נקרא מבחוץ לפני שמציגים את החלון */
     public void setQuestion(Question q) {
         this.question = q;
 
-        // reset לכל פתיחה
         secondsLeft = 30;
         answeredCorrect = false;
         answered = false;
         stopTimer();
 
         questionLabel.setText(q.getText());
-
-        // אם אין קטגוריה אצלך במודל – פשוט תסתירי
         categoryLabel.setText("");
         categoryLabel.setVisible(false);
 
-        String[] opts = q.getOptions();   // אצלך זה String[]
+        String[] opts = q.getOptions();
         for (int i = 0; i < 4; i++) {
             answerButtons[i].setText(opts[i]);
             answerButtons[i].setDisable(false);
@@ -63,6 +64,10 @@ public class QuestionController {
         startTimer();
     }
 
+    /**
+     * Starts the countdown timer and updates the timer label
+     * every second until it expires or is stopped.
+     */
     private void startTimer() {
         timerLabel.setText(String.valueOf(secondsLeft));
 
