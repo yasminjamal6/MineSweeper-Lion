@@ -20,10 +20,10 @@ public class SysData {
         return List.of();
     }
 
-    public void saveQuestions(List<Question> questions) {
+    /*public void saveQuestions(List<Question> questions) {
     }
 
-    /*public GameHistory loadHistory() {
+    public GameHistory loadHistory() {
         return new GameHistory();
     }
 

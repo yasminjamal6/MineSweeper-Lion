@@ -7,6 +7,14 @@ import javafx.stage.Stage;
 import model.ScoreRules;
 import javafx.scene.layout.VBox;
 
+/**
+ * Controller for the Surprise popup window.
+ * <p>
+ * This dialog displays the outcome of activating a Surprise Tile,
+ * including points gained/lost, lives gained/lost, and a contextual
+ * message indicating whether the surprise was positive, negative, or neutral.
+ * </p>
+ */
 public class SurpriseController {
 
     @FXML private Label titleLabel;
@@ -41,6 +49,9 @@ public class SurpriseController {
         }
     }
 
+    /**
+     * Closes the surprise popup when the user confirms.
+     */
     @FXML
     private void onClose() {
         Stage stage = (Stage) okButton.getScene().getWindow();
