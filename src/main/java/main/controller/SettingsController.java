@@ -127,6 +127,35 @@ public class SettingsController {
             Label brightnessLabel = (Label) root.lookup("#brightnessLabel");
             Button closeSettingsBtn = (Button) root.lookup("#closeSettingsBtn");
 
+            // ===== מסך ה-Game Setup =====
+            Parent gameSetupRoot = (Parent) root.lookup("#gameSetupRoot");
+            if (gameSetupRoot != null) {
+                gameSetupRoot.setNodeOrientation(
+                        hebrew ? NodeOrientation.RIGHT_TO_LEFT : NodeOrientation.LEFT_TO_RIGHT
+                );
+            }
+
+            // setup
+            Label setupTitleLabel      = (Label) root.lookup("#setupTitleLabel");
+            Label setupSubtitleLabel   = (Label) root.lookup("#setupSubtitleLabel");
+            Label playerATitleLabel    = (Label) root.lookup("#playerATitleLabel");
+            Label playerANameLabel     = (Label) root.lookup("#playerANameLabel");
+            Label playerABoardLabel    = (Label) root.lookup("#playerABoardLabel");
+            Label playerBTitleLabel    = (Label) root.lookup("#playerBTitleLabel");
+            Label playerBNameLabel     = (Label) root.lookup("#playerBNameLabel");
+            Label playerBBoardLabel    = (Label) root.lookup("#playerBBoardLabel");
+            Label challengeTitleLabel  = (Label) root.lookup("#challengeTitleLabel");
+
+            ToggleButton easyBtnNode   = (ToggleButton) root.lookup("#easyBtn");
+            ToggleButton mediumBtnNode = (ToggleButton) root.lookup("#mediumBtn");
+            ToggleButton hardBtnNode   = (ToggleButton) root.lookup("#hardBtn");
+
+            Button startAdventureButton= (Button) root.lookup("#startAdventureButton");
+            Button backToHomeButton    = (Button) root.lookup("#backToHomeButton");
+
+
+
+
             if (hebrew) {
                 // בית
                 if (title != null)      title.setText("מיינסוויפר חכם");
@@ -145,6 +174,27 @@ public class SettingsController {
                 if (brightnessLabel != null) brightnessLabel.setText("בהירות");
                 if (closeSettingsBtn != null) closeSettingsBtn.setText("סגור");
 
+                // ---- Game Setup – עברית ----
+                if (setupTitleLabel != null)     setupTitleLabel.setText("הכנת המאורה");
+                if (setupSubtitleLabel != null)  setupSubtitleLabel.setText("הכינו את האריות לאתגר!");
+                if (playerATitleLabel != null)   playerATitleLabel.setText("שחקן א' 🦁");
+                if (playerANameLabel != null)    playerANameLabel.setText("שם שחקן");
+                if (playerABoardLabel != null)   playerABoardLabel.setText("סגנון לוח");
+
+                if (playerBTitleLabel != null)   playerBTitleLabel.setText("שחקן ב' 🦁");
+                if (playerBNameLabel != null)    playerBNameLabel.setText("שם שחקן");
+                if (playerBBoardLabel != null)   playerBBoardLabel.setText("סגנון לוח");
+
+                if (challengeTitleLabel != null) challengeTitleLabel.setText("בחרו את רמת האתגר");
+
+                if (easyBtnNode != null)         easyBtnNode.setText("קל");
+                if (mediumBtnNode != null)       mediumBtnNode.setText("בינוני");
+                if (hardBtnNode != null)         hardBtnNode.setText("קשה");
+
+                if (startAdventureButton != null)startAdventureButton.setText("התחל את ההרפתקה 🦁");
+                if (backToHomeButton != null)    backToHomeButton.setText("חזרה לבית");
+
+
             } else {
                 // בית
                 if (title != null)      title.setText("Mine Sweeper Smart");
@@ -162,6 +212,27 @@ public class SettingsController {
                 if (volumeLabel != null)     volumeLabel.setText("Volume");
                 if (brightnessLabel != null) brightnessLabel.setText("Brightness");
                 if (closeSettingsBtn != null) closeSettingsBtn.setText("Close");
+
+
+                // ---- Game Setup – English ----
+                if (setupTitleLabel != null)     setupTitleLabel.setText("Prepare the Den");
+                if (setupSubtitleLabel != null)  setupSubtitleLabel.setText("Get your lions ready for the challenge!");
+                if (playerATitleLabel != null)   playerATitleLabel.setText("Player A 🦁");
+                if (playerANameLabel != null)    playerANameLabel.setText("Player name");
+                if (playerABoardLabel != null)   playerABoardLabel.setText("Board style");
+
+                if (playerBTitleLabel != null)   playerBTitleLabel.setText("Player B 🦁");
+                if (playerBNameLabel != null)    playerBNameLabel.setText("Player name");
+                if (playerBBoardLabel != null)   playerBBoardLabel.setText("Board style");
+
+                if (challengeTitleLabel != null) challengeTitleLabel.setText("Choose the challenge level");
+
+                if (easyBtnNode != null)         easyBtnNode.setText("Easy");
+                if (mediumBtnNode != null)       mediumBtnNode.setText("Medium");
+                if (hardBtnNode != null)         hardBtnNode.setText("Hard");
+
+                if (startAdventureButton != null)startAdventureButton.setText("Start the Adventure 🦁");
+                if (backToHomeButton != null)    backToHomeButton.setText("Back to Home");
             }
         }
     }
