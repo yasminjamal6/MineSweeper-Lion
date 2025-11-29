@@ -14,13 +14,14 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.control.Button;
 
-
+/**
+ * Controller for the Game Setup screen.
+ * Handles player input, difficulty selection, and navigation to the main game scene.
+ */
 public class GameSetupController {
-
     public enum Difficulty { EASY, MEDIUM, HARD }
 
     public static Difficulty selectedDifficulty = Difficulty.EASY;
@@ -37,24 +38,21 @@ public class GameSetupController {
     @FXML private TextField playerAName, playerBName;
     @FXML private Button aGoldBtn, aSavannaBtn;
     @FXML private Button bGoldBtn, bSavannaBtn;
-
-
     @FXML private StackPane root;   // ⭐ מחובר ל-fx:id="root" ב-FXML
 
+    /**
+     * Initializes the controller. Sets the default difficulty and logs FXML/CSS loading status.
+     */
     @FXML
     private void initialize() {
-        // מה שהיה לך קודם
+        // Sets 'Easy' as the default selection when the view loads.
         easyBtn.setSelected(true);
-
-        // ⭐ בדיקות כדי לראות אם ה-CSS והתמונה נטענים
-        System.out.println("Root = " + root);
-        if (root != null) {
-            System.out.println("Stylesheets from FXML = " + root.getStylesheets());
-        }
-        System.out.println("CSS exists? -> " + getClass().getResource("/css/game-setup.css"));
-        System.out.println("Image exists? -> " + getClass().getResource("/images/King.png"));
     }
 
+
+    /**
+     * Navigates back to the home screen with a smooth fade transition.
+     */
     @FXML
     private void onBack(ActionEvent event) {
         System.out.println(">> Back clicked");
@@ -83,6 +81,10 @@ public class GameSetupController {
 
 
 
+    /**
+     * Validates player input and starts the game if all data is valid.
+     * Displays alerts for missing or duplicate player names.
+     */
     @FXML
     private void onStart(ActionEvent event) {
 
