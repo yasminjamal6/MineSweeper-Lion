@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import model.ScoreRules;
+import javafx.scene.layout.VBox;
 
 public class SurpriseController {
 
@@ -23,7 +24,7 @@ public class SurpriseController {
         int lives = change.getLivesDelta();
 
         String pointsText = "Points: " + (points >= 0 ? "+" + points : points);
-        String livesText = "Lives: "  + (lives  >= 0 ? "+" + lives  : lives);
+        String livesText  = "Lives: "  + (lives  >= 0 ? "+" + lives  : lives);
 
         pointsLabel.setText(pointsText);
         livesLabel.setText(livesText);

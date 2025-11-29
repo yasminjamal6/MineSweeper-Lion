@@ -21,12 +21,13 @@ import javafx.stage.Stage;
 import model.GameHistory;
 import model.GameHistoryManager;
 import model.Difficulty;
-
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 import javafx.util.Duration;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
+
 
 public class GameHistoryController {
 
@@ -40,6 +41,10 @@ public class GameHistoryController {
     @FXML private TableColumn<GameHistory, Number> livesCol;
     @FXML private TableColumn<GameHistory, String> resultCol;
     @FXML private TableColumn<GameHistory, Number> durationCol;
+    @FXML private TextField searchField;
+
+    private ObservableList<GameHistory> masterData;
+
 
     @FXML private Label totalGamesLabel;
     @FXML private Label easyGamesLabel;
@@ -77,7 +82,7 @@ public class GameHistoryController {
 
         // ---- Table columns ----
 
-        // Date
+        // Date column
         startedAtCol.setCellValueFactory(cellData -> {
             GameHistory g = cellData.getValue();
             if (g.getStartedAt() == null) {
@@ -86,7 +91,7 @@ public class GameHistoryController {
             return new SimpleStringProperty(g.getStartedAt().format(formatter));
         });
 
-        // Player A / B
+        // Player A / Player B
         playerACol.setCellValueFactory(
                 cellData -> new SimpleStringProperty(cellData.getValue().getPlayerAName())
         );
@@ -110,7 +115,7 @@ public class GameHistoryController {
                 cellData -> new SimpleLongProperty(cellData.getValue().getSharedLives())
         );
 
-        // Result: Win / Loss (based on shared lives)
+        // Result: Win / Loss based on shared lives
         resultCol.setCellValueFactory(cellData -> {
             GameHistory g = cellData.getValue();
             if (g.getSharedLives() > 0) {
@@ -120,7 +125,7 @@ public class GameHistoryController {
             }
         });
 
-        // Colored Result column with emojis
+        // Styled Result column with emoji
         resultCol.setCellFactory(column -> new TableCell<GameHistory, String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -142,14 +147,52 @@ public class GameHistoryController {
             }
         });
 
-        // ---- Table data ----
-        ObservableList<GameHistory> data =
-                FXCollections.observableArrayList(history);
-        historyTable.setItems(data);
+        // ---- Table data with search functionality ----
+        masterData = FXCollections.observableArrayList(history);
 
-        // ---- Play entrance animations ----
+        // 1) FilteredList – starts with no filtering
+        FilteredList<GameHistory> filteredData =
+                new FilteredList<>(masterData, g -> true);
+
+        // 2) Listen to search field changes
+        if (searchField != null) {
+            searchField.textProperty().addListener((obs, oldValue, newValue) -> {
+                String filter = (newValue == null) ? "" : newValue.toLowerCase().trim();
+
+                filteredData.setPredicate(g -> {
+                    if (filter.isEmpty()) {
+                        return true; // No filtering
+                    }
+
+                    // Prepare all values as strings
+                    String a = g.getPlayerAName() == null ? "" : g.getPlayerAName().toLowerCase();
+                    String b = g.getPlayerBName() == null ? "" : g.getPlayerBName().toLowerCase();
+                    String diff = g.getDifficultyString() == null ? "" : g.getDifficultyString().toLowerCase();
+                    String result = g.getResult().toLowerCase();
+                    String scoreStr = String.valueOf(g.getScore());
+                    String livesStr = String.valueOf(g.getSharedLives());
+
+                    return a.contains(filter)
+                            || b.contains(filter)
+                            || diff.contains(filter)
+                            || result.contains(filter)
+                            || scoreStr.contains(filter)
+                            || livesStr.contains(filter);
+                });
+            });
+        }
+
+        // 3) SortedList – supports table column sorting
+        SortedList<GameHistory> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(historyTable.comparatorProperty());
+
+        historyTable.setItems(sortedData);
+
+        // ---- Entrance animations ----
         playEntranceAnimations();
     }
+
+
 
     private void playEntranceAnimations() {
         if (headerRow == null || statsRow == null || tableCard == null) return;
