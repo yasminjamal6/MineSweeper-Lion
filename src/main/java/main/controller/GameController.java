@@ -8,11 +8,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 import model.Difficulty;
 import model.QuestionBank;
 import model.QuestionLevel;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import model.ScoreRules;
+import model.SurpriseType;
 
 import javafx.scene.layout.HBox;
 
@@ -44,8 +50,8 @@ public class GameController {
         playerBNameLabel.setText(GameSetupController.selectedPlayerBName);
 
         int mines = getMinesForDifficulty(GameSetupController.selectedDifficulty);
-        playerAMinesLabel.setText("💣 " + mines);
-        playerBMinesLabel.setText("💣 " + mines);
+        playerAMinesLabel.setText(String.valueOf(mines));
+        playerBMinesLabel.setText(String.valueOf(mines));
 
         model.Difficulty diff = DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
 
@@ -93,7 +99,19 @@ public class GameController {
         updateBoardHighlight();
     }
 
+    private void toggleFlag(Button cell) {
+        String current = cell.getText();
 
+        if ("🐾".equals(current)) {
+            cell.setText("");
+            cell.getStyleClass().remove("paw-flag");
+        } else {
+            cell.setText("🐾");
+            if (!cell.getStyleClass().contains("paw-flag")) {
+                cell.getStyleClass().add("paw-flag");
+            }
+        }
+    }
 
     private void buildHearts(model.Difficulty diff) {
         heartsBox.getChildren().clear();
@@ -169,6 +187,48 @@ public class GameController {
         };
     }
 
+    private void triggerRandomSurprise() {
+        Difficulty diff = DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
+        boolean good = Math.random() < 0.5;
+        SurpriseType type = good ? SurpriseType.GOOD : SurpriseType.BAD;
+
+        ScoreRules.ScoreChange change = ScoreRules.surpriseTriggered(diff, type);
+
+        lives += change.getLivesDelta();
+        if (lives < 0) lives = 0;
+
+        score += change.getPointsDelta();
+        scoreLabel.setText("Score: " + score);
+
+        updateLivesUI(diff);
+        showSurprisePopup(change);
+    }
+
+
+    private void showSurprisePopup(ScoreRules.ScoreChange change) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/surprise-view.fxml")
+            );
+            Parent root = loader.load();
+
+            SurpriseController controller = loader.getController();
+            controller.setData(change);
+
+            Stage dialog = new Stage();
+            dialog.initOwner(scoreLabel.getScene().getWindow());
+            dialog.initModality(Modality.APPLICATION_MODAL);
+
+            Scene scene = new Scene(root);
+            dialog.setScene(scene);
+            dialog.showAndWait();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     /**
      * בניית לוח בגודל קבוע שנראה טוב על המסך.
@@ -189,6 +249,12 @@ public class GameController {
                     cell.getStyleClass().add("orange-cell");
                 }
                 cell.setOnAction(e -> handleCellClick(cell, isBoardA));
+
+                cell.setOnMouseClicked(event -> {
+                    if (event.getButton() == MouseButton.SECONDARY) {
+                        toggleFlag(cell);
+                    }
+                });
 
                 // גודל ריבוע קבוע לפי קושי – לא משתנה עם Resize
                 cell.setPrefSize(cellSize, cellSize);
