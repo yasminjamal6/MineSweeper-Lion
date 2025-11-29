@@ -14,8 +14,12 @@ public class SurpriseInfoController {
     @FXML private Label badDetailsLabel;
     @FXML private Label goodDetailsLabel;
     @FXML private Button openButton;
-
     private Difficulty difficulty;
+
+    /**
+     * Controller responsible for displaying detailed information
+     * about the Surprise Tile based on the selected difficulty level.
+     */
 
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
@@ -28,6 +32,7 @@ public class SurpriseInfoController {
         int surprises   = difficulty.getSurpriseCells();
         int initialLives= difficulty.getInitialLives();
 
+        // Set title according to difficulty level for thematic consistency.
         switch (difficulty) {
             case EASY -> titleLabel.setText("Cub Training – Savannah Surprise Tile!");
             case MEDIUM -> titleLabel.setText("Young Lion Challenge – Savannah Surprise Tile!");
