@@ -14,10 +14,12 @@ import javafx.util.Duration;
 import model.Difficulty;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.QuestionBank;
+import model.QuestionLevel;
 import model.ScoreRules;
 import model.SurpriseType;
 import javafx.scene.layout.HBox;
-
+import model.Theme;
 
 
 /**
@@ -42,6 +44,9 @@ public class GameController {
     private int score = 0;
     private boolean isPlayerATurn = true;
 
+    private final QuestionBank questionBank = new QuestionBank();
+    private Theme playerATheme;
+    private Theme playerBTheme;
 
 
 
@@ -54,6 +59,9 @@ public class GameController {
         // Set player names and mines based on setup
         playerANameLabel.setText(GameSetupController.selectedPlayerAName);
         playerBNameLabel.setText(GameSetupController.selectedPlayerBName);
+
+        playerATheme = GameSetupController.selectedThemeA;
+        playerBTheme = GameSetupController.selectedThemeB;
 
         int mines = getMinesForDifficulty(GameSetupController.selectedDifficulty);
         playerAMinesLabel.setText(String.valueOf(mines));
@@ -77,8 +85,6 @@ public class GameController {
         buildBoardGrid(boardAGrid, size, cellSize, true);
         buildBoardGrid(boardBGrid, size, cellSize, false);
         updateBoardHighlight();
-        buildBoardGrid(boardAGrid, size, cellSize, true);
-        buildBoardGrid(boardBGrid, size, cellSize, false);
     }
 
 
@@ -110,7 +116,6 @@ public class GameController {
         System.out.println("Player clicked on: " + (isBoardA ? "A" : "B"));
         isPlayerATurn = !isPlayerATurn;
         updateBoardHighlight();
-        // TODO: Implement game logic (reveal cell, check mine, update score/lives)
     }
 
     private void toggleFlag(Button cell) {
@@ -166,12 +171,12 @@ public class GameController {
         };
     }
 
-    // Defines the cell size to ensure the board layout scales properly to the screen
+    // גודל המשבצת – מותאם כך שכל הלוח יישב נוח במסך
     private int getCellSize(GameSetupController.Difficulty diff) {
         return switch (diff) {
-            case EASY   -> 44;  // Small board – larger tiles
+            case EASY   -> 44;
             case MEDIUM -> 36;
-            case HARD   -> 28;  // Large board – smaller tiles to fit on screen
+            case HARD   -> 28;
         };
     }
 
@@ -183,11 +188,16 @@ public class GameController {
         };
     }
 
+    private QuestionLevel getLevelFromSetup() {
+        GameSetupController.Difficulty d = GameSetupController.selectedDifficulty;
 
-    /**
-     * Handles random in-game surprise events based on difficulty level, updating score and lives.
-     * Note: The waiting button and its frontend functionality are not yet implemented in this iteration.
-     */
+        return switch (d) {
+            case EASY -> QuestionLevel.EASY;
+            case MEDIUM -> QuestionLevel.MEDIUM;
+            case HARD -> QuestionLevel.HARD;
+        };
+    }
+
     private void triggerRandomSurprise() {
         Difficulty diff = DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
         boolean good = Math.random() < 0.5;
@@ -243,11 +253,15 @@ public class GameController {
                 Button cell = new Button();
                 cell.getStyleClass().add("cell-button");
 
-                if (isBoardA) {
-                    cell.getStyleClass().add("golden-cell");
-                } else {
-                    cell.getStyleClass().add("orange-cell");
+                Theme theme = isBoardA ? playerATheme : playerBTheme;
+
+                if (theme != null) {
+                    cell.setStyle(
+                            theme.cellStyle +
+                                    " -fx-background-radius: 8; -fx-border-radius: 8;"
+                    );
                 }
+
                 cell.setOnAction(e -> handleCellClick(cell, isBoardA));
 
                 cell.setOnMouseClicked(event -> {
