@@ -13,8 +13,6 @@
            styleClass="root-pane"
            prefWidth="1200.0" prefHeight="800.0">
 
-
-
     <children>
 
         <ImageView fitWidth="1200.0" fitHeight="800.0" preserveRatio="false">
@@ -47,23 +45,31 @@
                     </VBox>
                 </StackPane>
 
-                <Label text="Mine Sweeper Smart" styleClass="main-title"/>
-                <Label text="🌟 Legendary trivia from the savanna! 🌟" styleClass="main-subtitle"/>
+                <Label fx:id="titleLabel"
+                       text="Mine Sweeper Smart"
+                       styleClass="main-title"/>
+
+                <Label fx:id="subtitleLabel"
+                       text="🌟 Legendary trivia from the savanna! 🌟"
+                       styleClass="main-subtitle"/>
 
             </VBox>
 
             <!-- BUTTONS SECTION -->
             <VBox alignment="CENTER" spacing="14.0" styleClass="buttons-wrapper" fx:id="buttonsSection">
 
-                <Button text="Start Adventure "
+                <Button fx:id="startButton"
+                        text="Start Adventure"
                         styleClass="primary-btn"
                         onAction="#onStartAdventure"/>
 
                 <HBox alignment="CENTER" spacing="20">
-                    <Button text="Question Manager"
+                    <Button fx:id="questionManagerButton"
+                            text="Question Manager"
                             styleClass="secondary-btn"
                             onAction="#onQuestionManager" />
-                    <Button text="Game History"
+                    <Button fx:id="historyButton"
+                            text="Game History"
                             styleClass="secondary-btn"
                             onAction="#onHistory" />
                 </HBox>
@@ -102,9 +108,9 @@
 
         </VBox>
 
-
-        <!-- Floating How To Play button (NOW ON TOP) -->
-        <Button text="How to Play?"
+        <!-- HOW TO PLAY BUTTON -->
+        <Button fx:id="howButton"
+                text="How to Play?"
                 styleClass="how-btn"
                 onAction="#onHowToPlay"
                 StackPane.alignment="TOP_LEFT">
@@ -112,6 +118,8 @@
                 <Insets top="18" left="18"/>
             </StackPane.margin>
         </Button>
+
+        <!-- SETTINGS BUTTON -->
         <Button text="⚙"
                 fx:id="settingsBtn"
                 styleClass="settings-btn"
