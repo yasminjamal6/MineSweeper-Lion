@@ -25,7 +25,6 @@
                    alignment="CENTER"
                    styleClass="hint-text"/>
 
-
             <!-- TOP BAR -->
             <HBox spacing="10" alignment="CENTER" styleClass="top-bar">
 
@@ -149,13 +148,17 @@
 
             </HBox>
 
-            <HBox alignment="CENTER">
-                <Button fx:id="backHomeBtn"
-                        text="Back to Home"
-                        onAction="#onBackToHome"
-                        styleClass="back-home-btn"/>
-            </HBox>
-
         </VBox>
+
+        <HBox alignment="CENTER_LEFT"
+              AnchorPane.bottomAnchor="16.0"
+              AnchorPane.leftAnchor="16.0">
+
+            <Button fx:id="backHomeBtn"
+                    text="Back to Home"
+                    onAction="#onBackToHome"
+                    styleClass="back-home-btn"/>
+        </HBox>
+
     </children>
 </AnchorPane>
