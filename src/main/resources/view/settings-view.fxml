@@ -41,14 +41,7 @@
                             prefWidth="280"/>
                 </VBox>
 
-                <!-- FULLSCREEN -->
-                <HBox spacing="14" alignment="CENTER">
-                    <Label text="Full Screen:"
-                           styleClass="settings-label"/>
-                    <ToggleButton fx:id="fullscreenToggle"
-                                  text="OFF"
-                                  styleClass="toggle-setting"/>
-                </HBox>
+
 
                 <!-- CLOSE -->
                 <Button text="Close"
