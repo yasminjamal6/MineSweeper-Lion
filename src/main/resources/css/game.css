@@ -1,14 +1,10 @@
-/* ============================================================
-    GLOBAL ROOT
-   ============================================================ */
+
 .game-root {
     -fx-background-color: linear-gradient(to bottom, #120308, #2b0606);
     -fx-font-family: "Segoe UI", "Arial";
 }
 
-/* ============================================================
-    TOP BAR
-   ============================================================ */
+
 
 .top-bar {
     -fx-background-color: linear-gradient(to right, #7f1d1d, #a11b3b);
@@ -26,7 +22,8 @@
     -fx-font-weight: 800;
 }
 
-/* ---------- HEARTS (BIGGER) ---------- */
+/* HEARTS (BIGGER) */
+
 .hearts-row {
     -fx-padding: 0 6;
 }
@@ -37,7 +34,7 @@
     -fx-effect: dropshadow(gaussian, rgba(255,110,145,0.9), 20, 0.65, 0, 0);
 }
 
-/* ---------- LIVES COUNTER ---------- */
+/*  LIVES COUNTER */
 .lives-counter {
     -fx-text-fill: #fef9c3;
     -fx-font-size: 15px;
@@ -52,10 +49,7 @@
 }
 
 
-/* ============================================================
-    PLAYER HEADERS ABOVE EACH BOARD
-   ============================================================ */
-
+ /*PLAYER HEADERS ABOVE EACH BOARD*/
 .player-header {
     -fx-background-color: rgba(0,0,0,0.75);
     -fx-background-radius: 999;
@@ -84,10 +78,8 @@
 }
 
 
-/* ============================================================
-    MINES CHIP
-   ============================================================ */
 
+ /*MINES CHIP*/
 .mines-chip {
     -fx-background-color: linear-gradient(to right, #7f1d1d, #b91c1c);
     -fx-background-radius: 999;
@@ -115,10 +107,7 @@
 }
 
 
-/* ============================================================
-    BOARD TITLES
-   ============================================================ */
-
+/*BOARD TITLES*/
 .board-title {
     -fx-text-fill: #fef3c7;
     -fx-font-size: 14px;
@@ -126,10 +115,7 @@
 }
 
 
-/* ============================================================
-    BOARD CONTAINERS
-   ============================================================ */
-
+/*BOARD CONTAINERS*/
 .board-container {
     -fx-background-color: linear-gradient(to bottom,
     rgba(15,10,5,0.9),
@@ -143,10 +129,8 @@
 }
 
 
-/* ============================================================
-    BOARD CELLS
-   ============================================================ */
 
+/*BOARD CELLS*/
 .cell-button {
     -fx-pref-width: 48;
     -fx-pref-height: 48;
@@ -177,10 +161,8 @@
 }
 
 
-/* ============================================================
-    BACK BUTTON
-   ============================================================ */
 
+/*BACK BUTTON*/
 .back-home-btn {
     -fx-background-color: linear-gradient(to right, #111827, #1f2937);
     -fx-text-fill: #fef3c7;

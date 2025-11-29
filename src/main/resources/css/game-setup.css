@@ -1,445 +1,445 @@
 /* =========================
-   GLOBAL FONT
-   ========================= */
+GLOBAL FONT
+========================= */
 .root {
-    -fx-font-family: "Segoe UI", "Arial";
+-fx-font-family: "Segoe UI", "Arial";
 }
 
 /* ========================================================
-   ---------  LIGHT MODE  (Lion Day)  ----------------------
-   ======================================================== */
+--------- LIGHT MODE (Lion Day) ----------------------
+======================================================== */
 
 /* רקע – אותה תמונה, אבל גוונים בהירים וחמים */
 .background-pane {
-    -fx-background-color: linear-gradient(
-            from 0% 0% to 100% 100%,
-            #ffe7b3 0%,
-            #ffd38a 35%,
-            #ffb955 70%,
-            #ffedd2 100%
-    );
-    -fx-background-image: url("/images/King.png");
-    -fx-background-size: cover;
-    -fx-background-position: center;
-    -fx-background-repeat: no-repeat;
+-fx-background-color: linear-gradient(
+from 0% 0% to 100% 100%,
+#ffe7b3 0%,
+#ffd38a 35%,
+#ffb955 70%,
+#ffedd2 100%
+);
+-fx-background-image: url("/images/King.png");
+-fx-background-size: cover;
+-fx-background-position: center;
+-fx-background-repeat: no-repeat;
 
-    -fx-padding: 20 32 32 32;
+-fx-padding: 20 32 32 32;
 }
 
 /* כרטיס מרכזי – בהיר אבל עדיין זהוב ומודגש */
 .card-main {
-    -fx-background-color: linear-gradient(
-            from 0% 0% to 0% 100%,
-            rgba(255, 248, 230, 0.95) 0%,
-            rgba(253, 235, 204, 0.97) 55%,
-            rgba(248, 220, 178, 0.98) 100%
-    );
-    -fx-background-radius: 26;
-    -fx-border-radius: 26;
-    -fx-border-color: rgba(222, 170, 60, 0.9);
-    -fx-border-width: 1.8;
-    -fx-padding: 26 40 32 40;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 26, 0.55, 0, 8);
+-fx-background-color: linear-gradient(
+from 0% 0% to 0% 100%,
+rgba(255, 248, 230, 0.95) 0%,
+rgba(253, 235, 204, 0.97) 55%,
+rgba(248, 220, 178, 0.98) 100%
+);
+-fx-background-radius: 26;
+-fx-border-radius: 26;
+-fx-border-color: rgba(222, 170, 60, 0.9);
+-fx-border-width: 1.8;
+-fx-padding: 26 40 32 40;
+-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 26, 0.55, 0, 8);
 }
 
 /* כותרת – אותה טיפוגרפיה, רק כהה על בהיר */
 .title-label {
-    -fx-text-fill: #3b2304;
-    -fx-font-size: 38;
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, rgba(255,248,220,0.9), 4, 0.7, 0, 1);
+-fx-text-fill: #3b2304;
+-fx-font-size: 38;
+-fx-font-weight: bold;
+-fx-effect: dropshadow(gaussian, rgba(255,248,220,0.9), 4, 0.7, 0, 1);
 }
 
 .subtitle-label {
-    -fx-text-fill: #5c4525;
-    -fx-font-size: 14;
+-fx-text-fill: #5c4525;
+-fx-font-size: 14;
 }
 
 .hearts-label {
-    -fx-text-fill: #b45309;
-    -fx-font-size: 13;
+-fx-text-fill: #b45309;
+-fx-font-size: 13;
 }
 
 .heart-icon {
-    -fx-text-fill: #f97316;
-    -fx-font-size: 18;
+-fx-text-fill: #f97316;
+-fx-font-size: 18;
 }
 
 /* בסיס לכפתורים */
 .button {
-    -fx-font-weight: bold;
-    -fx-background-radius: 999;
-    -fx-border-radius: 999;
-    -fx-font-size: 12.5;
-    -fx-cursor: hand;
-    -fx-scale-x: 1;
-    -fx-scale-y: 1;
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
+-fx-font-weight: bold;
+-fx-background-radius: 999;
+-fx-border-radius: 999;
+-fx-font-size: 12.5;
+-fx-cursor: hand;
+-fx-scale-x: 1;
+-fx-scale-y: 1;
+-fx-focus-color: transparent;
+-fx-faint-focus-color: transparent;
 }
 
 .button:hover {
-    -fx-scale-x: 1.03;
-    -fx-scale-y: 1.03;
+-fx-scale-x: 1.03;
+-fx-scale-y: 1.03;
 }
 
 /* PRIMARY – Start the Adventure (זהוב חזק) */
 .primary-action-btn {
-    -fx-background-color: linear-gradient(#ffe58f, #f9a826);
-    -fx-text-fill: #3b2304;
-    -fx-padding: 10 40;
-    -fx-effect: dropshadow(gaussian, rgba(248,181,0,0.85), 24, 0.7, 0, 5);
+-fx-background-color: linear-gradient(#ffe58f, #f9a826);
+-fx-text-fill: #3b2304;
+-fx-padding: 10 40;
+-fx-effect: dropshadow(gaussian, rgba(248,181,0,0.85), 24, 0.7, 0, 5);
 }
 
 .primary-action-btn:hover {
-    -fx-background-color: linear-gradient(#fff3b0, #fdc739);
+-fx-background-color: linear-gradient(#fff3b0, #fdc739);
 }
 
 /* SECONDARY – Back to Home */
 .secondary-action-btn {
-    -fx-background-color: rgba(255, 247, 231, 0.95);
-    -fx-text-fill: #3b2304;
-    -fx-border-color: rgba(210, 162, 58, 0.9);
-    -fx-border-width: 1.6;
-    -fx-padding: 6 20;
+-fx-background-color: rgba(255, 247, 231, 0.95);
+-fx-text-fill: #3b2304;
+-fx-border-color: rgba(210, 162, 58, 0.9);
+-fx-border-width: 1.6;
+-fx-padding: 6 20;
 }
 
 .secondary-action-btn:hover {
-    -fx-background-color: rgba(255, 239, 210, 0.98);
+-fx-background-color: rgba(255, 239, 210, 0.98);
 }
 
 .small-back-btn {
-    -fx-padding: 4 16;
+-fx-padding: 4 16;
 }
 
 /* כרטיסי שחקן – בהיר אבל עם מסגרת זהב חזקה */
 .player-card {
-    -fx-background-color: linear-gradient(
-            from 0% 0% to 100% 100%,
-            rgba(255, 247, 228, 0.98) 0%,
-            rgba(253, 234, 208, 0.99) 40%,
-            rgba(246, 216, 176, 1.0) 100%
-    );
-    -fx-background-radius: 22;
-    -fx-border-radius: 22;
-    -fx-border-color: rgba(222, 170, 60, 0.95);
-    -fx-border-width: 1.8;
-    -fx-padding: 20 26 22 26;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.28), 20, 0.5, 0, 5);
+-fx-background-color: linear-gradient(
+from 0% 0% to 100% 100%,
+rgba(255, 247, 228, 0.98) 0%,
+rgba(253, 234, 208, 0.99) 40%,
+rgba(246, 216, 176, 1.0) 100%
+);
+-fx-background-radius: 22;
+-fx-border-radius: 22;
+-fx-border-color: rgba(222, 170, 60, 0.95);
+-fx-border-width: 1.8;
+-fx-padding: 20 26 22 26;
+-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.28), 20, 0.5, 0, 5);
 }
 
 .player-title {
-    -fx-text-fill: #7c2d12;
-    -fx-font-size: 16;
-    -fx-font-weight: bold;
+-fx-text-fill: #7c2d12;
+-fx-font-size: 16;
+-fx-font-weight: bold;
 }
 
 .field-label {
-    -fx-text-fill: #5b4630;
-    -fx-font-size: 12.5;
+-fx-text-fill: #5b4630;
+-fx-font-size: 12.5;
 }
 
 /* שדה שם – בהיר */
 .name-field {
-    -fx-background-radius: 16;
-    -fx-background-color: rgba(255,255,255,0.96);
-    -fx-text-fill: #3b2304;
-    -fx-prompt-text-fill: #b29a80;
-    -fx-padding: 7 12;
-    -fx-border-color: rgb(182, 136, 45);
+-fx-background-radius: 16;
+-fx-background-color: rgba(255,255,255,0.96);
+-fx-text-fill: #3b2304;
+-fx-prompt-text-fill: #b29a80;
+-fx-padding: 7 12;
+-fx-border-color: rgb(182, 136, 45);
 }
 
 /* BOARD STYLE – טבליות לבנות עם זהב */
 .board-style-pill {
-    -fx-background-radius: 999;
-    -fx-padding: 6 18;
-    -fx-font-size: 12.5;
-    -fx-font-weight: bold;
-    -fx-background-color: #fefcf5;
-    -fx-text-fill: #3b2304;
-    -fx-border-radius: 999;
-    -fx-border-color: rgba(217, 163, 48, 0.9);
-    -fx-border-width: 1.2;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0.25, 0, 2);
+-fx-background-radius: 999;
+-fx-padding: 6 18;
+-fx-font-size: 12.5;
+-fx-font-weight: bold;
+-fx-background-color: #fefcf5;
+-fx-text-fill: #3b2304;
+-fx-border-radius: 999;
+-fx-border-color: rgba(217, 163, 48, 0.9);
+-fx-border-width: 1.2;
+-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0.25, 0, 2);
 }
 
 .board-style-pill:hover {
-    -fx-background-color: #fff7e0;
+-fx-background-color: #fff7e0;
 }
 
 /* כשהכפתור נבחר */
 .board-style-pill.board-selected {
-    -fx-background-color: linear-gradient(#ffe58f, #f9a826);
-    -fx-text-fill: #3b2304;
-    -fx-border-color: rgba(180, 116, 16, 0.95);
-    -fx-effect: dropshadow(gaussian, rgba(248,181,0,0.9), 16, 0.7, 0, 3);
+-fx-background-color: linear-gradient(#ffe58f, #f9a826);
+-fx-text-fill: #3b2304;
+-fx-border-color: rgba(180, 116, 16, 0.95);
+-fx-effect: dropshadow(gaussian, rgba(248,181,0,0.9), 16, 0.7, 0, 3);
 }
 
 /* כותרת של רמת קושי */
 .section-title {
-    -fx-text-fill: #fef9e6;
-    -fx-font-size: 15;
-    -fx-font-weight: bold;
+-fx-text-fill: #fef9e6;
+-fx-font-size: 15;
+-fx-font-weight: bold;
 }
 
 /* כפתורי קושי – Easy/Medium/Hard */
 .difficulty-btn {
-    -fx-background-radius: 999;
-    -fx-border-radius: 999;
-    -fx-background-insets: 0;
-    -fx-border-insets: 0;
-    -fx-padding: 8 24;
-    -fx-font-size: 13;
-    -fx-background-color: rgb(72, 17, 17);
-    -fx-text-fill: #e5e7eb;
-    -fx-border-color: rgb(115, 60, 10);
-    -fx-border-width: 1;
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
+-fx-background-radius: 999;
+-fx-border-radius: 999;
+-fx-background-insets: 0;
+-fx-border-insets: 0;
+-fx-padding: 8 24;
+-fx-font-size: 13;
+-fx-background-color: rgb(72, 17, 17);
+-fx-text-fill: #e5e7eb;
+-fx-border-color: rgb(115, 60, 10);
+-fx-border-width: 1;
+-fx-focus-color: transparent;
+-fx-faint-focus-color: transparent;
 }
 
 .difficulty-btn:hover {
-    -fx-background-color: rgb(196, 113, 44);
+-fx-background-color: rgb(196, 113, 44);
 }
 
 .difficulty-btn:selected {
-    -fx-background-radius: 999;
-    -fx-border-radius: 999;
-    -fx-background-insets: 0;
-    -fx-border-insets: 0;
-    -fx-background-color: linear-gradient(#ffa94d, #ff7b1a);
-    -fx-text-fill: #3b2304;
-    -fx-effect: dropshadow(gaussian, rgba(249,115,22,0.85), 18, 0.6, 0, 3);
+-fx-background-radius: 999;
+-fx-border-radius: 999;
+-fx-background-insets: 0;
+-fx-border-insets: 0;
+-fx-background-color: linear-gradient(#ffa94d, #ff7b1a);
+-fx-text-fill: #3b2304;
+-fx-effect: dropshadow(gaussian, rgba(249,115,22,0.85), 18, 0.6, 0, 3);
 }
 
 /* מסגרת לוח – בהיר */
 .board-frame {
-    -fx-background-color: transparent;
-    -fx-padding: 6;
-    -fx-background-radius: 18;
-    -fx-border-radius: 18;
-    -fx-border-color: rgba(222,170,60,0.9);
-    -fx-border-width: 1.8;
+-fx-background-color: transparent;
+-fx-padding: 6;
+-fx-background-radius: 18;
+-fx-border-radius: 18;
+-fx-border-color: rgba(222,170,60,0.9);
+-fx-border-width: 1.8;
 }
 
 .board-container {
-    -fx-background-color: transparent;
+-fx-background-color: transparent;
 }
 
 /* ========================================================
-   ---------  DARK MODE (Lion Night)  ----------------------
-   ======================================================== */
+--------- DARK MODE (Lion Night) ----------------------
+======================================================== */
 
 /* BACKGROUND – סגנון לילה, כמו שאהבת */
 .dark-mode .background-pane {
-    -fx-background-color: linear-gradient(
-            #7c3aed 0%,
-            #a855f7 35%,
-            #f97316 70%,
-            #1f0b3a 100%
-    );
-    -fx-background-image: url("/images/King.png");
-    -fx-background-size: cover;
-    -fx-background-position: center;
-    -fx-background-repeat: no-repeat;
+-fx-background-color: linear-gradient(
+#7c3aed 0%,
+#a855f7 35%,
+#f97316 70%,
+#1f0b3a 100%
+);
+-fx-background-image: url("/images/King.png");
+-fx-background-size: cover;
+-fx-background-position: center;
+-fx-background-repeat: no-repeat;
 
-    -fx-padding: 20 32 32 32;
+-fx-padding: 20 32 32 32;
 }
 
 /* MAIN CARD – כהה, זהוב */
 .dark-mode .card-main {
-    -fx-background-color: linear-gradient(
-            from 0% 0% to 0% 100%,
-            rgba(36, 24, 10, 0.95) 0%,
-            rgba(20, 14, 8, 0.96) 55%,
-            rgba(14, 10, 6, 0.97) 100%
-    );
-    -fx-background-radius: 26;
-    -fx-border-radius: 26;
-    -fx-border-color: rgba(250, 204, 21, 0.65);
-    -fx-border-width: 1.8;
-    -fx-padding: 26 40 32 40;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 32, 0.6, 0, 10);
+-fx-background-color: linear-gradient(
+from 0% 0% to 0% 100%,
+rgba(36, 24, 10, 0.95) 0%,
+rgba(20, 14, 8, 0.96) 55%,
+rgba(14, 10, 6, 0.97) 100%
+);
+-fx-background-radius: 26;
+-fx-border-radius: 26;
+-fx-border-color: rgba(250, 204, 21, 0.65);
+-fx-border-width: 1.8;
+-fx-padding: 26 40 32 40;
+-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 32, 0.6, 0, 10);
 }
 
 /* TITLES – GOLDEN ADVENTURE */
 .dark-mode .title-label {
-    -fx-text-fill: #fef9c3;
-    -fx-font-size: 40;
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 26, 0.6, 0, 6);
+-fx-text-fill: #fef9c3;
+-fx-font-size: 40;
+-fx-font-weight: bold;
+-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 26, 0.6, 0, 6);
 }
 
 .dark-mode .subtitle-label {
-    -fx-text-fill: #e5e7eb;
-    -fx-font-size: 13.5;
+-fx-text-fill: #e5e7eb;
+-fx-font-size: 13.5;
 }
 
 .dark-mode .hearts-label {
-    -fx-text-fill: #fecaca;
-    -fx-font-size: 13;
+-fx-text-fill: #fecaca;
+-fx-font-size: 13;
 }
 
 .dark-mode .heart-icon {
-    -fx-text-fill: #fb7185;
-    -fx-font-size: 18;
+-fx-text-fill: #fb7185;
+-fx-font-size: 18;
 }
 
 /* BUTTON BASE */
 .dark-mode .button {
-    -fx-font-weight: bold;
-    -fx-background-radius: 999;
-    -fx-border-radius: 999;
-    -fx-font-size: 12.5;
-    -fx-cursor: hand;
-    -fx-scale-x: 1;
-    -fx-scale-y: 1;
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
+-fx-font-weight: bold;
+-fx-background-radius: 999;
+-fx-border-radius: 999;
+-fx-font-size: 12.5;
+-fx-cursor: hand;
+-fx-scale-x: 1;
+-fx-scale-y: 1;
+-fx-focus-color: transparent;
+-fx-faint-focus-color: transparent;
 }
 
 .dark-mode .button:hover {
-    -fx-scale-x: 1.03;
-    -fx-scale-y: 1.03;
+-fx-scale-x: 1.03;
+-fx-scale-y: 1.03;
 }
 
 /* PRIMARY – Start Adventure */
 .dark-mode .primary-action-btn {
-    -fx-background-color: linear-gradient(#facc15, #f97316);
-    -fx-text-fill: #111827;
-    -fx-padding: 10 40;
-    -fx-effect: dropshadow(gaussian, rgba(250,204,21,0.9), 26, 0.7, 0, 6);
+-fx-background-color: linear-gradient(#facc15, #f97316);
+-fx-text-fill: #111827;
+-fx-padding: 10 40;
+-fx-effect: dropshadow(gaussian, rgba(250,204,21,0.9), 26, 0.7, 0, 6);
 }
 
 .dark-mode .primary-action-btn:hover {
-    -fx-background-color: linear-gradient(#fde047, #fb923c);
+-fx-background-color: linear-gradient(#fde047, #fb923c);
 }
 
 /* SECONDARY – Back */
 .dark-mode .secondary-action-btn {
-    -fx-background-color: rgba(15,23,42,0.9);
-    -fx-text-fill: #facc15;
-    -fx-border-color: rgba(250,204,21,0.8);
-    -fx-border-width: 1.6;
-    -fx-padding: 6 20;
+-fx-background-color: rgba(15,23,42,0.9);
+-fx-text-fill: #facc15;
+-fx-border-color: rgba(250,204,21,0.8);
+-fx-border-width: 1.6;
+-fx-padding: 6 20;
 }
 
 .dark-mode .secondary-action-btn:hover {
-    -fx-background-color: rgba(8,12,20,1);
+-fx-background-color: rgba(8,12,20,1);
 }
 
 .dark-mode .small-back-btn {
-    -fx-padding: 4 16;
+-fx-padding: 4 16;
 }
 
 /* PLAYER CARDS – כהה */
 .dark-mode .player-card {
-    -fx-background-color: linear-gradient(
-            from 0% 0% to 100% 100%,
-            rgba(48, 26, 18, 0.92) 0%,
-            rgba(38, 20, 14, 0.94) 40%,
-            rgba(28, 16, 12, 0.96) 100%
-    );
-    -fx-background-radius: 22;
-    -fx-border-radius: 22;
-    -fx-border-color: rgba(250, 204, 21, 0.7);
-    -fx-border-width: 1.8;
-    -fx-padding: 20 26 22 26;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 20, 0.5, 0, 6);
+-fx-background-color: linear-gradient(
+from 0% 0% to 100% 100%,
+rgba(48, 26, 18, 0.92) 0%,
+rgba(38, 20, 14, 0.94) 40%,
+rgba(28, 16, 12, 0.96) 100%
+);
+-fx-background-radius: 22;
+-fx-border-radius: 22;
+-fx-border-color: rgba(250, 204, 21, 0.7);
+-fx-border-width: 1.8;
+-fx-padding: 20 26 22 26;
+-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 20, 0.5, 0, 6);
 }
 
 .dark-mode .player-title {
-    -fx-text-fill: #facc15;
-    -fx-font-size: 16;
-    -fx-font-weight: bold;
+-fx-text-fill: #facc15;
+-fx-font-size: 16;
+-fx-font-weight: bold;
 }
 
 .dark-mode .field-label {
-    -fx-text-fill: #f1f5f9;
-    -fx-font-size: 12.5;
+-fx-text-fill: #f1f5f9;
+-fx-font-size: 12.5;
 }
 
 .dark-mode .name-field {
-    -fx-background-radius: 16;
-    -fx-background-color: rgba(0,0,0,0.55);
-    -fx-text-fill: #fef9c3;
-    -fx-prompt-text-fill: #cfc8b5;
-    -fx-padding: 7 12;
-    -fx-border-color: transparent;
+-fx-background-radius: 16;
+-fx-background-color: rgba(0,0,0,0.55);
+-fx-text-fill: #fef9c3;
+-fx-prompt-text-fill: #cfc8b5;
+-fx-padding: 7 12;
+-fx-border-color: transparent;
 }
 
 /* BOARD STYLE – Dark */
 .dark-mode .board-style-pill {
-    -fx-background-radius: 999;
-    -fx-padding: 6 18;
-    -fx-font-size: 12.5;
-    -fx-font-weight: bold;
-    -fx-background-color: #f9fafb;
-    -fx-text-fill: #1f2933;
-    -fx-border-radius: 999;
-    -fx-border-color: rgba(0,0,0,0.18);
-    -fx-border-width: 1;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 10, 0.25, 0, 2);
+-fx-background-radius: 999;
+-fx-padding: 6 18;
+-fx-font-size: 12.5;
+-fx-font-weight: bold;
+-fx-background-color: #f9fafb;
+-fx-text-fill: #1f2933;
+-fx-border-radius: 999;
+-fx-border-color: rgba(0,0,0,0.18);
+-fx-border-width: 1;
+-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 10, 0.25, 0, 2);
 }
 
 .dark-mode .board-style-pill:hover {
-    -fx-background-color: #ffffff;
-    -fx-effect: dropshadow(gaussian, rgba(250,204,21,0.65), 14, 0.6, 0, 3);
+-fx-background-color: #ffffff;
+-fx-effect: dropshadow(gaussian, rgba(250,204,21,0.65), 14, 0.6, 0, 3);
 }
 
 .dark-mode .board-style-pill.board-selected {
-    -fx-background-color: linear-gradient(#facc15, #f97316);
-    -fx-text-fill: #111827;
-    -fx-border-color: rgba(161,98,7,0.9);
-    -fx-effect: dropshadow(gaussian, rgba(250,204,21,0.9), 18, 0.7, 0, 4);
+-fx-background-color: linear-gradient(#facc15, #f97316);
+-fx-text-fill: #111827;
+-fx-border-color: rgba(161,98,7,0.9);
+-fx-effect: dropshadow(gaussian, rgba(250,204,21,0.9), 18, 0.7, 0, 4);
 }
 
 /* DIFFICULTY – Dark */
 .dark-mode .section-title {
-    -fx-text-fill: #fef9c3;
-    -fx-font-size: 15;
-    -fx-font-weight: bold;
+-fx-text-fill: #fef9c3;
+-fx-font-size: 15;
+-fx-font-weight: bold;
 }
 
 .dark-mode .difficulty-btn {
-    -fx-background-radius: 999;
-    -fx-border-radius: 999;
-    -fx-background-insets: 0;
-    -fx-border-insets: 0;
-    -fx-padding: 8 24;
-    -fx-font-size: 13;
-    -fx-background-color: rgba(6,12,24,0.95);
-    -fx-text-fill: #e5e7eb;
-    -fx-border-color: rgba(15,23,42,0.9);
-    -fx-border-width: 1;
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
+-fx-background-radius: 999;
+-fx-border-radius: 999;
+-fx-background-insets: 0;
+-fx-border-insets: 0;
+-fx-padding: 8 24;
+-fx-font-size: 13;
+-fx-background-color: rgba(6,12,24,0.95);
+-fx-text-fill: #e5e7eb;
+-fx-border-color: rgba(15,23,42,0.9);
+-fx-border-width: 1;
+-fx-focus-color: transparent;
+-fx-faint-focus-color: transparent;
 }
 
 .dark-mode .difficulty-btn:hover {
-    -fx-background-color: rgba(15,23,42,1);
+-fx-background-color: rgba(15,23,42,1);
 }
 
 .dark-mode .difficulty-btn:selected {
-    -fx-background-radius: 999;
-    -fx-border-radius: 999;
-    -fx-background-insets: 0;
-    -fx-border-insets: 0;
-    -fx-background-color: linear-gradient(#f59e0b, #f97316);
-    -fx-text-fill: #451a03;
-    -fx-effect: dropshadow(gaussian, rgba(249,115,22,0.8), 18, 0.6, 0, 3);
+-fx-background-radius: 999;
+-fx-border-radius: 999;
+-fx-background-insets: 0;
+-fx-border-insets: 0;
+-fx-background-color: linear-gradient(#f59e0b, #f97316);
+-fx-text-fill: #451a03;
+-fx-effect: dropshadow(gaussian, rgba(249,115,22,0.8), 18, 0.6, 0, 3);
 }
 
 /* BOARD FRAME – Dark */
 .dark-mode .board-frame {
-    -fx-background-color: transparent;
-    -fx-padding: 6;
-    -fx-background-radius: 18;
-    -fx-border-radius: 18;
-    -fx-border-color: rgba(250,204,21,0.85);
-    -fx-border-width: 1.8;
+-fx-background-color: transparent;
+-fx-padding: 6;
+-fx-background-radius: 18;
+-fx-border-radius: 18;
+-fx-border-color: rgba(250,204,21,0.85);
+-fx-border-width: 1.8;
 }
 
 .dark-mode .board-container {
-    -fx-background-color: transparent;
+-fx-background-color: transparent;
 }
