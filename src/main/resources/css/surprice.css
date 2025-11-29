@@ -1,8 +1,10 @@
+/* Root background overlay */
 .surprise-root {
     -fx-background-color: rgba(0, 0, 0, 0.9);
     -fx-padding: 16;
 }
 
+/* Main surprise card container */
 .surprise-card {
     -fx-background-radius: 24;
     -fx-border-radius: 24;
@@ -13,11 +15,13 @@
     -fx-spacing: 16;
 }
 
+/* Icon displayed at the top (emoji or symbol) */
 .surprise-icon {
     -fx-font-size: 72px;
     -fx-padding: 0 0 8 0;
 }
 
+/* Title text (e.g., “Good Surprise!” or “Bad Luck!”) */
 .surprise-title {
     -fx-text-fill: white;
     -fx-font-size: 26px;
@@ -27,6 +31,7 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.8), 8, 0.3, 0, 2);
 }
 
+/* Message text under the title */
 .surprise-message {
     -fx-text-fill: #f9fafb;
     -fx-font-size: 15px;
@@ -34,6 +39,7 @@
     -fx-alignment: center;
 }
 
+/* Box displaying result details (points/lives change) */
 .result-box {
     -fx-background-radius: 18;
     -fx-border-radius: 18;
@@ -41,39 +47,47 @@
     -fx-border-width: 2;
 }
 
+/* Positive result box (good surprise) */
 .result-box-good {
     -fx-background-color: rgba(22,163,74,0.3);
     -fx-border-color: #86efac;
 }
 
+/* Negative result box (bad surprise) */
 .result-box-bad {
     -fx-background-color: rgba(220,38,38,0.3);
     -fx-border-color: #fecaca;
 }
 
+/* Result label title (e.g., “Points”, “Lives”) */
 .result-title {
     -fx-text-fill: white;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
 }
 
+/* Emoji or small icon near result */
 .result-emoji {
     -fx-font-size: 20px;
 }
 
+/* Numeric or textual value of the result */
 .result-value {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
 }
 
+/* Positive text color for added value */
 .result-positive {
     -fx-text-fill: #bbf7d0;
 }
 
+/* Negative text color for deducted value */
 .result-negative {
     -fx-text-fill: #fecaca;
 }
 
+/* Main action button (e.g., “Continue” or “OK”) */
 .primary-action-btn {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
@@ -90,6 +104,7 @@
     -fx-cursor: hand;
 }
 
+/* Hover effect for the main action button */
 .primary-action-btn:hover {
     -fx-background-color: rgba(255, 255, 255, 0.3);
 }

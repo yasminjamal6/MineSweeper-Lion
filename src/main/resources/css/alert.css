@@ -1,14 +1,17 @@
+/* Alert container */
 .lion-alert {
     -fx-background-color: linear-gradient(to bottom, #2a0303, #3d0d0d);
     -fx-padding: 16;
     -fx-font-family: "Segoe UI", "Arial";
 }
 
+/* Alert text */
 .lion-alert .label {
     -fx-text-fill: #fef3c7;
     -fx-font-size: 14px;
 }
 
+/* OK button styling */
 .lion-alert .button {
     -fx-background-color: linear-gradient(to right, #fbbf24, #f59e0b);
     -fx-text-fill: #1f2937;
@@ -16,7 +19,7 @@
     -fx-background-radius: 999;
     -fx-padding: 6 18 6 18;
 }
-
+/* Hover effect for OK button */
 .lion-alert .button:hover {
     -fx-background-color: linear-gradient(to right, #facc15, #f97316);
 }

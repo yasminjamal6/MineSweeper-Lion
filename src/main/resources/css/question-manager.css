@@ -1,38 +1,30 @@
-/* =========================
-   GLOBAL FONT
-   ========================= */
+/* GLOBAL FONT*/
 .gh-root, .gh-background {
     -fx-font-family: "Segoe UI", "Arial";
 }
 
-/* =========================
-   PAGE BACKGROUND GRADIENT
-   ========================= */
+/* BACKGROUND GRADIENT (PAGE)*/
 .gh-background {
     -fx-background-color: linear-gradient(
-            #7c3aed 0%,
-            #a855f7 35%,
-            #f97316 70%,
-            #1f0b3a 100%
+        #7c3aed 0%,
+        #a855f7 35%,
+        #f97316 70%,
+        #1f0b3a 100%
     );
 }
 
-/* =========================
-   MAIN LAYOUT CONTAINER
-   ========================= */
+/*MAIN LAYOUT CONTAINER*/
 .gh-root {
     -fx-padding: 20 32 32 32;
     -fx-alignment: top_center;
 }
 
-/* =========================
-   HEADER AREA
-   ========================= */
+/*HEADER AREA */
 .gh-header {
     -fx-alignment: center_left;
 }
 
-/* Header icon container */
+/* Icon background for header */
 .gh-header-icon {
     -fx-background-color: linear-gradient(#a855f7, #f97316);
     -fx-background-radius: 16;
@@ -58,11 +50,9 @@
     -fx-font-size: 12;
 }
 
-/* =========================
-   BUTTONS
-   ========================= */
+/*BUTTONS*/
 
-/* Primary button (used for "Add Question") */
+/* Primary button: used for "Add Question" */
 .gh-btn-primary {
     -fx-background-color: linear-gradient(#facc15, #f97316);
     -fx-text-fill: white;
@@ -84,7 +74,7 @@
     -fx-scale-y: 1.05;
 }
 
-/* Secondary button (used for "Back") */
+/* Secondary button: used for "Back" */
 .gh-btn-secondary {
     -fx-background-color: rgba(0,0,0,0.45);
     -fx-text-fill: #facc15;
@@ -102,9 +92,7 @@
     -fx-background-color: rgba(0,0,0,0.7);
 }
 
-/* =========================
-   TABLE CARD WRAPPER
-   ========================= */
+/* TABLE CARD WRAPPER */
 .gh-table-wrapper {
     -fx-background-color: linear-gradient(#020617, #0f172a, #1e293b);
     -fx-background-radius: 26;
@@ -115,7 +103,7 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 25, 0.6, 0, 10);
 }
 
-/* Table title text */
+/* Title above the table */
 .gh-table-title {
     -fx-text-fill: #f9fafb;
     -fx-font-size: 16;
@@ -127,9 +115,7 @@
     -fx-font-size: 18;
 }
 
-/* =========================
-   TABLEVIEW HEADER
-   ========================= */
+/* TABLEVIEW HEADER (GH TABLE) */
 
 .gh-table .column-header-background,
 .gh-table .column-header-background .filler,
@@ -151,9 +137,7 @@
     -fx-alignment: CENTER;
 }
 
-/* =========================
-   TABLEVIEW ROWS
-   ========================= */
+/* TABLEVIEW ROWS*/
 .table-view {
     -fx-background-color: transparent;
 }
@@ -174,15 +158,14 @@
     -fx-background-color: rgba(147,51,234,0.40);
 }
 
+/* Table cells */
 .table-view .table-cell {
     -fx-text-fill: #f9fafb;
     -fx-font-size: 13;
     -fx-padding: 6 10;
 }
 
-/* =========================
-   SEARCH FIELD
-   ========================= */
+/*SEARCH FIELD (OPTIONAL) */
 .gh-search-field {
     -fx-background-radius: 14;
     -fx-padding: 6 12;
@@ -194,9 +177,7 @@
     -fx-border-width: 1;
 }
 
-/* =========================
-   ACTION BUTTONS (EDIT / DELETE)
-   ========================= */
+/* ACTION BUTTONS INSIDE TABLE (Edit / Delete)*/
 .edit-btn {
     -fx-background-color: transparent;
     -fx-border-color: rgba(59, 130, 246, 0.7);
@@ -226,12 +207,9 @@
 .delete-btn:hover {
     -fx-background-color: rgba(239, 68, 68, 0.35);
 }
+/*QUESTION DIALOG (ADD / EDIT) */
 
-/* =========================
-   QUESTION DIALOG (ADD / EDIT)
-   ========================= */
-
-/* DialogPane styling */
+/* General styling for the DialogPane (The modal window background) */
 .dialog-pane.qd-dialog-pane {
     -fx-background-color: linear-gradient(
             #7c3aed 0%,
@@ -244,12 +222,12 @@
     -fx-padding: 18;
 }
 
-/* Main content container of the dialog */
+/* Content area inside the dialog */
 .qd-root {
     -fx-spacing: 16;
 }
 
-/* Inner card (similar to table wrapper) */
+/* Inner card wrapper (Similar to gh-table-wrapper, but smaller) */
 .qd-card {
     -fx-background-color: linear-gradient(#020617, #0f172a, #1e293b);
     -fx-background-radius: 20;
@@ -260,7 +238,7 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 20, 0.6, 0, 8);
 }
 
-/* Dialog header */
+/* Dialog Header (title and subtitle) */
 .qd-header {
     -fx-alignment: center_left;
     -fx-spacing: 10;
@@ -290,7 +268,7 @@
     -fx-font-size: 11;
 }
 
-/* Form grid */
+/* Form Fields Layout */
 .qd-form-grid {
     -fx-hgap: 10;
     -fx-vgap: 10;
@@ -301,7 +279,7 @@
     -fx-font-size: 12;
 }
 
-/* Text fields, text area, choice box */
+/* Text Fields / Text Areas / Choice Boxes (Inputs) */
 .qd-textfield,
 .qd-textarea,
 .qd-choicebox {
@@ -316,23 +294,28 @@
     -fx-font-size: 12;
 }
 
-/* Dark TextArea fix */
 .qd-textarea {
     -fx-min-height: 70;
-    -fx-control-inner-background: rgba(15,23,42,0.9);
+}
+/* Text Area specific styling */
+.qd-textarea {
+    -fx-min-height: 70;
+    -fx-control-inner-background: rgba(15,23,42,0.9); /* מבטל את הרקע הלבן */
 }
 
+/* Inner components of TextArea (Scrollbar, viewport) to make them transparent */
 .qd-textarea .scroll-pane,
 .qd-textarea .viewport,
 .qd-textarea .content {
     -fx-background-color: transparent;
 }
 
+/* Text color inside the TextArea */
 .qd-textarea .text {
     -fx-fill: #f9fafb;
 }
 
-/* ChoiceBox design */
+/* ChoiceBox style (e.g., for Correct Answer / Difficulty) */
 .qd-choicebox {
     -fx-background-color: rgba(15,23,42,0.95);
     -fx-background-radius: 10;
@@ -355,7 +338,7 @@
     -fx-background-color: #facc15;
 }
 
-/* ChoiceBox popup menu */
+/* ChoiceBox popup (the opened menu) */
 .context-menu {
     -fx-background-color: rgba(15,23,42,0.97);
     -fx-background-radius: 10;
@@ -364,6 +347,7 @@
     -fx-border-width: 1.2;
 }
 
+/* Menu items inside the popup */
 .menu-item {
     -fx-text-fill: #e5e7eb;
     -fx-font-size: 12;
@@ -375,12 +359,10 @@
     -fx-text-fill: #f9fafb;
 }
 
-/* Dialog buttons (OK/Cancel) using existing button styles */
+/* Dialog Action Buttons (OK/Cancel) */
 .dialog-pane .button.gh-btn-primary {
-    -fx-min-width: 80;
+-fx-min-width: 80;
 }
-
-
 
 .dialog-pane .button.gh-btn-secondary {
     -fx-min-width: 80;
