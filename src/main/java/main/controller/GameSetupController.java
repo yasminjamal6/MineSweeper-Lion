@@ -14,6 +14,8 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.control.Button;
 import model.Theme;
@@ -41,8 +43,12 @@ public class GameSetupController {
 
     @FXML private StackPane root;
 
+    /**
+     * Initializes the controller. Sets the default difficulty and logs FXML/CSS loading status.
+     */
     @FXML
     private void initialize() {
+        // Sets 'Easy' as the default selection when the view loads.
         easyBtn.setSelected(true);
 
         System.out.println("Root = " + root);
@@ -56,6 +62,10 @@ public class GameSetupController {
         rebuildPicker(themePickerB, selectedThemeB, false);
     }
 
+
+    /**
+     * Navigates back to the home screen with a smooth fade transition.
+     */
     @FXML
     private void onBack(ActionEvent event) {
         System.out.println(">> Back clicked");
@@ -84,6 +94,10 @@ public class GameSetupController {
 
 
 
+    /**
+     * Validates player input and starts the game if all data is valid.
+     * Displays alerts for missing or duplicate player names.
+     */
     @FXML
     private void onStart(ActionEvent event) {
 
@@ -187,8 +201,5 @@ public class GameSetupController {
             box.getChildren().add(btn);
         }
     }
-
-
-
 
 }
