@@ -12,40 +12,51 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 import model.Difficulty;
-import model.QuestionBank;
-import model.QuestionLevel;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.QuestionBank;
+import model.QuestionLevel;
 import model.ScoreRules;
 import model.SurpriseType;
 import javafx.scene.layout.HBox;
 import model.Theme;
 
+
+/**
+ * Main controller for the game view. Handles UI initialization, game flow logic,
+ * cell interactions, and transitions.
+ */
 public class GameController {
 
     @FXML private Label livesLabel;
     @FXML private Label scoreLabel;
-
     @FXML private Label playerANameLabel;
     @FXML private Label playerBNameLabel;
     @FXML private Label playerAMinesLabel;
     @FXML private Label playerBMinesLabel;
-
     @FXML private GridPane boardAGrid;
     @FXML private GridPane boardBGrid;
-
     @FXML private HBox heartsBox;
 
+
+    // Game State Variables
     private int lives = 10;
     private int score = 0;
     private boolean isPlayerATurn = true;
+
     private final QuestionBank questionBank = new QuestionBank();
     private Theme playerATheme;
     private Theme playerBTheme;
 
 
+
+    /**
+     * Initializes the controller after its root element has been completely processed by the FXMLLoader.
+     * Sets player names, initial lives, and builds the two game boards.
+     */
     @FXML
     private void initialize() {
+        // Set player names and mines based on setup
         playerANameLabel.setText(GameSetupController.selectedPlayerAName);
         playerBNameLabel.setText(GameSetupController.selectedPlayerBName);
 
@@ -56,33 +67,41 @@ public class GameController {
         playerAMinesLabel.setText(String.valueOf(mines));
         playerBMinesLabel.setText(String.valueOf(mines));
 
+        // Initialize game state based on difficulty model
         model.Difficulty diff = DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
 
         lives = diff.getInitialLives();
         score = 0;
 
+        // Build UI elements
         buildHearts(diff);
         updateLivesUI(diff);
 
+        // Calculate board parameters
         int size = getBoardSize(GameSetupController.selectedDifficulty);
         int cellSize = getCellSize(GameSetupController.selectedDifficulty);
 
-        buildBoardGrid(boardAGrid, size, cellSize, true);   // לוח A – לפי playerATheme
-        buildBoardGrid(boardBGrid, size, cellSize, false);  // לוח B – לפי playerBTheme
-
+        // Building the game boards
+        buildBoardGrid(boardAGrid, size, cellSize, true);
+        buildBoardGrid(boardBGrid, size, cellSize, false);
         updateBoardHighlight();
     }
 
+
+    /**
+     * Updates the visual style of the boards (active/inactive) based on the current player's turn.
+     */
     private void updateBoardHighlight() {
         if (isPlayerATurn) {
-            //  A
+
+            // Highlight Player A's board
             boardAGrid.getStyleClass().add("active-board");
             boardAGrid.getStyleClass().remove("inactive-board");
 
             boardBGrid.getStyleClass().add("inactive-board");
             boardBGrid.getStyleClass().remove("active-board");
         } else {
-            //  B
+            // Highlight Player B's board
             boardBGrid.getStyleClass().add("active-board");
             boardBGrid.getStyleClass().remove("inactive-board");
 
@@ -144,14 +163,6 @@ public class GameController {
         }
     }
 
-    private void loseLife(model.Difficulty diff) {
-        if (lives > 0) {
-            lives--;
-            updateLivesUI(diff);
-        }
-    }
-
-
     private int getBoardSize(GameSetupController.Difficulty diff) {
         return switch (diff) {
             case EASY   -> 9;
@@ -160,6 +171,7 @@ public class GameController {
         };
     }
 
+    // גודל המשבצת – מותאם כך שכל הלוח יישב נוח במסך
     private int getCellSize(GameSetupController.Difficulty diff) {
         return switch (diff) {
             case EASY   -> 44;
@@ -203,7 +215,6 @@ public class GameController {
         showSurprisePopup(change);
     }
 
-
     private void showSurprisePopup(ScoreRules.ScoreChange change) {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -230,7 +241,7 @@ public class GameController {
 
 
     /**
-     * בניית לוח בגודל קבוע שנראה טוב על המסך.
+     * Builds a fixed-size game board that looks visually balanced on the screen.
      */
     private void buildBoardGrid(GridPane grid, int size, int cellSize, boolean isBoardA) {
         grid.getChildren().clear();
@@ -259,6 +270,7 @@ public class GameController {
                     }
                 });
 
+                // Fixed cell size per difficulty, not affected by resizing
                 cell.setPrefSize(cellSize, cellSize);
                 cell.setMinSize(cellSize, cellSize);
                 cell.setMaxSize(cellSize, cellSize);
