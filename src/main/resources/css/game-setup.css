@@ -1,204 +1,264 @@
+/* =========================
+   GLOBAL FONT
+   ========================= */
 .root {
     -fx-font-family: "Segoe UI", "Arial";
 }
 
-/* רקע חיצוני כהה */
+/* =========================
+   BACKGROUND – GH STYLE
+   ========================= */
 .background-pane {
-    -fx-background-color: linear-gradient(to bottom, #2a0303, #3d0d0d);
-}
+    -fx-background-color: linear-gradient(
+            #7c3aed 0%,
+            #a855f7 35%,
+            #f97316 70%,
+            #1f0b3a 100%
+    );
 
-/* כרטיס מרכזי – תמונה פנימית */
-.card-main {
-    -fx-background-color: rgba(20, 5, 15, 0.92);
     -fx-background-image: url("/images/King.png");
     -fx-background-size: cover;
     -fx-background-position: center;
     -fx-background-repeat: no-repeat;
 
-    -fx-padding: 18 40 28 40;  /* העליתי את כל התוכן מעט למעלה */
+    -fx-padding: 20 32 32 32;
+}
+
+/* =========================
+   MAIN CARD – SAVANNA DARK GOLD
+   ========================= */
+.card-main {
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 0% 100%,
+            rgba(36, 24, 10, 0.95) 0%,
+            rgba(20, 14, 8, 0.96) 55%,
+            rgba(14, 10, 6, 0.97) 100%
+    );
     -fx-background-radius: 26;
     -fx-border-radius: 26;
-    -fx-border-color: rgba(255, 211, 107, 0.95);
-    -fx-border-width: 1.4;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.85), 40, 0.4, 0, 12);
+    -fx-border-color: rgba(250, 204, 21, 0.65);
+    -fx-border-width: 1.6;
+    -fx-padding: 26 40 32 40;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 32, 0.55, 0, 10);
 }
 
+/* =========================
+   TITLES – GOLDEN ADVENTURE
+   ========================= */
 .title-label {
-    -fx-text-fill: linear-gradient(to bottom, #fff1c1, #ffd36b, #ffb347);
-    -fx-font-size: 44;
+    -fx-text-fill: #fef9c3;
+    -fx-font-size: 40;
     -fx-font-weight: bold;
-
-    /* שילוב של אור חיצוני + עומק */
-    -fx-effect: dropshadow(gaussian, rgba(255, 180, 70, 0.95), 55, 0.45, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.85), 26, 0.6, 0, 6);
 }
-
 
 .subtitle-label {
-    -fx-text-fill: #ffe5c8;
-    -fx-font-size: 14;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 10, 0.3, 0, 2);
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 13.5;
 }
 
 .hearts-label {
-    -fx-text-fill: #ffb8cd;
+    -fx-text-fill: #fecaca;
     -fx-font-size: 13;
 }
 
 .heart-icon {
-    -fx-text-fill: #ff6f91;
-    -fx-font-size: 20;
-    -fx-effect: dropshadow(gaussian, rgba(255,110,145,0.9), 15, 0.5, 0, 0);
+    -fx-text-fill: #fb7185;
+    -fx-font-size: 18;
 }
 
-/* בסיס לכפתורים */
+/* =========================
+   BUTTONS – Adventure Style
+   ========================= */
 .button {
-    -fx-background-radius: 22;
     -fx-font-weight: bold;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-font-size: 12.5;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(255,180,80,0.45), 14, 0.3, 0, 0);
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
 }
 
 .button:hover {
-    -fx-scale-x: 1.06;
-    -fx-scale-y: 1.06;
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
 }
 
-/* כפתור Back */
+/* PRIMARY BUTTON – Start the Adventure */
+.primary-action-btn {
+    -fx-background-color: linear-gradient(#facc15, #f97316);
+    -fx-text-fill: #111827;
+    -fx-padding: 10 40;
+    -fx-effect: dropshadow(gaussian, rgba(250,204,21,0.7), 22, 0.4, 0, 4);
+}
+
+.primary-action-btn:hover {
+    -fx-background-color: linear-gradient(#fde047, #fb923c);
+}
+
+/* SECONDARY BUTTON – Back to Home */
 .secondary-action-btn {
-    -fx-background-radius: 22;
-    -fx-background-color: linear-gradient(to right, #ffe09c, #ffb54d);
-    -fx-border-color: #ffc76e;
-    -fx-border-width: 1.2;
-    -fx-text-fill: #402000;
+    -fx-background-color: rgba(15,23,42,0.9);
+    -fx-text-fill: #facc15;
+    -fx-border-color: rgba(250,204,21,0.8);
+    -fx-border-width: 1.4;
+    -fx-padding: 6 20;
+}
 
-    /* יותר padding = כפתור גבוה יותר = אזור לחיץ גדול יותר */
-    -fx-padding: 10 30;
-
-    /* Glow קצת יותר קטן שלא "מטעה" את העין */
-    -fx-effect: dropshadow(gaussian, rgba(255,160,90,0.55), 10, 0.45, 0, 0);
+.secondary-action-btn:hover {
+    -fx-background-color: rgba(8,12,20,1);
 }
 
 .small-back-btn {
-    -fx-background-radius: 18;
-    /* אפשר להשאיר או להוריד, לא קריטי */
-    -fx-padding: 4 18;
+    -fx-padding: 4 16;
 }
 
-/* כרטיס שחקן */
+/* =========================
+   PLAYER CARDS – Warm Premium
+   ========================= */
 .player-card {
-    -fx-background-color: rgba(35, 10, 20, 0.92);
-    -fx-border-color: #ffb347;
-    -fx-border-width: 1.8;
-    -fx-border-radius: 18;
-    -fx-background-radius: 18;
-    -fx-padding: 18 22 22 22;
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 100% 100%,
+            rgba(48, 26, 18, 0.92) 0%,
+            rgba(38, 20, 14, 0.94) 40%,
+            rgba(28, 16, 12, 0.96) 100%
+    );
+    -fx-background-radius: 22;
+    -fx-border-radius: 22;
+    -fx-border-color: rgba(250, 204, 21, 0.55);
+    -fx-border-width: 1.4;
+    -fx-padding: 20 26 22 26;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 18, 0.35, 0, 5);
 }
 
 .player-title {
-    -fx-text-fill: #ffd36b;
+    -fx-text-fill: #facc15;
     -fx-font-size: 16;
     -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 12, 0.3, 0, 2);
 }
 
 .field-label {
-    -fx-text-fill: #f5e1c8;
+    -fx-text-fill: #f1f5f9;
     -fx-font-size: 12.5;
 }
 
 .name-field {
     -fx-background-radius: 16;
     -fx-background-color: rgba(0,0,0,0.55);
-    -fx-text-fill: white;
-    -fx-prompt-text-fill: #bca7a7;
+    -fx-text-fill: #fef9c3;
+    -fx-prompt-text-fill: #cfc8b5;
     -fx-padding: 7 12;
     -fx-border-color: transparent;
 }
 
-/* כפתורי Board */
+/* =========================
+   BOARD STYLE PILLS – white, glossy
+   ========================= */
 .board-style-pill {
-    -fx-background-radius: 22;
-    -fx-padding: 8 20;
+    -fx-background-radius: 999;
+    -fx-padding: 6 18;
     -fx-font-size: 12.5;
     -fx-font-weight: bold;
-    -fx-text-fill: #2b0b0b;
-    -fx-effect: dropshadow(gaussian, rgba(255,170,70,0.6), 12, 0.4, 0, 0);
-    -fx-border-color: rgba(255,255,255,0.10);
-    -fx-border-width: 0.8;
+    -fx-background-color: #f9fafb;
+    -fx-text-fill: #1f2933;
+    -fx-border-radius: 999;
+    -fx-border-color: rgba(0,0,0,0.18);
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 10, 0.25, 0, 2);
 }
 
 .board-style-pill:hover {
-    -fx-effect: dropshadow(gaussian, rgba(255,120,60,0.8), 18, 0.55, 0, 0);
-    -fx-scale-x: 1.07;
-    -fx-scale-y: 1.07;
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(250,204,21,0.65), 14, 0.6, 0, 3);
 }
 
-.board-gold {
-    -fx-background-color: linear-gradient(to right, #ffd36b, #ffb347, #ff9f2f);
-    -fx-text-fill: #3a1a00;
+/* כשהכפתור נבחר (מוסיפים מחלקה board-selected מה-Controller) */
+.board-style-pill.board-selected {
+    -fx-background-color: linear-gradient(#facc15, #f97316);
+    -fx-text-fill: #111827;
+    -fx-border-color: rgba(161,98,7,0.9);
+    -fx-effect: dropshadow(gaussian, rgba(250,204,21,0.9), 18, 0.7, 0, 4);
 }
 
-.board-savanna {
-    -fx-background-color: linear-gradient(to right, #ff9a5c, #ff6b3b, #ff5a2a);
-    -fx-text-fill: #ffe7d3;
-}
+/* נשמור את המחלקות הישנות אם תרצי להשתמש בהן בהמשך */
+.board-gold { }
+.board-savanna { }
 
-/* כותרות קטנות */
+/* =========================
+   DIFFICULTY SELECTORS
+   ========================= */
 .section-title {
-    -fx-text-fill: #ffd36b;
+    -fx-text-fill: #fef9c3;
     -fx-font-size: 15;
     -fx-font-weight: bold;
 }
 
-/* כפתורי קושי */
 .difficulty-btn {
-    -fx-background-radius: 24;
-    -fx-padding: 10 28;
-    -fx-font-size: 14.5;
-    -fx-background-color: rgba(0,0,0,0.7);
-    -fx-text-fill: #f5e1c8;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.65), 18, 0.35, 0, 6);
+    -fx-background-radius: 999;
+    -fx-padding: 8 24;
+    -fx-font-size: 13;
+    -fx-background-color: rgba(6,12,24,0.95);
+    -fx-text-fill: #e5e7eb;
+    -fx-border-color: rgba(15,23,42,0.9);
+    -fx-border-width: 1;
 }
 
+/* Hover עדין */
 .difficulty-btn:hover {
-    -fx-background-color: rgba(255,180,100,0.25);
+    -fx-background-color: rgba(15,23,42,1);
 }
 
+/* =========================
+   DIFFICULTY SELECTORS
+   ========================= */
+
+.difficulty-btn {
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;          /* ⭐ גם המסגרת עגולה, לא רק הרקע  */
+    -fx-background-insets: 0;        /* ⭐ לא שכבות רקע מרובעות */
+    -fx-border-insets: 0;            /* ⭐ לא מסגרת מרובעת מסביב */
+    -fx-padding: 8 24;
+    -fx-font-size: 13;
+    -fx-background-color: rgba(6,12,24,0.95);
+    -fx-text-fill: #e5e7eb;
+    -fx-border-color: rgba(15,23,42,0.9);
+    -fx-border-width: 1;
+
+    /* מבטלים הילה של focus מרובעת */
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* Hover */
+.difficulty-btn:hover {
+    -fx-background-color: rgba(15,23,42,1);
+}
+
+/* Selected */
 .difficulty-btn:selected {
-    -fx-background-color: linear-gradient(to right, #ffb347, #ff6b6b);
-    -fx-text-fill: #2b0b0b;
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, rgba(255,100,80,0.8), 20, 0.45, 0, 2);
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-background-color: linear-gradient(#f59e0b, #f97316);
+    -fx-text-fill: #451a03;
+    -fx-effect: dropshadow(gaussian, rgba(249,115,22,0.8), 18, 0.6, 0, 3);
 }
 
-/* כפתור Start */
-.primary-action-btn {
-    -fx-background-radius: 32;
-    -fx-padding: 14 62;
-    -fx-background-color: linear-gradient(to right, #ff8a3c, #ff543d, #ff2e2e);
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 17;
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, rgba(255,60,40,0.6), 28, 0.4, 0, 7);
-}
 
-.primary-action-btn:hover {
-    -fx-background-color: linear-gradient(to right, #ff9f50, #ff6a56, #ff3f3f);
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
-    -fx-effect: dropshadow(gaussian, rgba(255,80,55,0.85), 34, 0.55, 0, 8);
-}
-
+/* =========================
+   BOARD FRAME (if used)
+   ========================= */
 .board-frame {
     -fx-background-color: transparent;
     -fx-padding: 6;
-    -fx-background-radius: 16;
-    -fx-border-radius: 16;
-    -fx-border-color: rgba(250,204,21,0.9); /* إطار ذهبي */
-    -fx-border-width: 2;
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-border-color: rgba(250,204,21,0.85);
+    -fx-border-width: 1.8;
 }
 
 .board-container {
     -fx-background-color: transparent;
 }
-

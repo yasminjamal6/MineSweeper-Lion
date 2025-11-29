@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <StackPane fx:id="root"
            prefWidth="1200" prefHeight="800"
            maxHeight="Infinity"
@@ -60,24 +59,6 @@
                         <VBox alignment="CENTER" spacing="6">
                             <Label styleClass="title-label" text="Prepare the Den" />
                             <Label styleClass="subtitle-label" text="Get your lions ready for the challenge!" />
-                        </VBox>
-
-                        <!-- Hearts -->
-                        <VBox alignment="CENTER" spacing="6">
-                            <HBox alignment="CENTER" spacing="4">
-                                <Label text="♥" styleClass="heart-icon"/>
-                                <Label text="♥" styleClass="heart-icon"/>
-                                <Label text="♥" styleClass="heart-icon"/>
-                                <Label text="♥" styleClass="heart-icon"/>
-                                <Label text="♥" styleClass="heart-icon"/>
-                                <Label text="♥" styleClass="heart-icon"/>
-                                <Label text="♥" styleClass="heart-icon"/>
-                                <Label text="♥" styleClass="heart-icon"/>
-                                <Label text="♥" styleClass="heart-icon"/>
-                                <Label text="♥" styleClass="heart-icon"/>
-                            </HBox>
-                            <Label text="Shared Hearts: 10 / 10"
-                                   styleClass="hearts-label"/>
                         </VBox>
                         <!-- Players -->
                         <HBox alignment="CENTER" spacing="22">
