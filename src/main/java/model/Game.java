@@ -30,8 +30,8 @@ public class Game {
         int rows = difficulty.getRows();
         int cols = difficulty.getCols();
 
-        this.boardA = new Board(rows, cols, playerA.getBoardColor());
-        this.boardB = new Board(rows, cols, playerB.getBoardColor());
+        this.boardA = new Board(rows, cols, playerA.getTheme());
+        this.boardB = new Board(rows, cols, playerB.getTheme());
     }
 
     public void startGame() {
