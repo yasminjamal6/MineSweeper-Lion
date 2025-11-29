@@ -12,11 +12,12 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.control.Button;
+import model.Theme;
+import model.ThemeColors;
 
 
 public class GameSetupController {
@@ -26,33 +27,33 @@ public class GameSetupController {
     public static Difficulty selectedDifficulty = Difficulty.EASY;
     public static String selectedPlayerAName;
     public static String selectedPlayerBName;
-    public static Color selectedPlayerAColor = Color.web("#6C63FF");
-    public static Color selectedPlayerBColor = Color.web("#FF8C42");
-    private static final Color GOLD_COLOR = Color.web("#6C63FF");     // Royal Gold
-    private static final Color SAVANNA_COLOR = Color.web("#FF8C42");  // Savanna Sunset
-
 
     @FXML private ToggleButton easyBtn, mediumBtn, hardBtn;
     @FXML private ToggleGroup difficultyGroup;
     @FXML private TextField playerAName, playerBName;
-    @FXML private Button aGoldBtn, aSavannaBtn;
-    @FXML private Button bGoldBtn, bSavannaBtn;
+
+    @FXML private HBox themePickerA;
+    @FXML private HBox themePickerB;
+
+    public static Theme selectedThemeA = ThemeColors.themes.get(0);
+    public static Theme selectedThemeB = ThemeColors.themes.get(1);
 
 
-    @FXML private StackPane root;   // ⭐ מחובר ל-fx:id="root" ב-FXML
+    @FXML private StackPane root;
 
     @FXML
     private void initialize() {
-        // מה שהיה לך קודם
         easyBtn.setSelected(true);
 
-        // ⭐ בדיקות כדי לראות אם ה-CSS והתמונה נטענים
         System.out.println("Root = " + root);
         if (root != null) {
             System.out.println("Stylesheets from FXML = " + root.getStylesheets());
         }
         System.out.println("CSS exists? -> " + getClass().getResource("/css/game-setup.css"));
         System.out.println("Image exists? -> " + getClass().getResource("/images/King.png"));
+
+        rebuildPicker(themePickerA, selectedThemeA, true);
+        rebuildPicker(themePickerB, selectedThemeB, false);
     }
 
     @FXML
@@ -138,62 +139,56 @@ public class GameSetupController {
         alert.setContentText(msg);
         alert.showAndWait();
     }
-    // ---------- Player A choose color ----------
-    @FXML
-    private void onChooseGoldA() {
-        selectedPlayerAColor = GOLD_COLOR;
-        updateButtonsForConflicts();
+
+    private Button createThemeButton(Theme theme, boolean isSelected) {
+        Button btn = new Button();
+        btn.setPrefSize(40, 40);
+        btn.getStyleClass().add("theme-btn");
+
+        btn.setStyle(
+                theme.previewStyle +
+                        (isSelected
+                                ? "-fx-border-color: white; -fx-border-width: 3; -fx-scale-x:1.1; -fx-scale-y:1.1;"
+                                : "-fx-border-color: rgba(255,255,255,0.3); -fx-border-width: 2;")
+        );
+
+        btn.setOnAction(e -> {
+            boolean isInA = themePickerA.getChildren().contains(btn);
+
+            if (isInA) {
+                selectedThemeA = theme;
+            } else {
+                selectedThemeB = theme;
+            }
+
+            rebuildPicker(themePickerA, selectedThemeA, true);
+            rebuildPicker(themePickerB, selectedThemeB, false);
+        });
+
+        return btn;
     }
 
-    @FXML
-    private void onChooseSavannaA() {
-        selectedPlayerAColor = SAVANNA_COLOR;
-        updateButtonsForConflicts();
-    }
+    private void rebuildPicker(HBox box, Theme selected, boolean isPlayerA) {
+        box.getChildren().clear();
 
+        for (Theme t : ThemeColors.themes) {
+            boolean isSelected = selected != null && t.id.equals(selected.id);
+            Button btn = createThemeButton(t, isSelected);
 
-    // ---------- Player B choose color ----------
-    @FXML
-    private void onChooseGoldB() {
-        selectedPlayerBColor = GOLD_COLOR;
-        updateButtonsForConflicts();
-    }
+            boolean usedByOther = isPlayerA
+                    ? (selectedThemeB != null && t.id.equals(selectedThemeB.id))
+                    : (selectedThemeA != null && t.id.equals(selectedThemeA.id));
 
-    @FXML
-    private void onChooseSavannaB() {
-        selectedPlayerBColor = SAVANNA_COLOR;
-        updateButtonsForConflicts();
-    }
+            if (usedByOther) {
+                btn.setDisable(true);
+                btn.setOpacity(0.35);
+            }
 
-
-    // ---------- Disable same color for other player ----------
-    private void updateButtonsForConflicts() {
-
-        // להחזיר הכל למצב פעיל
-        aGoldBtn.setDisable(false);
-        aSavannaBtn.setDisable(false);
-        bGoldBtn.setDisable(false);
-        bSavannaBtn.setDisable(false);
-
-        // אם A בחר GOLD → לנעול GOLD אצל B
-        if (selectedPlayerAColor.equals(GOLD_COLOR)) {
-            bGoldBtn.setDisable(true);
-        }
-
-        // אם A בחר SAVANNA → לנעול SAVANNA אצל B
-        if (selectedPlayerAColor.equals(SAVANNA_COLOR)) {
-            bSavannaBtn.setDisable(true);
-        }
-
-        // אם B בחר GOLD → לנעול GOLD אצל A
-        if (selectedPlayerBColor.equals(GOLD_COLOR)) {
-            aGoldBtn.setDisable(true);
-        }
-
-        // אם B בחר SAVANNA → לנעול SAVANNA אצל A
-        if (selectedPlayerBColor.equals(SAVANNA_COLOR)) {
-            aSavannaBtn.setDisable(true);
+            box.getChildren().add(btn);
         }
     }
+
+
+
 
 }
