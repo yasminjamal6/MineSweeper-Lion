@@ -72,18 +72,19 @@
                                styleClass="gh-table">
 
                         <columns>
-                            <TableColumn fx:id="colActions"
-                                         text="Actions" prefWidth="90"/>
-                            <TableColumn fx:id="colCorrect"
-                                         text="Correct" prefWidth="70"/>
-                            <TableColumn fx:id="colAnswers"
-                                         text="Answers" prefWidth="300"/>
-                            <TableColumn fx:id="colDifficulty"
-                                         text="Difficulty" prefWidth="100"/>
                             <TableColumn fx:id="colQuestion"
                                          text="Question" prefWidth="320"/>
+                            <TableColumn fx:id="colAnswers"
+                                         text="Answers" prefWidth="300"/>
+                            <TableColumn fx:id="colCorrect"
+                                         text="Correct" prefWidth="70"/>
+                            <TableColumn fx:id="colDifficulty"
+                                         text="Difficulty" prefWidth="100"/>
+                            <TableColumn fx:id="colActions"
+                                         text="Actions" prefWidth="90"/>
                         </columns>
                     </TableView>
+
 
                 </StackPane>
             </VBox>
