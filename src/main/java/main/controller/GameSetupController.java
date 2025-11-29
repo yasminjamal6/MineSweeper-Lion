@@ -162,6 +162,13 @@ public class GameSetupController {
         Alert alert = new Alert(Alert.AlertType.WARNING, msg, ButtonType.OK);
         alert.setHeaderText(null);
         alert.setContentText(msg);
+        var dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(
+                getClass().getResource("/css/alert.css").toExternalForm()
+        );
+        dialogPane.getStyleClass().add("lion-alert");
+
+
         alert.showAndWait();
     }
 
