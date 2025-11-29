@@ -1,9 +1,13 @@
 package main.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.collections.ObservableList;
 
 import javax.sound.sampled.*;
 import java.net.URL;
@@ -15,19 +19,59 @@ public class SettingsController {
     private ToggleButton soundToggle;
 
     @FXML
-    private ToggleButton fullscreenToggle;
+    private ToggleButton fullscreenToggle;   // אם אין ב-FXML זה פשוט יהיה null
+
+    @FXML
+    private ToggleButton themeToggle;        // כפתור LIGHT / DARK
 
     @FXML
     private Slider volumeSlider;
+
+    @FXML
+    private Parent settingsRoot; // ה-Root של חלון ההגדרות (BorderPane מה-FXML)
 
     private static Clip bgClip = null;
     private static boolean soundOn = false;
     private static double volume = 0.7;
 
-    private void initClipIfNeeded() {
-        if (bgClip != null) {
-            return;
+    // false = LIGHT, true = DARK
+    private static boolean darkMode = false;
+
+    /* ---- חשוף לשאר הקונטרולרים ---- */
+
+    public static boolean isDarkMode() {
+        return darkMode;
+    }
+
+    /** החלת ה־Theme על Root אחד (מסך אחד) */
+    public static void applyThemeToRoot(Parent root) {
+        if (root == null) return;
+
+        ObservableList<String> styles = root.getStyleClass();
+
+        // להסיר קודם
+        styles.remove("dark-mode");
+
+        // אם Dark Mode פעיל – להוסיף
+        if (darkMode && !styles.contains("dark-mode")) {
+            styles.add("dark-mode");
         }
+    }
+
+    /** החלת ה־Theme על כל החלונות הפתוחים */
+    public static void applyThemeToAllWindows() {
+        for (Window window : Window.getWindows()) {
+            Scene scene = window.getScene();
+            if (scene != null) {
+                applyThemeToRoot(scene.getRoot());
+            }
+        }
+    }
+
+    /* ---- מוזיקה ---- */
+
+    private void initClipIfNeeded() {
+        if (bgClip != null) return;
 
         try {
             URL url = Objects.requireNonNull(
@@ -40,7 +84,6 @@ public class SettingsController {
             bgClip.open(ais);
 
             bgClip.loop(Clip.LOOP_CONTINUOUSLY);
-
             applyVolume(volume);
 
             if (!soundOn) {
@@ -76,14 +119,24 @@ public class SettingsController {
     @FXML
     private void initialize() {
 
+        // להחיל Theme על חלון ההגדרות עצמו לפי המצב הנוכחי
+        applyThemeToRoot(settingsRoot);
+
+        // ווליום
         if (volumeSlider != null) {
             volumeSlider.setMin(0);
             volumeSlider.setMax(100);
             volumeSlider.setValue(volume * 100);
+
+            volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+                double v = newVal.doubleValue() / 100.0;
+                applyVolume(v);
+            });
         }
 
         initClipIfNeeded();
 
+        // סאונד ON/OFF
         if (soundToggle != null) {
             soundToggle.setSelected(soundOn);
             soundToggle.setText(soundOn ? "ON" : "OFF");
@@ -103,20 +156,28 @@ public class SettingsController {
             });
         }
 
-        if (volumeSlider != null) {
-            volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-                double v = newVal.doubleValue() / 100.0;
-                applyVolume(v);
-            });
-        }
-
+        // FULLSCREEN – אופציונלי
         if (fullscreenToggle != null) {
             fullscreenToggle.setSelected(false);
             fullscreenToggle.setText("OFF");
-
             fullscreenToggle.setOnAction(e -> {
                 boolean full = fullscreenToggle.isSelected();
                 fullscreenToggle.setText(full ? "ON" : "OFF");
+                // אפשר להוסיף בהמשך stage.setFullScreen(full);
+            });
+        }
+
+        // כפתור Theme (Light / Dark)
+        if (themeToggle != null) {
+            themeToggle.setSelected(darkMode);
+            themeToggle.setText(darkMode ? "DARK" : "LIGHT");
+
+            themeToggle.setOnAction(e -> {
+                darkMode = themeToggle.isSelected();
+                themeToggle.setText(darkMode ? "DARK" : "LIGHT");
+
+                // להחיל על כל החלונות
+                applyThemeToAllWindows();
             });
         }
     }

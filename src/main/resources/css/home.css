@@ -10,19 +10,19 @@
 
 .overlay-vertical {
     -fx-background-color: linear-gradient(
-        from 50% 0% to 50% 100%,
-        rgba(0,0,0,0.75) 0%,
-        rgba(64,0,96,0.85) 45%,
-        rgba(0,0,0,0.92) 100%
+            from 50% 0% to 50% 100%,
+            rgba(0,0,0,0.75) 0%,
+            rgba(64,0,96,0.85) 45%,
+            rgba(0,0,0,0.92) 100%
     );
 }
 
 .overlay-diagonal {
     -fx-background-color: linear-gradient(
-        from 0% 50% to 100% 50%,
-        rgba(255,153,51,0.4) 0%,
-        rgba(0,0,0,0) 40%,
-        rgba(255,204,75,0.4) 100%
+            from 0% 50% to 100% 50%,
+            rgba(255,153,51,0.4) 0%,
+            rgba(0,0,0,0) 40%,
+            rgba(255,204,75,0.4) 100%
     );
 }
 
@@ -30,10 +30,10 @@
 
 .lion-badge {
     -fx-background-color: linear-gradient(
-        from 0% 0% to 100% 100%,
-        #f9e16b 0%,
-        #ff9a3c 45%,
-        #ff4b3b 100%
+            from 0% 0% to 100% 100%,
+            #f9e16b 0%,
+            #ff9a3c 45%,
+            #ff4b3b 100%
     );
     -fx-padding: 8 22 8 22;
     -fx-background-radius: 24;
@@ -67,10 +67,10 @@
 .bomb-circle {
     -fx-background-radius: 60;
     -fx-background-color: linear-gradient(
-        from 0% 0% to 100% 100%,
-        #ffb347 0%,
-        #ff7a3c 40%,
-        #ff4141 100%
+            from 0% 0% to 100% 100%,
+            #ffb347 0%,
+            #ff7a3c 40%,
+            #ff4141 100%
     );
     -fx-border-radius: 60;
     -fx-border-color: rgba(255, 232, 166, 0.9);
@@ -90,10 +90,10 @@
     -fx-font-size: 40;
     -fx-font-weight: bold;
     -fx-text-fill: linear-gradient(
-        from 0% 50% to 100% 50%,
-        #ffe9b8 0%,
-        #ffc777 50%,
-        #ffe9b8 100%
+            from 0% 50% to 100% 50%,
+            #ffe9b8 0%,
+            #ffc777 50%,
+            #ffe9b8 100%
     );
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 18, 0.3, 0, 4);
 }
@@ -118,10 +118,10 @@
     -fx-padding: 14 40 14 40;
     -fx-background-radius: 32;
     -fx-background-color: linear-gradient(
-        from 0% 50% to 100% 50%,
-        #ffd447 0%,
-        #ff9240 40%,
-        #ff3b3b 100%
+            from 0% 50% to 100% 50%,
+            #ffd447 0%,
+            #ff9240 40%,
+            #ff3b3b 100%
     );
     -fx-border-radius: 32;
     -fx-border-color: rgba(255, 225, 140, 0.9);
@@ -132,10 +132,10 @@
 
 .primary-btn:hover {
     -fx-background-color: linear-gradient(
-        from 0% 50% to 100% 50%,
-        #ffe24f 0%,
-        #ffa24a 40%,
-        #ff5555 100%
+            from 0% 50% to 100% 50%,
+            #ffe24f 0%,
+            #ffa24a 40%,
+            #ff5555 100%
     );
     -fx-scale-x: 1.02;
     -fx-scale-y: 1.02;
@@ -195,10 +195,10 @@
 
 .footer-pill {
     -fx-background-color: linear-gradient(
-        from 0% 50% to 100% 50%,
-        rgba(255, 212, 71, 0.35) 0%,
-        rgba(255, 146, 64, 0.35) 50%,
-        rgba(255, 75, 59, 0.35) 100%
+            from 0% 50% to 100% 50%,
+            rgba(255, 212, 71, 0.35) 0%,
+            rgba(255, 146, 64, 0.35) 50%,
+            rgba(255, 75, 59, 0.35) 100%
     );
     -fx-padding: 6 18 6 18;
     -fx-background-radius: 24;
@@ -223,6 +223,7 @@
     -fx-text-fill: #f0d9ff;
     -fx-opacity: 0.9;
 }
+
 .how-btn {
     -fx-font-size: 13;
     -fx-font-weight: bold;
@@ -230,9 +231,9 @@
     -fx-padding: 6 16 6 16;
     -fx-background-radius: 14;
     -fx-background-color: linear-gradient(
-        from 0% 50% to 100% 50%,
-        #7c3aed 0%,
-        #ec4899 100%
+            from 0% 50% to 100% 50%,
+            #7c3aed 0%,
+            #ec4899 100%
     );
     -fx-border-radius: 14;
     -fx-border-color: rgba(255, 200, 255, 0.7);
@@ -243,21 +244,22 @@
 
 .how-btn:hover {
     -fx-background-color: linear-gradient(
-        from 0% 50% to 100% 50%,
-        #9d4eed 0%,
-        #f472b6 100%
+            from 0% 50% to 100% 50%,
+            #9d4eed 0%,
+            #f472b6 100%
     );
     -fx-scale-x: 1.03;
     -fx-scale-y: 1.03;
 }
+
 /* -------- HOW TO PLAY WINDOW -------- */
 
 .how-root {
     -fx-background-color: linear-gradient(
-        from 0% 0% to 100% 100%,
-        #4A0D0D 0%,
-        #2A0A0A 40%,
-        #1A0606 100%
+            from 0% 0% to 100% 100%,
+            #4A0D0D 0%,
+            #2A0A0A 40%,
+            #1A0606 100%
     );
     -fx-padding: 18;
 }
@@ -304,10 +306,10 @@
 
 .objective-box {
     -fx-background-color: linear-gradient(
-        from 0% 0% to 100% 100%,
-        #7B3F1B 0%,
-        #8B4A22 50%,
-        #A8622D 100%
+            from 0% 0% to 100% 100%,
+            #7B3F1B 0%,
+            #8B4A22 50%,
+            #A8622D 100%
     );
     -fx-background-radius: 18;
     -fx-border-radius: 18;
@@ -320,10 +322,10 @@
 
 .bomb-box {
     -fx-background-color: linear-gradient(
-        from 0% 0% to 100% 100%,
-        #6B1616 0%,
-        #7A1A1A 40%,
-        #8A1E1E 100%
+            from 0% 0% to 100% 100%,
+            #6B1616 0%,
+            #7A1A1A 40%,
+            #8A1E1E 100%
     );
     -fx-border-color: #B23C3C;
     -fx-border-width: 1.6;
@@ -334,10 +336,10 @@
 
 .trivia-box {
     -fx-background-color: linear-gradient(
-        from 0% 0% to 100% 100%,
-        #2F235F 0%,
-        #3C2C7A 50%,
-        #4E3C9A 100%
+            from 0% 0% to 100% 100%,
+            #2F235F 0%,
+            #3C2C7A 50%,
+            #4E3C9A 100%
     );
     -fx-border-color: #6E63A8;
     -fx-border-width: 1.6;
@@ -348,10 +350,10 @@
 
 .surprise-box {
     -fx-background-color: linear-gradient(
-        from 0% 0% to 100% 100%,
-        #6B243C 0%,
-        #7A2C45 40%,
-        #8C3550 100%
+            from 0% 0% to 100% 100%,
+            #6B243C 0%,
+            #7A2C45 40%,
+            #8C3550 100%
     );
     -fx-border-color: #BB6A85;
     -fx-border-width: 1.6;
@@ -362,10 +364,10 @@
 
 .numbers-box {
     -fx-background-color: linear-gradient(
-        from 0% 0% to 100% 100%,
-        #355734 0%,
-        #3E6A3C 40%,
-        #487C45 100%
+            from 0% 0% to 100% 100%,
+            #355734 0%,
+            #3E6A3C 40%,
+            #487C45 100%
     );
     -fx-border-color: #83B388;
     -fx-border-width: 1.6;
@@ -391,10 +393,10 @@
 
 .how-howplay-box {
     -fx-background-color: linear-gradient(
-        from 0% 0% to 100% 100%,
-        #814221 0%,
-        #8F4A26 50%,
-        #9C532B 100%
+            from 0% 0% to 100% 100%,
+            #814221 0%,
+            #8F4A26 50%,
+            #9C532B 100%
     );
     -fx-border-color: #E4AE5A;
     -fx-border-width: 1.7;
@@ -405,10 +407,10 @@
 
 .how-tips-box {
     -fx-background-color: linear-gradient(
-        from 0% 0% to 100% 100%,
-        #8C6A23 0%,
-        #9B7827 50%,
-        #A8862B 100%
+            from 0% 0% to 100% 100%,
+            #8C6A23 0%,
+            #9B7827 50%,
+            #A8862B 100%
     );
     -fx-border-color: #F0C96A;
     -fx-border-width: 1.7;
@@ -422,14 +424,14 @@
     -fx-font-size: 14;
 }
 
-/* Bottom button (optional if you add it later) */
+/* Bottom button */
 
 .how-start-btn {
     -fx-background-color: linear-gradient(
-        from 0% 0% to 100% 100%,
-        #FFC94C 0%,
-        #FFB13C 40%,
-        #FF8A32 100%
+            from 0% 0% to 100% 100%,
+            #FFC94C 0%,
+            #FFB13C 40%,
+            #FF8A32 100%
     );
     -fx-text-fill: #442000;
     -fx-font-size: 16;
@@ -444,12 +446,13 @@
 
 .how-start-btn:hover {
     -fx-background-color: linear-gradient(
-        from 0% 0% to 100% 100%,
-        #FFDD5A 0%,
-        #FFC24A 40%,
-        #FFA23B 100%
+            from 0% 0% to 100% 100%,
+            #FFDD5A 0%,
+            #FFC24A 40%,
+            #FFA23B 100%
     );
 }
+
 .how-close-btn {
     -fx-background-color: transparent;
     -fx-text-fill: #ffd28a;
@@ -464,6 +467,7 @@
     -fx-scale-x: 1.1;
     -fx-scale-y: 1.1;
 }
+
 .settings-btn {
     -fx-background-color: rgba(0,0,0,0.55);
     -fx-background-radius: 999;
@@ -506,18 +510,23 @@
 /* TITLE */
 
 .settings-title {
-    -fx-font-size: 32px;
+    -fx-font-size: 34px;
     -fx-font-weight: bold;
-    -fx-text-fill: linear-gradient(#ffe7a3, #ffbb55);
+    -fx-text-fill: linear-gradient(
+            from 0% 50% to 100% 50%,
+            #ffe9b8 0%,
+            #ffc777 50%,
+            #ffe9b8 100%
+    );
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 12, 0.3, 0, 2);
 }
 
 /* LABELS */
 
 .settings-label {
-    -fx-font-size: 18px;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: #ffe7c6;
+    -fx-text-fill: #ffe9c6;
 }
 
 /* TOGGLE BUTTONS */
@@ -594,27 +603,239 @@
     -fx-background-color: #ffe4b0;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 8, 0.2, 0, 2);
 }
-/* צבע טקסט אחיד ולבן לכל הכותרות בתוך חלון ההגדרות */
-.settings-label {
-    -fx-text-fill: #ffe9c6;       /* לבן-זהוב */
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
+
+/* =========================================================
+   DARK MODE – Black / Dark Brown / Bright Orange
+   (מופעל כשמוסיפים למחלקות root-pane, settings-root את dark-mode)
+   ========================================================= */
+
+/* רקע כללי של המסך הראשי */
+.root-pane.dark-mode {
+    -fx-background-color: #050203;
 }
 
-/* כותרת ראשית */
-.settings-title {
+/* שכבות – שחור וחום כהה */
+.root-pane.dark-mode .overlay-vertical {
+    -fx-background-color: linear-gradient(
+            from 50% 0% to 50% 100%,
+            rgba(0,0,0,0.96) 0%,
+            rgba(32,8,5,0.97) 45%,
+            rgba(0,0,0,1.0) 100%
+    );
+}
+
+.root-pane.dark-mode .overlay-diagonal {
+    -fx-background-color: linear-gradient(
+            from 0% 50% to 100% 50%,
+            rgba(255,153,51,0.30) 0%,
+            rgba(0,0,0,0) 40%,
+            rgba(255,204,75,0.22) 100%
+    );
+}
+
+/* טקסטים ראשיים – עדיין זהובים אבל על רקע שחור */
+.root-pane.dark-mode .main-title {
     -fx-text-fill: linear-gradient(
             from 0% 50% to 100% 50%,
-            #ffe9b8 0%,
-            #ffc777 50%,
-            #ffe9b8 100%
+            #ffe5b3 0%,
+            #ffb955 50%,
+            #ffe5b3 100%
     );
-    -fx-font-size: 34px;
-    -fx-font-weight: bold;
 }
 
-/* כיתובים במרכז – Volume, Full Screen */
-.settings-text {
-    -fx-text-fill: #ffe9c6;
-    -fx-font-size: 14px;
+.root-pane.dark-mode .main-subtitle {
+    -fx-text-fill: #ffd7a3;
+}
+
+/* כרטיסי מידע */
+.root-pane.dark-mode .info-card {
+    -fx-background-color: rgba(20, 10, 6, 0.96);
+    -fx-border-color: rgba(245, 158, 11, 0.85); /* כתום זהוב */
+}
+
+.root-pane.dark-mode .card-title {
+    -fx-text-fill: #ffe6c6;
+}
+
+.root-pane.dark-mode .card-subtitle {
+    -fx-text-fill: #ffedd8;
+}
+
+/* Badge */
+.root-pane.dark-mode .lion-badge {
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 100% 100%,
+            #3a1a0f 0%,
+            #4b2213 45%,
+            #1d0a06 100%
+    );
+    -fx-border-color: rgba(245, 201, 120, 0.95);
+}
+
+.root-pane.dark-mode .badge-title,
+.root-pane.dark-mode .badge-subtitle {
+    -fx-text-fill: #fff3dd;
+}
+
+/* כפתור Start Adventure */
+.root-pane.dark-mode .primary-btn {
+    -fx-text-fill: #fff7eb;
+    -fx-background-color: linear-gradient(
+            from 0% 50% to 100% 50%,
+            #210a0e 0%,
+            #ea580c 40%,
+            #c2410c 100%
+    );
+    -fx-border-color: rgba(251, 191, 36, 0.95);
+}
+
+.root-pane.dark-mode .primary-btn:hover {
+    -fx-background-color: linear-gradient(
+            from 0% 50% to 100% 50%,
+            #fb923c 0%,
+            #f97316 40%,
+            #ea580c 100%
+    );
+}
+
+/* כפתורי secondary */
+.root-pane.dark-mode .secondary-btn {
+    -fx-text-fill: #ffeadd;
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 100% 100%,
+            #17100d 0%,
+            #231510 40%,
+            #0c0604 100%
+    );
+    -fx-border-color: rgba(245, 158, 11, 0.85);
+}
+
+.root-pane.dark-mode .secondary-btn:hover {
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 100% 100%,
+            #261610 0%,
+            #321b12 40%,
+            #110704 100%
+    );
+}
+
+/* How To Play */
+.root-pane.dark-mode .how-btn {
+    -fx-background-color: linear-gradient(
+            from 0% 50% to 100% 50%,
+            #b45309 0%,
+            #ea580c 100%
+    );
+    -fx-text-fill: #fff1e0;
+    -fx-border-color: rgba(251, 191, 36, 0.9);
+}
+
+.root-pane.dark-mode .how-btn:hover {
+    -fx-background-color: linear-gradient(
+            from 0% 50% to 100% 50%,
+            #c85a0b 0%,
+            #f97316 100%
+    );
+}
+
+/* כפתור הגדרות */
+.root-pane.dark-mode .settings-btn {
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 100% 100%,
+            #1a120e 0%,
+            #241712 60%,
+            #0b0503 100%
+    );
+    -fx-border-color: rgba(245, 203, 125, 0.9);
+    -fx-text-fill: #ffe5c4;
+}
+
+.root-pane.dark-mode .settings-btn:hover {
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 100% 100%,
+            #2b1912 0%,
+            #362017 60%,
+            #120705 100%
+    );
+}
+
+/* Footer */
+.root-pane.dark-mode .footer-pill {
+    -fx-background-color: linear-gradient(
+            from 0% 50% to 100% 50%,
+            rgba(245, 158, 11, 0.35) 0%,
+            rgba(234, 88, 12, 0.35) 50%,
+            rgba(24, 16, 9, 0.7) 100%
+    );
+    -fx-border-color: rgba(252, 211, 77, 0.9);
+}
+
+.root-pane.dark-mode .footer-quote {
+    -fx-text-fill: #ffe9cf;
+}
+
+/* ========= חלון ההגדרות – DARK ========= */
+
+.settings-root.dark-mode {
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 100% 100%,
+            #0b0604 0%,
+            #130905 40%,
+            #050202 100%
+    );
+    -fx-border-color: #f59e0b;
+}
+
+.settings-root.dark-mode .settings-title {
+    -fx-text-fill: linear-gradient(
+            from 0% 50% to 100% 50%,
+            #ffe2b5 0%,
+            #f59e0b 50%,
+            #ffe2b5 100%
+    );
+}
+
+.settings-root.dark-mode .settings-label {
+    -fx-text-fill: #ffedd5;
+}
+
+/* טוגלים בחלון ההגדרות */
+.settings-root.dark-mode .toggle-setting {
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 100% 100%,
+            #fdba74 0%,
+            #fb923c 50%,
+            #ea580c 100%
+    );
+    -fx-border-color: #fed7aa;
+}
+
+.settings-root.dark-mode .toggle-setting:selected {
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 100% 100%,
+            #f97316 0%,
+            #ea580c 50%,
+            #c2410c 100%
+    );
+}
+
+/* כפתור Close */
+.settings-root.dark-mode .close-settings-btn {
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 100% 100%,
+            #fdba74 0%,
+            #fb923c 40%,
+            #ea580c 100%
+    );
+    -fx-border-color: #fed7aa;
+    -fx-text-fill: #fff7ed;
+}
+
+.settings-root.dark-mode .close-settings-btn:hover {
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 100% 100%,
+            #fed7aa 0%,
+            #fdba74 40%,
+            #fb923c 100%
+    );
 }
