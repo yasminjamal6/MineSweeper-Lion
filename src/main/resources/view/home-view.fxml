@@ -4,8 +4,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.media.MediaView?>
-
 
 <StackPane xmlns="http://javafx.com/javafx/23"
            xmlns:fx="http://javafx.com/fxml/1"
@@ -15,64 +13,62 @@
            prefWidth="1200.0" prefHeight="800.0">
 
     <children>
-        <!-- וידאו כרקע -->
-        <MediaView fx:id="videoView"
-                   fitWidth="1200" fitHeight="800"
-                   preserveRatio="false"
-                   StackPane.alignment="CENTER" />
 
+        <ImageView fitWidth="1200.0" fitHeight="800.0" preserveRatio="false">
+            <image>
+                <Image url="@../images/lion.jpg"/>
+            </image>
+        </ImageView>
 
+        <AnchorPane styleClass="overlay-vertical"/>
+        <AnchorPane styleClass="overlay-diagonal"/>
 
         <VBox alignment="CENTER"
-              spacing="20.0"
+              spacing="28.0"
               styleClass="content-wrapper">
 
-            <!-- טופ: באנר + כותרות -->
-            <VBox alignment="CENTER" spacing="16.0">
+            <!-- HERO SECTION -->
+            <VBox alignment="CENTER" spacing="16.0" fx:id="heroSection">
 
-                <!-- TEAM LION – באנר דק, פחות "כפתור" -->
-                <StackPane styleClass="lion-banner"
-                           maxWidth="520"
-                           prefWidth="520"
-                           minWidth="520">
-                    <VBox alignment="CENTER" spacing="4.0">
+                <StackPane styleClass="lion-badge"
+                           maxWidth="450"
+                           prefWidth="450"
+                           minWidth="450">
+                    <VBox alignment="CENTER" spacing="6.0">
                         <HBox alignment="CENTER" spacing="8.0">
                             <Label text="🦁" styleClass="badge-emoji"/>
-                            <Label text="TEAM LION" styleClass="banner-title"/>
+                            <Label text="TEAM LION" styleClass="badge-title"/>
                             <Label text="🦁" styleClass="badge-emoji"/>
                         </HBox>
-                        <Label text='"Hakuna Matata - No Worries!"'
-                               styleClass="banner-subtitle"/>
+                        <Label text='"Hakuna Matata - No Worries!"' styleClass="badge-subtitle"/>
                     </VBox>
                 </StackPane>
 
                 <Label text="Mine Sweeper Smart" styleClass="main-title"/>
-                <Label text="🌟 Legendary trivia from the savanna! 🌟"
-                       styleClass="main-subtitle"/>
+                <Label text="🌟 Legendary trivia from the savanna! 🌟" styleClass="main-subtitle"/>
 
             </VBox>
 
-            <Region prefHeight="90.0"/>
+            <!-- BUTTONS SECTION -->
+            <VBox alignment="CENTER" spacing="14.0" styleClass="buttons-wrapper" fx:id="buttonsSection">
 
-            <!-- כפתורי אקשן -->
-            <VBox alignment="CENTER" spacing="14.0" styleClass="buttons-wrapper">
-                <Button text="Start Adventure 🦁"
+                <Button text="Start Adventure "
                         styleClass="primary-btn"
                         onAction="#onStartAdventure"/>
-                <HBox alignment="CENTER" spacing="16.0">
+
+                <HBox alignment="CENTER" spacing="20">
                     <Button text="Question Manager"
                             styleClass="secondary-btn"
-                            onAction="#onManageQuestions"/>
+                            onAction="#onQuestionManager" />
                     <Button text="Game History"
                             styleClass="secondary-btn"
-                            onAction="#onHistory"/>
+                            onAction="#onHistory" />
                 </HBox>
-            </VBox>
-            <!-- מרווח לפני שלושת השורות -->
-            <Region prefHeight="100.0"/>
 
-            <!-- שלושת הכרטיסים -->
-            <HBox alignment="CENTER" spacing="24.0" styleClass="features-row">
+            </VBox>
+
+            <!-- FEATURES SECTION -->
+            <HBox alignment="CENTER" spacing="18.0" styleClass="features-row" fx:id="featuresRow">
 
                 <VBox styleClass="info-card" spacing="6.0" alignment="CENTER">
                     <Label text="King of the Jungle" styleClass="card-title"/>
@@ -91,21 +87,18 @@
 
             </HBox>
 
-            <!-- SPACER – דוחף את הפוטר עוד למטה -->
-            <Region VBox.vgrow="ALWAYS"/>
-
             <!-- FOOTER -->
-            <VBox alignment="CENTER" spacing="8.0" styleClass="footer-box">
+            <VBox alignment="CENTER" spacing="8.0" styleClass="footer-box" fx:id="footerBox">
                 <HBox alignment="CENTER" spacing="8.0" styleClass="footer-pill">
-                    <Label text="🦁" styleClass="footer-emoji"/>
+                    <Label text="" styleClass="footer-emoji"/>
                     <Label text='"Remember who you are"' styleClass="footer-quote"/>
-                    <Label text="👑" styleClass="footer-emoji"/>
+                    <Label text="" styleClass="footer-emoji"/>
                 </HBox>
-                <Label text="Team Lion - Roaring Since 2025 🌅"
-                       styleClass="footer-signature"/>
+                <Label text="" styleClass="footer-signature"/>
             </VBox>
 
         </VBox>
+
 
         <!-- Floating How To Play button (NOW ON TOP) -->
         <Button text="How to Play?"
