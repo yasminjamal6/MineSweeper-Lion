@@ -20,6 +20,19 @@ import javafx.animation.TranslateTransition;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
+import javafx.collections.FXCollections;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import java.util.Optional;
+import javafx.geometry.Insets;
+import javafx.scene.layout.VBox;
+
+
+
 
 
 public class QuestionManagerController {
@@ -38,7 +51,7 @@ public class QuestionManagerController {
 
     @FXML
     private void initialize() {
-        // Set up table columns
+        // Set up table columns (כבר יש אצלך)
         colQuestion.setCellValueFactory(new PropertyValueFactory<>("text"));
         colDifficulty.setCellValueFactory(new PropertyValueFactory<>("level"));
 
@@ -56,10 +69,10 @@ public class QuestionManagerController {
 
         addActionButtons();
 
-        // Load all questions from CSV automatically
-        questionTable.getItems().setAll(questionBank.getAllQuestions());
+        // 🔹 טעינה מה־CSV לרשימה
+        questionTable.setItems(FXCollections.observableArrayList(questionBank.getAllQuestions()));
         System.out.println("✅ Loaded " + questionBank.getAllQuestions().size() + " questions from CSV.");
-        // Play entrance animations for header + table card
+
         playEntranceAnimations();
     }
 
@@ -73,24 +86,49 @@ public class QuestionManagerController {
                 return new TableCell<>() {
                     private final Button editBtn = new Button("✎");
                     private final Button deleteBtn = new Button("🗑");
+                    private final HBox pane = new HBox(5, editBtn, deleteBtn);
 
                     {
                         editBtn.setOnAction(e -> {
-                            Question q = getTableView().getItems().get(getIndex());
-                            System.out.println("Edit question: " + q.getText());
+                            Question oldQ = getTableView().getItems().get(getIndex());
+                            Question updatedQ = openQuestionDialog(oldQ);
+                            if (updatedQ != null) {
+                                // עדכון בבנק (כולל CSV)
+                                questionBank.updateQuestion(oldQ, updatedQ);
+
+                                // עדכון בטבלה
+                                getTableView().getItems().set(getIndex(), updatedQ);
+                                getTableView().refresh();
+
+                                System.out.println("✏ Updated question: " + updatedQ.getText());
+                            }
                         });
 
                         deleteBtn.setOnAction(e -> {
                             Question q = getTableView().getItems().get(getIndex());
-                            questionTable.getItems().remove(q);
-                            System.out.println("Deleted question: " + q.getText());
+
+                            Alert confirm = new Alert(
+                                    Alert.AlertType.CONFIRMATION,
+                                    "Delete this question?\n\n" + q.getText(),
+                                    ButtonType.YES, ButtonType.NO
+                            );
+
+                            Optional<ButtonType> res = confirm.showAndWait();
+                            if (res.isPresent() && res.get() == ButtonType.YES) {
+                                // מחיקה ממודל השאלות + CSV
+                                questionBank.removeQuestion(q);
+
+                                // מחיקה מהטבלה
+                                getTableView().getItems().remove(q);
+                                getTableView().refresh();
+
+                                System.out.println("🗑 Deleted question: " + q.getText());
+                            }
                         });
 
                         editBtn.getStyleClass().add("edit-btn");
                         deleteBtn.getStyleClass().add("delete-btn");
                     }
-
-                    private final HBox pane = new HBox(5, editBtn, deleteBtn);
 
                     @Override
                     protected void updateItem(Void item, boolean empty) {
@@ -101,6 +139,7 @@ public class QuestionManagerController {
             }
         });
     }
+
 
     /**
      * Handles going back to home screen.
@@ -121,8 +160,19 @@ public class QuestionManagerController {
      */
     @FXML
     private void onAddQuestion(ActionEvent e) {
-        System.out.println(">> Add question clicked (to be implemented later)");
+        Question newQ = openQuestionDialog(null);
+        if (newQ != null) {
+            // מוסיפים לבנק השאלות (וזה שומר ל־CSV)
+            questionBank.addQuestion(newQ);
+
+            // מוסיפים גם לטבלה
+            questionTable.getItems().add(newQ);
+            questionTable.refresh();
+
+            System.out.println("✅ Added new question: " + newQ.getText());
+        }
     }
+
     /**
      * Smooth entrance animations for the header and the table card.
      */
@@ -167,5 +217,181 @@ public class QuestionManagerController {
 
         all.play();
     }
+    private Question openQuestionDialog(Question original) {
+        Dialog<Question> dialog = new Dialog<>();
+        dialog.setTitle(original == null ? "Add Question" : "Edit Question");
+        dialog.setHeaderText(null); // נשתמש ב-header שלנו מה-UI
+
+        DialogPane dialogPane = dialog.getDialogPane();
+
+        // נטען את ה-CSS של העמוד שאליו כבר מחובר
+        dialogPane.getStylesheets().add(
+                getClass().getResource("/css/question-manager.css").toExternalForm()
+        );
+        // נוסיף סטייל לדיאלוג עצמו (רקע גרדיאנט, עיגול קצוות וכו')
+        dialogPane.getStyleClass().add("qd-dialog-pane");
+
+        ButtonType okButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialogPane.getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+
+        // ===== בניית ה-UI של החלון =====
+
+        // Header למעלה
+        HBox header = new HBox(10);
+        header.getStyleClass().add("qd-header");
+
+        StackPane iconWrapper = new StackPane();
+        iconWrapper.getStyleClass().add("qd-header-icon");
+        Label iconLabel = new Label(original == null ? "➕" : "✏");
+        iconLabel.getStyleClass().add("qd-header-icon-emoji");
+        iconWrapper.getChildren().add(iconLabel);
+
+        VBox headerTexts = new VBox(2);
+        Label titleLbl = new Label(original == null ? "Add Question" : "Edit Question");
+        titleLbl.getStyleClass().add("qd-header-title");
+        Label subLbl = new Label("Fill in the trivia question details");
+        subLbl.getStyleClass().add("qd-header-subtitle");
+        headerTexts.getChildren().addAll(titleLbl, subLbl);
+
+        header.getChildren().addAll(iconWrapper, headerTexts);
+
+        // טופס השדות (GridPane)
+        GridPane grid = new GridPane();
+        grid.getStyleClass().add("qd-form-grid");
+        grid.setPadding(new Insets(10, 0, 0, 0));
+
+        TextArea txtQuestion = new TextArea();
+        txtQuestion.setPrefRowCount(3);
+        txtQuestion.getStyleClass().addAll("qd-textarea");
+
+        TextField txtA = new TextField();
+        TextField txtB = new TextField();
+        TextField txtC = new TextField();
+        TextField txtD = new TextField();
+        txtA.getStyleClass().add("qd-textfield");
+        txtB.getStyleClass().add("qd-textfield");
+        txtC.getStyleClass().add("qd-textfield");
+        txtD.getStyleClass().add("qd-textfield");
+
+        ChoiceBox<Integer> cbCorrect = new ChoiceBox<>();
+        cbCorrect.getItems().addAll(1, 2, 3, 4);
+        cbCorrect.getStyleClass().add("qd-choicebox");
+
+        ChoiceBox<QuestionLevel> cbLevel = new ChoiceBox<>();
+        cbLevel.getItems().addAll(QuestionLevel.values());
+        cbLevel.getStyleClass().add("qd-choicebox");
+
+        // לייבלים
+        Label lblQ = new Label("Question:");
+        Label lblA = new Label("Answer A:");
+        Label lblB = new Label("Answer B:");
+        Label lblC = new Label("Answer C:");
+        Label lblD = new Label("Answer D:");
+        Label lblCorrect = new Label("Correct answer (1-4):");
+        Label lblLevel = new Label("Difficulty:");
+
+        lblQ.getStyleClass().add("qd-label");
+        lblA.getStyleClass().add("qd-label");
+        lblB.getStyleClass().add("qd-label");
+        lblC.getStyleClass().add("qd-label");
+        lblD.getStyleClass().add("qd-label");
+        lblCorrect.getStyleClass().add("qd-label");
+        lblLevel.getStyleClass().add("qd-label");
+
+        // הוספה לגריד
+        int row = 0;
+        grid.add(lblQ, 0, row);
+        grid.add(txtQuestion, 1, row++, 2, 1);
+
+        grid.add(lblA, 0, row);
+        grid.add(txtA, 1, row++);
+
+        grid.add(lblB, 0, row);
+        grid.add(txtB, 1, row++);
+
+        grid.add(lblC, 0, row);
+        grid.add(txtC, 1, row++);
+
+        grid.add(lblD, 0, row);
+        grid.add(txtD, 1, row++);
+
+        grid.add(lblCorrect, 0, row);
+        grid.add(cbCorrect, 1, row++);
+
+        grid.add(lblLevel, 0, row);
+        grid.add(cbLevel, 1, row);
+
+        // כרטיס פנימי
+        VBox card = new VBox(14);
+        card.getStyleClass().add("qd-card");
+        card.getChildren().addAll(grid);
+
+        // root של הדיאלוג
+        VBox root = new VBox(16);
+        root.getStyleClass().add("qd-root");
+        root.getChildren().addAll(header, card);
+
+        dialogPane.setContent(root);
+
+        // ===== ערכי ברירת מחדל (אם זה עריכה) =====
+        if (original != null) {
+            txtQuestion.setText(original.getText());
+            String[] opts = original.getOptions();
+            txtA.setText(opts[0]);
+            txtB.setText(opts[1]);
+            txtC.setText(opts[2]);
+            txtD.setText(opts[3]);
+            cbCorrect.setValue(original.getCorrectIndex() + 1);
+            cbLevel.setValue(original.getLevel());
+        } else {
+            cbCorrect.setValue(1);
+            cbLevel.setValue(QuestionLevel.EASY);
+        }
+
+        // ===== סטייל לכפתורים (Save / Cancel) =====
+        // חייב לקרוא אחרי setContent ואחרי הוספת הכפתורים
+        dialogPane.lookupButton(okButtonType).getStyleClass().add("gh-btn-primary");
+        dialogPane.lookupButton(ButtonType.CANCEL).getStyleClass().add("gh-btn-secondary");
+
+        // ===== המרה של תוצאת הדיאלוג לאובייקט Question =====
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == okButtonType) {
+                if (txtQuestion.getText().isBlank() ||
+                        txtA.getText().isBlank() ||
+                        txtB.getText().isBlank() ||
+                        txtC.getText().isBlank() ||
+                        txtD.getText().isBlank() ||
+                        cbCorrect.getValue() == null ||
+                        cbLevel.getValue() == null) {
+
+                    Alert alert = new Alert(Alert.AlertType.ERROR,
+                            "Please fill all fields", ButtonType.OK);
+                    alert.showAndWait();
+                    return null;
+                }
+
+                String[] opts = new String[4];
+                opts[0] = txtA.getText().trim();
+                opts[1] = txtB.getText().trim();
+                opts[2] = txtC.getText().trim();
+                opts[3] = txtD.getText().trim();
+
+                int correctIndex = cbCorrect.getValue() - 1; // 1–4 -> 0–3
+
+                return new Question(
+                        txtQuestion.getText().trim(),
+                        opts,
+                        correctIndex,
+                        cbLevel.getValue()
+                );
+            }
+            return null;
+        });
+
+        Optional<Question> result = dialog.showAndWait();
+        return result.orElse(null);
+    }
+
+
 
 }

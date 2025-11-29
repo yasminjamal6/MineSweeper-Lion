@@ -1,17 +1,22 @@
 package main.controller;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.effect.ColorAdjust;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import javafx.collections.ObservableList;
 
 import javax.sound.sampled.*;
 import java.net.URL;
 import java.util.Objects;
+import javafx.geometry.NodeOrientation;
+
 
 public class SettingsController {
 
@@ -19,46 +24,59 @@ public class SettingsController {
     private ToggleButton soundToggle;
 
     @FXML
-    private ToggleButton fullscreenToggle;   // אם אין ב-FXML זה פשוט יהיה null
+    private ToggleButton fullscreenToggle;
 
     @FXML
-    private ToggleButton themeToggle;        // כפתור LIGHT / DARK
+    private ToggleButton themeToggle;        // LIGHT / DARK
+
+    @FXML
+    private ToggleButton languageToggle;     // עברית / English
 
     @FXML
     private Slider volumeSlider;
 
     @FXML
-    private Parent settingsRoot; // ה-Root של חלון ההגדרות (BorderPane מה-FXML)
+    private Slider brightnessSlider;
+
+    @FXML
+    private Parent settingsRoot;             // BorderPane עם fx:id="settingsRoot"
 
     private static Clip bgClip = null;
     private static boolean soundOn = false;
     private static double volume = 0.7;
 
     // false = LIGHT, true = DARK
-    private static boolean darkMode = false;
+    private static boolean darkMode = true;
 
-    /* ---- חשוף לשאר הקונטרולרים ---- */
+    // false = English, true = Hebrew
+    private static boolean hebrew = false;
+
+    // בהירות בין -0.5 ל-0.5 (0 = רגיל)
+    private static double brightnessLevel = 0.0;
+
+    /* ---------- פונקציות סטטיות ---------- */
 
     public static boolean isDarkMode() {
         return darkMode;
     }
 
-    /** החלת ה־Theme על Root אחד (מסך אחד) */
+    public static boolean isHebrew() {
+        return hebrew;
+    }
+
     public static void applyThemeToRoot(Parent root) {
         if (root == null) return;
 
         ObservableList<String> styles = root.getStyleClass();
-
-        // להסיר קודם
         styles.remove("dark-mode");
 
-        // אם Dark Mode פעיל – להוסיף
         if (darkMode && !styles.contains("dark-mode")) {
             styles.add("dark-mode");
         }
+
+        applyBrightnessToRoot(root);
     }
 
-    /** החלת ה־Theme על כל החלונות הפתוחים */
     public static void applyThemeToAllWindows() {
         for (Window window : Window.getWindows()) {
             Scene scene = window.getScene();
@@ -68,7 +86,94 @@ public class SettingsController {
         }
     }
 
-    /* ---- מוזיקה ---- */
+    public static void applyBrightnessToRoot(Parent root) {
+        if (root == null) return;
+        ColorAdjust ca = new ColorAdjust();
+        ca.setBrightness(brightnessLevel);
+        root.setEffect(ca);
+    }
+
+    public static void applyBrightnessToAllWindows() {
+        for (Window window : Window.getWindows()) {
+            Scene scene = window.getScene();
+            if (scene != null) {
+                applyBrightnessToRoot(scene.getRoot());
+            }
+        }
+    }
+
+    /** משנה טקסטים *בכל* החלונות לפי השפה שנבחרה */
+    public static void refreshLanguageOnAllWindows() {
+        for (Window window : Window.getWindows()) {
+            Scene scene = window.getScene();
+            if (scene == null) continue;
+
+            Parent root = scene.getRoot();
+// אם זה חלון ההגדרות – להפוך כיוון לימין-לשמאל בעברית
+            Parent settingsRootNode = (Parent) root.lookup("#settingsRoot");
+            if (settingsRootNode != null) {
+                settingsRootNode.setNodeOrientation(
+                        hebrew ? NodeOrientation.RIGHT_TO_LEFT : NodeOrientation.LEFT_TO_RIGHT
+                );
+            }
+
+            // ----- מסך הבית -----
+            Label title = (Label) root.lookup("#titleLabel");
+            Label subtitle = (Label) root.lookup("#subtitleLabel");
+            Button startBtn = (Button) root.lookup("#startButton");
+            Button questionBtn = (Button) root.lookup("#questionManagerButton");
+            Button historyBtn = (Button) root.lookup("#historyButton");
+            Button howBtn = (Button) root.lookup("#howButton");
+
+            // ----- חלון ההגדרות -----
+            Label settingsTitle = (Label) root.lookup("#settingsTitleLabel");
+            Label soundLabel = (Label) root.lookup("#soundLabel");
+            Label themeLabel = (Label) root.lookup("#themeLabel");
+            Label languageLabel = (Label) root.lookup("#languageLabel");
+            Label volumeLabel = (Label) root.lookup("#volumeLabel");
+            Label brightnessLabel = (Label) root.lookup("#brightnessLabel");
+            Button closeSettingsBtn = (Button) root.lookup("#closeSettingsBtn");
+
+            if (hebrew) {
+                // בית
+                if (title != null)      title.setText("מיינסוויפר חכם");
+                if (subtitle != null)   subtitle.setText("🌟 טריוויה אגדה מהסוואנה! 🌟");
+                if (startBtn != null)   startBtn.setText("התחל הרפתקה");
+                if (questionBtn != null)questionBtn.setText("מנהל שאלות");
+                if (historyBtn != null) historyBtn.setText("היסטוריית משחק");
+                if (howBtn != null)     howBtn.setText("איך משחקים?");
+
+                // הגדרות
+                if (settingsTitle != null)   settingsTitle.setText("הגדרות ⚙");
+                if (soundLabel != null)      soundLabel.setText("צליל:");
+                if (themeLabel != null)      themeLabel.setText("ערכת נושא:");
+                if (languageLabel != null)   languageLabel.setText("שפה:");
+                if (volumeLabel != null)     volumeLabel.setText("עוצמת קול");
+                if (brightnessLabel != null) brightnessLabel.setText("בהירות");
+                if (closeSettingsBtn != null) closeSettingsBtn.setText("סגור");
+
+            } else {
+                // בית
+                if (title != null)      title.setText("Mine Sweeper Smart");
+                if (subtitle != null)   subtitle.setText("🌟 Legendary trivia from the savanna! 🌟");
+                if (startBtn != null)   startBtn.setText("Start Adventure");
+                if (questionBtn != null)questionBtn.setText("Question Manager");
+                if (historyBtn != null) historyBtn.setText("Game History");
+                if (howBtn != null)     howBtn.setText("How to Play?");
+
+                // הגדרות
+                if (settingsTitle != null)   settingsTitle.setText("Settings ⚙");
+                if (soundLabel != null)      soundLabel.setText("Sound:");
+                if (themeLabel != null)      themeLabel.setText("Theme:");
+                if (languageLabel != null)   languageLabel.setText("Language:");
+                if (volumeLabel != null)     volumeLabel.setText("Volume");
+                if (brightnessLabel != null) brightnessLabel.setText("Brightness");
+                if (closeSettingsBtn != null) closeSettingsBtn.setText("Close");
+            }
+        }
+    }
+
+    /* ---------- מוזיקה ---------- */
 
     private void initClipIfNeeded() {
         if (bgClip != null) return;
@@ -116,13 +221,23 @@ public class SettingsController {
         }
     }
 
+    /* ---------- עזר לכפתור שפה ---------- */
+
+    private void updateLanguageToggleText() {
+        if (languageToggle != null) {
+            languageToggle.setText(hebrew ? "עברית" : "English");
+        }
+    }
+
+    /* ---------- initialize ---------- */
+
     @FXML
     private void initialize() {
 
-        // להחיל Theme על חלון ההגדרות עצמו לפי המצב הנוכחי
         applyThemeToRoot(settingsRoot);
+        initClipIfNeeded();
 
-        // ווליום
+        // Volume
         if (volumeSlider != null) {
             volumeSlider.setMin(0);
             volumeSlider.setMax(100);
@@ -134,9 +249,7 @@ public class SettingsController {
             });
         }
 
-        initClipIfNeeded();
-
-        // סאונד ON/OFF
+        // Sound ON/OFF
         if (soundToggle != null) {
             soundToggle.setSelected(soundOn);
             soundToggle.setText(soundOn ? "ON" : "OFF");
@@ -156,18 +269,17 @@ public class SettingsController {
             });
         }
 
-        // FULLSCREEN – אופציונלי
+        // Fullscreen (כרגע רק טקסט)
         if (fullscreenToggle != null) {
             fullscreenToggle.setSelected(false);
             fullscreenToggle.setText("OFF");
             fullscreenToggle.setOnAction(e -> {
                 boolean full = fullscreenToggle.isSelected();
                 fullscreenToggle.setText(full ? "ON" : "OFF");
-                // אפשר להוסיף בהמשך stage.setFullScreen(full);
             });
         }
 
-        // כפתור Theme (Light / Dark)
+        // Theme
         if (themeToggle != null) {
             themeToggle.setSelected(darkMode);
             themeToggle.setText(darkMode ? "DARK" : "LIGHT");
@@ -175,11 +287,39 @@ public class SettingsController {
             themeToggle.setOnAction(e -> {
                 darkMode = themeToggle.isSelected();
                 themeToggle.setText(darkMode ? "DARK" : "LIGHT");
-
-                // להחיל על כל החלונות
                 applyThemeToAllWindows();
             });
         }
+
+        // Language
+        if (languageToggle != null) {
+            languageToggle.setSelected(hebrew);
+            updateLanguageToggleText();
+
+            languageToggle.setOnAction(e -> {
+                hebrew = languageToggle.isSelected();
+                updateLanguageToggleText();
+                refreshLanguageOnAllWindows();
+            });
+        }
+
+        // Brightness
+        if (brightnessSlider != null) {
+            brightnessSlider.setMin(0);
+            brightnessSlider.setMax(100);
+
+            double sliderVal = (brightnessLevel + 0.5) * 100.0;
+            brightnessSlider.setValue(sliderVal);
+
+            brightnessSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+                double norm = newVal.doubleValue() / 100.0; // 0..1
+                brightnessLevel = norm - 0.5;               // -0.5..0.5
+                applyBrightnessToAllWindows();
+            });
+        }
+
+        // כשנכנסים להגדרות – לעדכן טקסטים לפי השפה הנוכחית
+        refreshLanguageOnAllWindows();
     }
 
     @FXML

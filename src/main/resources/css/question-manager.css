@@ -228,3 +228,168 @@
 .delete-btn:hover {
     -fx-background-color: rgba(239, 68, 68, 0.35);
 }
+/* =========================
+   QUESTION DIALOG (ADD / EDIT)
+   ========================= */
+
+/* עיצוב כללי של ה-DialogPane */
+.dialog-pane.qd-dialog-pane {
+    -fx-background-color: linear-gradient(
+            #7c3aed 0%,
+            #a855f7 35%,
+            #f97316 70%,
+            #1f0b3a 100%
+    );
+    -fx-background-radius: 26;
+    -fx-border-radius: 26;
+    -fx-padding: 18;
+}
+
+/* אזור התוכן בתוך הדיאלוג */
+.qd-root {
+    -fx-spacing: 16;
+}
+
+/* כרטיס הפנימי (כמו ה-table-card) */
+.qd-card {
+    -fx-background-color: linear-gradient(#020617, #0f172a, #1e293b);
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #a855f7;
+    -fx-border-width: 2;
+    -fx-padding: 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 20, 0.6, 0, 8);
+}
+
+/* Header קטן למעלה של הדיאלוג */
+.qd-header {
+    -fx-alignment: center_left;
+    -fx-spacing: 10;
+}
+
+.qd-header-icon {
+    -fx-background-color: linear-gradient(#a855f7, #f97316);
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-color: rgba(255,255,255,0.6);
+    -fx-border-width: 1.5;
+    -fx-padding: 6;
+}
+
+.qd-header-icon-emoji {
+    -fx-font-size: 18;
+}
+
+.qd-header-title {
+    -fx-text-fill: #fde68a;
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+}
+
+.qd-header-subtitle {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 11;
+}
+
+/* טופס השדות */
+.qd-form-grid {
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+}
+
+.qd-label {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 12;
+}
+
+/* שדות טקסט / טקסט-אריה */
+.qd-textfield,
+.qd-textarea,
+.qd-choicebox {
+    -fx-background-color: rgba(15,23,42,0.9);
+    -fx-text-fill: #f9fafb;
+    -fx-prompt-text-fill: #6b7280;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: rgba(251,191,36,0.7);
+    -fx-border-width: 1;
+    -fx-padding: 5 8;
+    -fx-font-size: 12;
+}
+
+.qd-textarea {
+    -fx-min-height: 70;
+}
+/* =========================
+   FIX: TextArea שיהיה כהה ולא לבן
+   ========================= */
+.qd-textarea {
+    -fx-min-height: 70;
+    -fx-control-inner-background: rgba(15,23,42,0.9); /* מבטל את הרקע הלבן */
+}
+
+/* כל השכבות הפנימיות */
+.qd-textarea .scroll-pane,
+.qd-textarea .viewport,
+.qd-textarea .content {
+    -fx-background-color: transparent;
+}
+
+/* צבע הטקסט בפנים */
+.qd-textarea .text {
+    -fx-fill: #f9fafb;
+}
+
+/* ===== ChoiceBox style (Correct answer / Difficulty) ===== */
+
+.qd-choicebox {
+    -fx-background-color: rgba(15,23,42,0.95);
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: rgba(251,191,36,0.9);
+    -fx-border-width: 1.2;
+}
+
+.qd-choicebox .label {
+    -fx-text-fill: #f9fafb;
+    -fx-font-size: 12;
+}
+
+.qd-choicebox .arrow-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0 10 10 0;
+}
+
+.qd-choicebox .arrow {
+    -fx-background-color: #facc15;
+}
+
+/* popup של ה-ChoiceBox (התפריט שנפתח) */
+.context-menu {
+    -fx-background-color: rgba(15,23,42,0.97);
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: rgba(251,191,36,0.8);
+    -fx-border-width: 1.2;
+}
+
+/* פריטי התפריט */
+.menu-item {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 12;
+    -fx-padding: 4 10;
+}
+
+.menu-item:focused {
+    -fx-background-color: rgba(147,51,234,0.6);
+    -fx-text-fill: #f9fafb;
+}
+
+/* כפתורי OK/Cancel – משתמשים בסטיילים הקיימים */
+.dialog-pane .button.gh-btn-primary {
+    -fx-min-width: 80;
+}
+
+.dialog-pane .button.gh-btn-secondary {
+    -fx-min-width: 80;
+}
