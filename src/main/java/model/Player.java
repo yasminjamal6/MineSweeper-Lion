@@ -4,12 +4,16 @@ public class Player {
 
     private final String id;
     private String name;
-    private BoardColor boardColor;
+    private Theme theme;
 
-    public Player(String id, String name, BoardColor boardColor) {
+    public Player(String id, String name, Theme theme) {
         this.id = id;
         this.name = name;
-        this.boardColor = boardColor;
+        this.theme = theme;
+    }
+
+    public Theme getTheme() {
+        return theme;
     }
 
     public String getId() {
@@ -20,15 +24,11 @@ public class Player {
         return name;
     }
 
-    public BoardColor getBoardColor() {
-        return boardColor;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setBoardColor(BoardColor boardColor) {
-        this.boardColor = boardColor;
+    public void setTheme(Theme theme) {
+        this.theme = theme;
     }
 }
