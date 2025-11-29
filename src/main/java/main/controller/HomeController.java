@@ -15,6 +15,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.layout.StackPane;
+import javafx.fxml.FXML;
+
 
 public class HomeController {
 
@@ -24,8 +27,11 @@ public class HomeController {
     @FXML private VBox footerBox;
 
     @FXML
+    private StackPane rootPane;   // אותו fx:id מה-FXML
+
+    @FXML
     private void initialize() {
-        playEntranceAnimations();
+        SettingsController.applyThemeToRoot(rootPane);
     }
 
     private void playEntranceAnimations() {
@@ -204,4 +210,4 @@ public class HomeController {
         }
     }
 }
-}
+
