@@ -17,6 +17,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * Controller for the Home screen.
+ * <p>
+ * Applies the current theme and language, plays entrance animations,
+ * and provides navigation to the main game flow, how-to-play page,
+ * settings dialog, game history, and question manager.
+ * </p>
+ */
 public class HomeController {
 
     @FXML private VBox heroSection;
@@ -30,12 +38,13 @@ public class HomeController {
     private void initialize() {
         // DARK / LIGHT + Brightness
         SettingsController.applyThemeToRoot(rootPane);
-        // לעדכן טקסטים לפי השפה הנוכחית
         SettingsController.refreshLanguageOnAllWindows();
-        // אנימציות
         playEntranceAnimations();
     }
-
+    /**
+     * Plays entrance animations for the hero section, main buttons,
+     * feature row, and footer to create a smooth landing effect.
+     */
     private void playEntranceAnimations() {
         if (heroSection == null || buttonsSection == null
                 || featuresRow == null || footerBox == null) {
@@ -117,8 +126,6 @@ public class HomeController {
 
             newRoot.setOpacity(0);
             scene.setRoot(newRoot);
-
-            // ⭐ כאן – אחרי שה-root נכנס ל-Scene
             SettingsController.applyThemeToRoot(newRoot);
 
             FadeTransition ft = new FadeTransition(Duration.millis(250), newRoot);
