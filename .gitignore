@@ -5,6 +5,8 @@
 *.ear
 *.log
 !MineSweeper-Lion.jar
+!Fat_Jar_MineSweeper-Lion.jar
+!javafx*.jar
 
 # ===== Maven =====
 target/
