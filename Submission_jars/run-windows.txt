@@ -1,1 +1,1 @@
-java --module-path Submission_jars\lib --add-modules javafx.controls,javafx.fxml,javafx.media -jar Submission_jars\MineSweeper-Lion.jar
+java --module-path "Submission_jars/lib_win" --add-modules javafx.controls,javafx.fxml,javafx.media -jar "Submission_jars/MineSweeper-Lion-windows.jar"
