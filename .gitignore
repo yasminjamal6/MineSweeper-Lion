@@ -7,7 +7,7 @@
 !MineSweeper-Lion.jar
 !Fat_Jar_MineSweeper-Lion.jar
 !javafx*.jar
-
+!MineSweeper-Lion-windows.jar
 # ===== Maven =====
 target/
 dependency-reduced-pom.xml
