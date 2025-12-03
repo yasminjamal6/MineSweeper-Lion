@@ -67,4 +67,35 @@ public class Cell {
     public void setQuestion(Question question) {
         this.question = question;
     }
+
+    /**
+     * Returns true if this cell contains a mine.
+     */
+    public boolean isMine() {
+        return type == CellType.MINE;
+    }
+
+    /**
+     * Sets or clears a mine on this cell by updating its type.
+     */
+    public void setMine(boolean mine) {
+        this.type = mine ? CellType.MINE : CellType.REGULAR;
+    }
+
+    /**
+     * Returns true if this cell contains a surprise gift.
+     * (Requires a matching CellType value such as GIFT or SURPRISE.)
+     */
+    public boolean isGift() {
+        return type == CellType.SURPRISE;  // Change if you use a different enum value name
+    }
+
+    /**
+     * Returns true if this cell is a question cell with an attached question.
+     */
+    public boolean hasQuestion() {
+        return type == CellType.QUESTION && question != null; // Adjust enum name if needed
+    }
+
+
 }
