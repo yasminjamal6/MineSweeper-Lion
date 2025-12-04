@@ -1,8 +1,10 @@
 package main.controller;
 
+import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -286,16 +288,47 @@ public class GameController {
     }
 
     private void buildHearts(model.Difficulty diff) {
+
+        // מחיקה של לבבות קודמים
         heartsBox.getChildren().clear();
+
+        // מרווח שלילי כדי לצמצם אותם ממש
+        heartsBox.setSpacing(-40);  // 👈 זה מה שרצית
 
         int total = diff.getInitialLives();
 
+        // טוענים את תמונת הלב
+        Image heartImg = new Image(
+                getClass().getResourceAsStream("/images/heart.png")
+        );
+
         for (int i = 0; i < total; i++) {
-            Label heart = new Label("❤");
+
+            ImageView heart = new ImageView(heartImg);
+            heart.setFitWidth(100);     // 👈 הגודל הגדול שביקשת
+            heart.setFitHeight(100);
+            heart.setPreserveRatio(true);
+
+            // שמירה על אותו CSS class (אל תשני שם!)
             heart.getStyleClass().add("heart-icon");
+
+            // ביטול מרווח טבעי שה-JavaFX מוסיף
+            HBox.setMargin(heart, new Insets(0));
+
+            // אפקט נשימה (אנימציה)
+            FadeTransition ft = new FadeTransition(Duration.millis(1200), heart);
+            ft.setFromValue(1.0);
+            ft.setToValue(0.65);
+            ft.setCycleCount(Animation.INDEFINITE);
+            ft.setAutoReverse(true);
+            ft.setDelay(Duration.millis(i * 120));
+            ft.play();
+
+            // הוספה ל-HBox
             heartsBox.getChildren().add(heart);
         }
     }
+
 
     private void updateLivesUI(model.Difficulty diff) {
         livesLabel.setText(lives + " / " + diff.getInitialLives());

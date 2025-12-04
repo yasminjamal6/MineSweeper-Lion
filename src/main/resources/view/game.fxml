@@ -14,8 +14,15 @@
             stylesheets="@../css/game.css"
             styleClass="game-root">
 
-
     <children>
+
+        <!-- שכבת שחור מעל התמונה (כמעט מסתירה אותה) -->
+        <Pane styleClass="bg-overlay"
+              AnchorPane.topAnchor="0.0"
+              AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0" />
+
         <VBox spacing="12"
               AnchorPane.topAnchor="10.0"
               AnchorPane.bottomAnchor="10.0"
@@ -38,7 +45,7 @@
 
                 <HBox fx:id="heartsBox"
                       alignment="CENTER"
-                      spacing="3"
+                      spacing="0"
                       styleClass="hearts-row"/>
 
                 <Region HBox.hgrow="ALWAYS"/>
@@ -86,9 +93,6 @@
                                   hgap="2" vgap="2"
                                   alignment="CENTER"/>
                     </StackPane>
-
-
-
                 </VBox>
 
                 <VBox spacing="10" HBox.hgrow="ALWAYS">
@@ -126,9 +130,6 @@
                                   hgap="2" vgap="2"
                                   alignment="CENTER"/>
                     </StackPane>
-
-
-
                 </VBox>
 
             </HBox>
