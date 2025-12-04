@@ -9,9 +9,11 @@
 <AnchorPane xmlns="http://javafx.com/javafx/23"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="main.controller.GameController"
+            fx:id="root"
             prefWidth="1200.0" prefHeight="800.0"
             stylesheets="@../css/game.css"
             styleClass="game-root">
+
 
     <children>
         <VBox spacing="12"
@@ -77,11 +79,15 @@
 
                     <Label text="Board A" styleClass="board-title"/>
 
-                    <StackPane styleClass="board-container" VBox.vgrow="ALWAYS">
+                    <StackPane fx:id="boardAContainer"
+                               styleClass="board-container"
+                               VBox.vgrow="ALWAYS">
                         <GridPane fx:id="boardAGrid"
                                   hgap="2" vgap="2"
                                   alignment="CENTER"/>
                     </StackPane>
+
+
 
                 </VBox>
 
@@ -113,11 +119,15 @@
 
                     <Label text="Board B" styleClass="board-title"/>
 
-                    <StackPane styleClass="board-container" VBox.vgrow="ALWAYS">
+                    <StackPane fx:id="boardBContainer"
+                               styleClass="board-container"
+                               VBox.vgrow="ALWAYS">
                         <GridPane fx:id="boardBGrid"
                                   hgap="2" vgap="2"
                                   alignment="CENTER"/>
                     </StackPane>
+
+
 
                 </VBox>
 

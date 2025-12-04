@@ -8,8 +8,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import model.Difficulty;
 import javafx.stage.Modality;
@@ -24,6 +31,7 @@ import model.Board;
 import model.Cell;
 import model.RevealResult;
 
+import java.io.InputStream;
 
 
 /**
@@ -43,7 +51,9 @@ public class GameController {
     @FXML private HBox heartsBox;
     private Board boardA;
     private Board boardB;
-
+    @FXML private StackPane boardAContainer;
+    @FXML private StackPane boardBContainer;
+    @FXML private AnchorPane root;
 
 
     // Game State Variables
@@ -55,6 +65,9 @@ public class GameController {
     private Theme playerATheme;
     private Theme playerBTheme;
 
+    // Resources
+    private Image mineImage;
+    private double mineImageSize;
 
 
     /**
@@ -63,7 +76,17 @@ public class GameController {
      */
     @FXML
     private void initialize() {
-        // Set player names and mines based on setup
+        try {
+            InputStream is = getClass().getResourceAsStream("/images/bomb2.png");
+            if (is != null) {
+                mineImage = new Image(is);
+            } else {
+                System.err.println("Could not load /images/bomb2.png. Using fallback.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         playerANameLabel.setText(GameSetupController.selectedPlayerAName);
         playerBNameLabel.setText(GameSetupController.selectedPlayerBName);
 
@@ -74,36 +97,42 @@ public class GameController {
         playerAMinesLabel.setText(String.valueOf(mines));
         playerBMinesLabel.setText(String.valueOf(mines));
 
-        // Initialize game state based on difficulty model
         model.Difficulty diff = DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
-
         lives = diff.getInitialLives();
         score = 0;
 
-        // Build UI elements
         buildHearts(diff);
         updateLivesUI(diff);
+        scoreLabel.setText("Score: " + score + " 🏆");
 
-        // Calculate board parameters
         int size = getBoardSize(GameSetupController.selectedDifficulty);
         int cellSize = getCellSize(GameSetupController.selectedDifficulty);
 
-        // Create the logical boards for both players
+        this.mineImageSize = cellSize * 0.70;
+
         boardA = new Board(size, size, playerATheme);
         boardB = new Board(size, size, playerBTheme);
 
-        // Generate mines and numbers on each board
         boardA.generate(diff);
         boardB.generate(diff);
 
-        // Building the game boards (UI)
         buildBoardGrid(boardAGrid, size, cellSize, true);
         buildBoardGrid(boardBGrid, size, cellSize, false);
 
-        // Highlight the active board
+        boardAContainer.prefWidthProperty().bind(root.widthProperty().multiply(0.48));
+        boardBContainer.prefWidthProperty().bind(root.widthProperty().multiply(0.48));
+
+        boardAContainer.prefHeightProperty().bind(root.heightProperty().multiply(0.72));
+        boardBContainer.prefHeightProperty().bind(root.heightProperty().multiply(0.72));
+
+        boardAGrid.prefWidthProperty().bind(boardAContainer.widthProperty().subtract(44));
+        boardAGrid.prefHeightProperty().bind(boardAContainer.heightProperty().subtract(44));
+
+        boardBGrid.prefWidthProperty().bind(boardBContainer.widthProperty().subtract(44));
+        boardBGrid.prefHeightProperty().bind(boardBContainer.heightProperty().subtract(44));
+
         updateBoardHighlight();
     }
-
 
 
     /**
@@ -111,22 +140,20 @@ public class GameController {
      */
     private void updateBoardHighlight() {
         if (isPlayerATurn) {
+            boardAContainer.getStyleClass().add("active-board");
+            boardAContainer.getStyleClass().remove("inactive-board");
 
-            // Highlight Player A's board
-            boardAGrid.getStyleClass().add("active-board");
-            boardAGrid.getStyleClass().remove("inactive-board");
-
-            boardBGrid.getStyleClass().add("inactive-board");
-            boardBGrid.getStyleClass().remove("active-board");
+            boardBContainer.getStyleClass().add("inactive-board");
+            boardBContainer.getStyleClass().remove("active-board");
         } else {
-            // Highlight Player B's board
-            boardBGrid.getStyleClass().add("active-board");
-            boardBGrid.getStyleClass().remove("inactive-board");
+            boardBContainer.getStyleClass().add("active-board");
+            boardBContainer.getStyleClass().remove("inactive-board");
 
-            boardAGrid.getStyleClass().add("inactive-board");
-            boardAGrid.getStyleClass().remove("active-board");
+            boardAContainer.getStyleClass().add("inactive-board");
+            boardAContainer.getStyleClass().remove("active-board");
         }
     }
+
     /**
      * Handles a left-click on a cell button.
      * Connects the UI button to the underlying board cell and updates the view.
@@ -159,33 +186,73 @@ public class GameController {
     }
     /**
      * Updates the visual state of a single cell button based on the underlying Cell model.
+     * * @param board
+     * @param cellButton
+     * @param row
+     * @param col
      */
     private void updateCellView(Board board, Button cellButton, int row, int col) {
         Cell cell = board.getCell(row, col);
 
+        cellButton.setStyle(null);
+
         if (!cell.isRevealed()) {
-            // Still hidden
             cellButton.setText("");
+            cellButton.setGraphic(null);
             return;
         }
 
-        // Optionally add a CSS class for revealed cells
+        cellButton.getStyleClass().removeIf(
+                s -> s.startsWith("number-") || s.equals("mine-icon")
+        );
+
         if (!cellButton.getStyleClass().contains("cell-revealed")) {
             cellButton.getStyleClass().add("cell-revealed");
         }
 
         if (cell.isMine()) {
-            // Show a mine icon when a mine is revealed
-            cellButton.setText("💣");
+            cellButton.setText("");
+
+            if (mineImage != null) {
+                ImageView iv = new ImageView(mineImage);
+                iv.setFitWidth(mineImageSize);
+                iv.setFitHeight(mineImageSize);
+                iv.setPreserveRatio(true);
+                cellButton.setGraphic(iv);
+            } else {
+                // Fallback if image not found
+                cellButton.setText("💣");
+            }
+
+            if (!cellButton.getStyleClass().contains("mine-icon")) {
+                cellButton.getStyleClass().add("mine-icon");
+            }
+
+
+            cellButton.setStyle("-fx-padding: 0;");
+
         } else {
-            // Always show the number of adjacent mines (even 0) for debugging
-            cellButton.setText(String.valueOf(cell.getAdjacentMines()));
+            cellButton.setGraphic(null);
+            int num = cell.getAdjacentMines();
+            if (num == 0) {
+                cellButton.setText("");
+            } else {
+                cellButton.setText(String.valueOf(num));
+                String cls = "number-" + num;
+                if (!cellButton.getStyleClass().contains(cls)) {
+                    cellButton.getStyleClass().add(cls);
+                }
+            }
+            cellButton.setStyle(null);
         }
 
-
-        // Disable the button so it cannot be clicked again
         cellButton.setDisable(true);
+        // Workaround for disabled buttons opacity in standard JavaFX modena (optional)
+        if (cellButton.getStyle() == null || !cellButton.getStyle().contains("-fx-opacity")) {
+            cellButton.setStyle((cellButton.getStyle() == null ? "" : cellButton.getStyle()) + "-fx-opacity: 1.0;");
+        }
     }
+
     private void refreshEntireBoard(Board board, GridPane grid) {
         for (Node node : grid.getChildren()) {
             if (node instanceof Button btn) {
@@ -195,21 +262,16 @@ public class GameController {
                 Cell cell = board.getCell(row, col);
 
                 if (cell.isRevealed()) {
-                    if (cell.isMine()) {
-                        btn.setText("💣");
-                    } else {
-                        btn.setText(cell.getAdjacentMines() == 0 ? "" : String.valueOf(cell.getAdjacentMines()));
-                    }
-                    btn.setDisable(true);
+                    updateCellView(board, btn, row, col);
                 }
             }
         }
     }
 
 
-
-
     private void toggleFlag(Button cell) {
+        if (cell.isDisabled()) return;
+
         String current = cell.getText();
 
         if ("🐾".equals(current)) {
@@ -256,26 +318,25 @@ public class GameController {
 
     private int getBoardSize(GameSetupController.Difficulty diff) {
         return switch (diff) {
-            case EASY   -> 9;
+            case EASY    -> 9;
             case MEDIUM -> 13;
-            case HARD   -> 16;
+            case HARD    -> 16;
         };
     }
 
-    // גודל המשבצת – מותאם כך שכל הלוח יישב נוח במסך
     private int getCellSize(GameSetupController.Difficulty diff) {
         return switch (diff) {
-            case EASY   -> 44;
+            case EASY    -> 44;
             case MEDIUM -> 36;
-            case HARD   -> 28;
+            case HARD    -> 28;
         };
     }
 
     private int getMinesForDifficulty(GameSetupController.Difficulty diff) {
         return switch (diff) {
-            case EASY   -> 10;
+            case EASY    -> 10;
             case MEDIUM -> 26;
-            case HARD   -> 44;
+            case HARD    -> 44;
         };
     }
 
@@ -339,21 +400,30 @@ public class GameController {
         grid.getColumnConstraints().clear();
         grid.getRowConstraints().clear();
 
+        for (int i = 0; i < size; i++) {
+            ColumnConstraints colConst = new ColumnConstraints();
+            colConst.setPercentWidth(100.0 / size);
+            grid.getColumnConstraints().add(colConst);
+
+            RowConstraints rowConst = new RowConstraints();
+            rowConst.setPercentHeight(100.0 / size);
+            grid.getRowConstraints().add(rowConst);
+        }
+
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
                 Button cell = new Button();
                 cell.getStyleClass().add("cell-button");
+                cell.setMnemonicParsing(false);
 
                 Theme theme = isBoardA ? playerATheme : playerBTheme;
 
-                if (theme != null) {
-                    cell.setStyle(
-                            theme.cellStyle +
-                                    " -fx-background-radius: 8; -fx-border-radius: 8;"
-                    );
+                if (theme != null && theme.cellStyle != null) {
+                    String themeStyle = theme.cellStyle;
+                    cell.setStyle(themeStyle + " -fx-background-radius: 8; -fx-border-radius: 8;");
                 }
 
-               // cell.setOnAction(e -> handleCellClick(cell, isBoardA));
+
                 final int rowIndex = row;
                 final int colIndex = col;
 
@@ -366,16 +436,7 @@ public class GameController {
                 });
 
 
-                cell.setOnMouseClicked(event -> {
-                    if (event.getButton() == MouseButton.SECONDARY) {
-                        toggleFlag(cell);
-                    }
-                });
-
-                // Fixed cell size per difficulty, not affected by resizing
-                cell.setPrefSize(cellSize, cellSize);
-                cell.setMinSize(cellSize, cellSize);
-                cell.setMaxSize(cellSize, cellSize);
+                cell.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
                 grid.add(cell, col, row);
             }
