@@ -120,7 +120,7 @@
     -fx-background-color: linear-gradient(to bottom,
     rgba(15,10,5,0.9),
     rgba(30,15,10,0.9));
-    -fx-padding: 12;
+    -fx-padding: 22;
     -fx-background-radius: 16;
     -fx-border-radius: 16;
     -fx-border-color: rgba(250,204,21,0.7);
@@ -132,19 +132,66 @@
 
 /*BOARD CELLS*/
 .cell-button {
-    -fx-pref-width: 48;
-    -fx-pref-height: 48;
 
     -fx-background-color: linear-gradient(to bottom right, #1f2933, #111827);
-    -fx-text-fill: #f9fafb;
-    -fx-border-color: rgba(250, 204, 21, 0.4);
-    -fx-border-width: 0.6;
-    -fx-padding: 0;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 18px;
+    -fx-font-weight: 800;
+    -fx-border-color: rgba(250, 204, 21, 0.8);
+    -fx-border-width: 0.8;
     -fx-background-radius: 8;
     -fx-border-radius: 8;
-
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 8, 0.3, 0, 2);
 }
+
+
+
+.cell-button:hover {
+    -fx-background-color: linear-gradient(to bottom right, #374151, #111827);
+}
+
+.cell-revealed {
+    -fx-background-color: #111827;
+}
+
+.cell-number-1 {
+    -fx-text-fill: #1d4ed8;
+    -fx-font-size: 20px;
+    -fx-font-weight: 900;
+}
+
+.cell-number-2 {
+    -fx-text-fill: #16a34a;
+    -fx-font-size: 20px;
+    -fx-font-weight: 900;
+}
+
+.cell-number-3 {
+    -fx-text-fill: #dc2626;
+    -fx-font-size: 20px;
+    -fx-font-weight: 900;
+}
+
+.cell-number-4,
+.cell-number-5,
+.cell-number-6,
+.cell-number-7,
+.cell-number-8 {
+    -fx-text-fill: #a855f7;
+    -fx-font-size: 20px;
+    -fx-font-weight: 900;
+}
+
+
+
+.mine-cell {
+    -fx-background-color: #450a0a;
+    -fx-text-fill: #fde68a;
+    -fx-font-size: 26px;
+    -fx-font-weight: 900;
+    -fx-effect: dropshadow(gaussian, rgba(239,68,68,0.9), 20, 0.6, 0, 0);
+}
+
 
 .cell-button:hover {
     -fx-background-color: linear-gradient(to bottom right, #374151, #111827);
@@ -216,6 +263,24 @@
     -fx-text-fill: #FFD700;
     -fx-font-size: 20px;
 }
+
+/* --- COLORS FOR EACH NUMBER LIKE REAL MINESWEEPER --- */
+.number-1 { -fx-text-fill: #4fc3f7; }
+.number-2 { -fx-text-fill: #81c784; }
+.number-3 { -fx-text-fill: #ff8a65; }
+.number-4 { -fx-text-fill: #ba68c8; }
+.number-5 { -fx-text-fill: #e57373; }
+.number-6 { -fx-text-fill: #64b5f6; }
+.number-7 { -fx-text-fill: #ffd54f; }
+.number-8 { -fx-text-fill: #f06292; }
+
+/* --- Make mine icon bigger and clearer --- */
+.mine-icon {
+    -fx-font-size: 24px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #ff4d4d;
+}
+
 
 
 
