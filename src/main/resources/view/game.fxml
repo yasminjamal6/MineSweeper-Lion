@@ -57,6 +57,19 @@
                 <Label fx:id="livesLabel"
                        text="10 / 10"
                        styleClass="lives-counter"/>
+
+                <Button fx:id="backHomeBtn"
+                        onAction="#onBackToHome"
+                        styleClass="back-home-btn">
+
+                    <graphic>
+                        <ImageView fitWidth="26" fitHeight="26" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/home.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
             </HBox>
 
             <!-- ===== BOARDS ===== -->
@@ -165,15 +178,9 @@
 
         </VBox>
 
-        <HBox alignment="CENTER_LEFT"
-              AnchorPane.bottomAnchor="16.0"
-              AnchorPane.leftAnchor="16.0">
 
-            <Button fx:id="backHomeBtn"
-                    text="Back to Home"
-                    onAction="#onBackToHome"
-                    styleClass="back-home-btn"/>
-        </HBox>
+
+
 
         <!-- Countdown overlay -->
         <StackPane fx:id="countdownOverlay"
