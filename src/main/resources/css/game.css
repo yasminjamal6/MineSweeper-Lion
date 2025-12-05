@@ -359,3 +359,10 @@
     -fx-font-weight: 900;
     -fx-text-fill: #ff4d4d;
 }
+
+.button.question-cell {
+    -fx-font-size: 20px;
+    -fx-text-fill: #ffd54f;
+    -fx-font-weight: bold;
+}
+
