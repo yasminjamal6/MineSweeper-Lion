@@ -2,6 +2,8 @@ package main.controller;
 
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -18,6 +20,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import model.Difficulty;
@@ -53,6 +56,8 @@ public class GameController {
     @FXML private StackPane boardAContainer;
     @FXML private StackPane boardBContainer;
     @FXML private AnchorPane root;
+    @FXML private StackPane countdownOverlay;
+    @FXML private Label countdownLabel;
 
     private Board boardA;
     private Board boardB;
@@ -166,6 +171,9 @@ public class GameController {
         boardBGrid.prefHeightProperty().bind(boardBContainer.heightProperty().subtract(44));
 
         updateBoardHighlight();
+
+        // Show countdown overlay before play begins
+        startCountdown();
     }
 
     /**
@@ -185,6 +193,30 @@ public class GameController {
             boardAContainer.getStyleClass().add("inactive-board");
             boardAContainer.getStyleClass().remove("active-board");
         }
+    }
+
+    /**
+     * Shows a short countdown before players can start interacting with the boards.
+     */
+    private void startCountdown() {
+        if (countdownOverlay == null || countdownLabel == null) {
+            return;
+        }
+        countdownOverlay.setVisible(true);
+        countdownOverlay.setMouseTransparent(false);
+        countdownOverlay.toFront();
+
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, e -> countdownLabel.setText("3")),
+                new KeyFrame(Duration.seconds(1), e -> countdownLabel.setText("2")),
+                new KeyFrame(Duration.seconds(2), e -> countdownLabel.setText("1")),
+                new KeyFrame(Duration.seconds(3), e -> countdownLabel.setText("Let's start!")),
+                new KeyFrame(Duration.seconds(3.7), e -> {
+                    countdownOverlay.setVisible(false);
+                    countdownOverlay.setMouseTransparent(true);
+                })
+        );
+        timeline.play();
     }
 
     /**
