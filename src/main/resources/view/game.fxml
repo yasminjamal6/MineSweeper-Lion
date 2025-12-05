@@ -9,11 +9,20 @@
 <AnchorPane xmlns="http://javafx.com/javafx/23"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="main.controller.GameController"
+            fx:id="root"
             prefWidth="1200.0" prefHeight="800.0"
             stylesheets="@../css/game.css"
             styleClass="game-root">
 
     <children>
+
+        <!-- שכבת שחור מעל התמונה (כמעט מסתירה אותה) -->
+        <Pane styleClass="bg-overlay"
+              AnchorPane.topAnchor="0.0"
+              AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0" />
+
         <VBox spacing="12"
               AnchorPane.topAnchor="10.0"
               AnchorPane.bottomAnchor="10.0"
@@ -32,11 +41,15 @@
                        text="Score: 0 🏆"
                        styleClass="score-label"/>
 
+                <Label fx:id="timerLabel"
+                       text="00:00"
+                       styleClass="timer-label"/>
+
                 <Region HBox.hgrow="ALWAYS"/>
 
                 <HBox fx:id="heartsBox"
                       alignment="CENTER"
-                      spacing="3"
+                      spacing="0"
                       styleClass="hearts-row"/>
 
                 <Region HBox.hgrow="ALWAYS"/>
@@ -77,12 +90,13 @@
 
                     <Label text="Board A" styleClass="board-title"/>
 
-                    <StackPane styleClass="board-container" VBox.vgrow="ALWAYS">
+                    <StackPane fx:id="boardAContainer"
+                               styleClass="board-container"
+                               VBox.vgrow="ALWAYS">
                         <GridPane fx:id="boardAGrid"
                                   hgap="2" vgap="2"
                                   alignment="CENTER"/>
                     </StackPane>
-
                 </VBox>
 
                 <VBox spacing="10" HBox.hgrow="ALWAYS">
@@ -113,12 +127,13 @@
 
                     <Label text="Board B" styleClass="board-title"/>
 
-                    <StackPane styleClass="board-container" VBox.vgrow="ALWAYS">
+                    <StackPane fx:id="boardBContainer"
+                               styleClass="board-container"
+                               VBox.vgrow="ALWAYS">
                         <GridPane fx:id="boardBGrid"
                                   hgap="2" vgap="2"
                                   alignment="CENTER"/>
                     </StackPane>
-
                 </VBox>
 
             </HBox>
@@ -159,6 +174,26 @@
                     onAction="#onBackToHome"
                     styleClass="back-home-btn"/>
         </HBox>
+
+        <!-- Countdown overlay -->
+        <StackPane fx:id="countdownOverlay"
+                   visible="false"
+                   mouseTransparent="true"
+                   AnchorPane.topAnchor="0.0"
+                   AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.leftAnchor="0.0"
+                   AnchorPane.rightAnchor="0.0"
+                   styleClass="countdown-overlay">
+            <VBox alignment="CENTER" spacing="12" styleClass="countdown-card">
+                <Label text="Get Ready" styleClass="countdown-title"/>
+                <Label fx:id="countdownLabel" text="3" styleClass="countdown-number"/>
+                <ImageView fitWidth="140" fitHeight="110" preserveRatio="true" smooth="true" styleClass="countdown-gif">
+                    <image>
+                        <Image url="@../images/simba-walk.gif"/>
+                    </image>
+                </ImageView>
+            </VBox>
+        </StackPane>
 
     </children>
 </AnchorPane>
