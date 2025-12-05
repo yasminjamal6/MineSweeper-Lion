@@ -58,6 +58,7 @@ public class GameController {
     @FXML private AnchorPane root;
     @FXML private StackPane countdownOverlay;
     @FXML private Label countdownLabel;
+    @FXML private Label timerLabel;
 
     private Board boardA;
     private Board boardB;
@@ -81,6 +82,8 @@ public class GameController {
 
     // Keep difficulty for lives updates
     private model.Difficulty currentDifficulty;
+    private Timeline timerTimeline;
+    private long timerStartMillis;
 
     /**
      * Initializes the controller after its root element has been completely processed by the FXMLLoader.
@@ -214,9 +217,41 @@ public class GameController {
                 new KeyFrame(Duration.seconds(3.7), e -> {
                     countdownOverlay.setVisible(false);
                     countdownOverlay.setMouseTransparent(true);
+                    startTimer();
                 })
         );
         timeline.play();
+    }
+
+    /**
+     * Starts the in-game timer and updates the timer label every second.
+     */
+    private void startTimer() {
+        if (timerLabel == null) {
+            return;
+        }
+
+        timerStartMillis = System.currentTimeMillis();
+        timerLabel.setText("00:00");
+
+        if (timerTimeline != null) {
+            timerTimeline.stop();
+        }
+
+        timerTimeline = new Timeline(
+                new KeyFrame(Duration.ZERO, e -> updateTimerLabel()),
+                new KeyFrame(Duration.seconds(1))
+        );
+        timerTimeline.setCycleCount(Animation.INDEFINITE);
+        timerTimeline.play();
+    }
+
+    private void updateTimerLabel() {
+        long elapsedMillis = System.currentTimeMillis() - timerStartMillis;
+        long totalSeconds = elapsedMillis / 1000;
+        long minutes = totalSeconds / 60;
+        long seconds = totalSeconds % 60;
+        timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
     }
 
     /**
