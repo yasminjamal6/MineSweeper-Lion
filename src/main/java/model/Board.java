@@ -101,6 +101,9 @@ public class Board {
                 cell.setRevealed(false);
                 cell.setFlagged(false);
                 cell.setAdjacentMines(0);
+                cell.setType(CellType.REGULAR);
+                cell.setQuestion(null);
+
             }
         }
 
@@ -129,6 +132,45 @@ public class Board {
         }
     }
     /**
+     * Randomly places question cells (CellType.QUESTION) on the board.
+     * Does NOT assign a specific Question object yet – רק מסמן את סוג התא.
+     */
+    public void placeQuestionCells(int questionCount) {
+        if (questionCount <= 0) {
+            return;
+        }
+
+        Random random = new Random();
+        int placed = 0;
+
+        // הגנה: לא לשים יותר שאלות ממספר התאים
+        int maxPossible = rows * cols;
+        questionCount = Math.min(questionCount, maxPossible);
+
+        while (placed < questionCount) {
+            int r = random.nextInt(rows);
+            int c = random.nextInt(cols);
+            Cell cell = cells[r][c];
+
+            // לא לשים שאלה על מוקש, ולא על תא שכבר הוגדר כשאלה
+            if (cell.isMine()) {
+                continue;
+            }
+            if (cell.getType() == CellType.QUESTION) {
+                continue;
+            }
+
+            cell.setType(CellType.QUESTION);
+            cell.setAdjacentMines(0); // משבצת שאלה לא מציגה מספר מוקשים
+            placed++;
+        }
+
+        System.out.println(">>> placed " + placed + " question cells");
+    }
+
+
+
+    /**
      * Reveals the cell at (row, col) and returns the outcome.
      * This method is a great candidate for white-box, black-box,
      * and unit tests in the assignment.
@@ -151,7 +193,9 @@ public class Board {
         cell.setRevealed(true);
         System.out.println("Reveal (" + row + "," + col + ") mine=" + cell.isMine()
                 + " adj=" + cell.getAdjacentMines());
-
+        if (cell.getType() == CellType.QUESTION) {
+            return RevealResult.QUESTION_CELL;
+        }
 
         // 4) Mine → hit mine
         if (cell.isMine()) {
