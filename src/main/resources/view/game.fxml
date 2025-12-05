@@ -171,5 +171,25 @@
                     styleClass="back-home-btn"/>
         </HBox>
 
+        <!-- Countdown overlay -->
+        <StackPane fx:id="countdownOverlay"
+                   visible="false"
+                   mouseTransparent="true"
+                   AnchorPane.topAnchor="0.0"
+                   AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.leftAnchor="0.0"
+                   AnchorPane.rightAnchor="0.0"
+                   styleClass="countdown-overlay">
+            <VBox alignment="CENTER" spacing="12" styleClass="countdown-card">
+                <Label text="Get Ready" styleClass="countdown-title"/>
+                <Label fx:id="countdownLabel" text="3" styleClass="countdown-number"/>
+                <ImageView fitWidth="140" fitHeight="110" preserveRatio="true" smooth="true" styleClass="countdown-gif">
+                    <image>
+                        <Image url="@../images/simba-walk.gif"/>
+                    </image>
+                </ImageView>
+            </VBox>
+        </StackPane>
+
     </children>
 </AnchorPane>
