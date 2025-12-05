@@ -1,5 +1,7 @@
 package main.controller;
 
+import model.CellType;
+import model.Question;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -20,7 +22,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.Alert;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import model.Difficulty;
@@ -155,6 +157,9 @@ public class GameController {
 
         boardA.generate(currentDifficulty);
         boardB.generate(currentDifficulty);
+        int questionCells = getQuestionCountForDifficulty(GameSetupController.selectedDifficulty);
+        boardA.placeQuestionCells(questionCells);
+        boardB.placeQuestionCells(questionCells);
 
         // Build board grids
         buildBoardGrid(boardAGrid, size, cellSize, true);
@@ -256,7 +261,7 @@ public class GameController {
 
     /**
      * Handles a left-click on a cell button.
-     * Enforces player turns, reveals cell in the model, updates UI, and handles mine hits.
+     * Enforces player turns, reveals cell in the model, updates UI, and handles mine hits & question cells.
      */
     private void handleCellClick(Button cellButton, boolean isBoardA, int row, int col) {
         // Enforce turn: Player A can only click on board A, Player B only on board B
@@ -276,20 +281,92 @@ public class GameController {
         updateCellView(board, cellButton, row, col);
         refreshEntireBoard(board, isBoardA ? boardAGrid : boardBGrid);
 
-        // If player hit a mine, decrease lives and update hearts
-        if (result == RevealResult.HIT_MINE) { // Adjust if your enum name is different
+        if (result == RevealResult.QUESTION_CELL) {
+            handleQuestionCell(isBoardA ? boardA : boardB, row, col, cellButton);
+        }
+
+
+        // אם זה מוקש – נוריד חיים
+        if (result == RevealResult.HIT_MINE) {
             lives--;
             if (lives < 0) lives = 0;
             updateLivesUI(currentDifficulty);
-
-            // Optional: handle game over if lives == 0
-            // if (lives == 0) { ... }
         }
 
         // Switch turn after a valid click
         isPlayerATurn = !isPlayerATurn;
         updateBoardHighlight();
     }
+
+    /**
+     * Handles QUESTION cells.
+     * 1. מבטיח שלתא תהיה שאלה מה-QuestionBank.
+     * 2. מציג אייקון ? על התא.
+     * 3. פותח את חלון ה-POPUP האמיתי עם השאלה.
+     */
+    private void handleQuestionCell(Board board, int row, int col, Button cellButton) {
+        System.out.println(">>> [handleQuestionCell] QUESTION cell at (" + row + "," + col + ")");
+
+        Cell cell = board.getCell(row, col);
+
+        // 1) אם עדיין אין לתא שאלה – נגריל אחת לפי רמת הקושי
+        if (!cell.hasQuestion()) {
+            QuestionLevel level = getLevelFromSetup();              // כבר קיימת אצלך
+            Question question = questionBank.getRandomQuestion(level);  // ← שימי לב לשם המתודה אצלך ב-QuestionBank
+            cell.setQuestion(question);
+        }
+
+        // 2) אייקון שאלה על הכפתור
+        cellButton.setGraphic(null);
+        cellButton.setText("?");
+        if (!cellButton.getStyleClass().contains("question-cell")) {
+            cellButton.getStyleClass().add("question-cell");
+        }
+
+        // 3) פתיחת חלון ה-POPUP עם השאלה
+        Question question = cell.getQuestion();
+        QuestionController controller = showQuestionPopup(question);
+
+        // כרגע רק נרשום ללוג את התוצאה – ניקוד/חיים נוסיף בצעד הבא
+        if (controller != null) {
+            boolean correct  = controller.isAnsweredCorrect();
+            boolean answered = controller.wasAnswered();
+            System.out.println(">>> Question result: answered=" + answered + ", correct=" + correct);
+        }
+    }
+
+    /**
+     * פותחת את חלון השאלה (question-view.fxml) ומחזירה את ה-QuestionController
+     * אחרי שהחלון נסגר (showAndWait).
+     */
+    private QuestionController showQuestionPopup(Question question) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/question-view.fxml")   // ← לוודא שזה השם והנתיב הנכונים של ה-FXML שלך
+            );
+            Parent root = loader.load();
+
+            // controller של חלון השאלה
+            QuestionController controller = loader.getController();
+            controller.setQuestion(question);
+
+            Stage dialog = new Stage();
+            dialog.initOwner(scoreLabel.getScene().getWindow());
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.setTitle("שאלת טריוויה");
+
+            Scene scene = new Scene(root);
+            dialog.setScene(scene);
+            dialog.showAndWait();   // מחכים עד שהשחקן יסיים לענות/שהזמן יגמר
+
+            return controller;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     /**
      * Updates the visual state of a single cell button based on the underlying Cell model.
@@ -299,20 +376,24 @@ public class GameController {
 
         cellButton.setStyle(null);
 
+        // אם התא לא נחשף – נשאיר אותו סגור
         if (!cell.isRevealed()) {
             cellButton.setText("");
             cellButton.setGraphic(null);
             return;
         }
 
-        // Remove previous number / mine classes
+        // להסיר סטיילים ישנים של מספר/מוקש/שאלה
         cellButton.getStyleClass().removeIf(
-                s -> s.startsWith("number-") || s.equals("mine-icon")
+                s -> s.startsWith("number-")
+                        || s.equals("mine-icon")
+                        || s.equals("question-cell")
         );
 
         if (!cellButton.getStyleClass().contains("cell-revealed")) {
             cellButton.getStyleClass().add("cell-revealed");
         }
+
 
         if (cell.isMine()) {
             cellButton.setText("");
@@ -324,7 +405,6 @@ public class GameController {
                 iv.setPreserveRatio(true);
                 cellButton.setGraphic(iv);
             } else {
-                // Fallback if image not found
                 cellButton.setText("💣");
             }
 
@@ -333,7 +413,18 @@ public class GameController {
             }
 
             cellButton.setStyle("-fx-padding: 0;");
-        } else {
+        }
+
+        else if (cell.getType() == CellType.QUESTION) {
+            cellButton.setGraphic(null);
+            cellButton.setText("?");
+            if (!cellButton.getStyleClass().contains("question-cell")) {
+                cellButton.getStyleClass().add("question-cell");
+            }
+            cellButton.setStyle(null);
+        }
+
+        else {
             cellButton.setGraphic(null);
             int num = cell.getAdjacentMines();
             if (num == 0) {
@@ -348,9 +439,10 @@ public class GameController {
             cellButton.setStyle(null);
         }
 
+        // אחרי שנחשף – לא ניתן ללחוץ שוב
         cellButton.setDisable(true);
 
-        // Keep full opacity even when disabled (JavaFX default lowers opacity)
+        // לשמור על אטימות מלאה גם כשהכפתור disabled
         if (cellButton.getStyle() == null || !cellButton.getStyle().contains("-fx-opacity")) {
             cellButton.setStyle(
                     (cellButton.getStyle() == null ? "" : cellButton.getStyle()) +
@@ -371,10 +463,19 @@ public class GameController {
                 Cell cell = board.getCell(row, col);
                 if (cell.isRevealed()) {
                     updateCellView(board, btn, row, col);
+
+                    // לוודא שוב שתאי שאלה נשארים עם "?"
+                    if (cell.getType() == CellType.QUESTION) {
+                        btn.setText("?");
+                        if (!btn.getStyleClass().contains("question-cell")) {
+                            btn.getStyleClass().add("question-cell");
+                        }
+                    }
                 }
             }
         }
     }
+
 
     /**
      * Toggles a flag (Simba's paw) on a cell when right-clicked.
@@ -516,6 +617,18 @@ public class GameController {
             case HARD    -> 44;
         };
     }
+    /**
+     * Returns number of question cells based on difficulty.
+     * לפי המפרט: קל – 6, בינוני – 7, קשה – 11.
+     */
+    private int getQuestionCountForDifficulty(GameSetupController.Difficulty diff) {
+        return switch (diff) {
+            case EASY    -> 6;
+            case MEDIUM  -> 7;
+            case HARD    -> 11;
+        };
+    }
+
 
     /**
      * Maps UI difficulty to question level.
