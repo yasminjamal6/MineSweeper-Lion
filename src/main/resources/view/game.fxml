@@ -41,6 +41,10 @@
                        text="Score: 0 🏆"
                        styleClass="score-label"/>
 
+                <Label fx:id="timerLabel"
+                       text="00:00"
+                       styleClass="timer-label"/>
+
                 <Region HBox.hgrow="ALWAYS"/>
 
                 <HBox fx:id="heartsBox"
