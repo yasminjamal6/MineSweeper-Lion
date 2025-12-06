@@ -235,18 +235,15 @@ public class Board {
         if (cell.getAdjacentMines() == 0) {
         // 4) Mine → hit mine
         if (cell.isMine()) {
-            return RevealResult.HIT_MINE;
+          return RevealResult.HIT_MINE;
         }
-
-        // 5) No adjacent mines → expand empty area (ONLY regular cells, not surprise/question)
-        if (cell.getAdjacentMines() == 0 && cell.getType() == CellType.REGULAR) {
-            revealNeighbors(row, col);
-            return RevealResult.EMPTY_AREA;
-        }
-
-        // 6) Safe number cell
-        return RevealResult.SAFE_NUMBER;
+      // 5) No adjacent mines → expand empty area (ONLY regular cells, not surprise/question)
+      if (cell.getAdjacentMines() == 0 && cell.getType() == CellType.REGULAR) {
+        revealNeighbors(row, col);
+        return RevealResult.EMPTY_AREA;
+      }
+      // 6) Safe number cell
+      return RevealResult.SAFE_NUMBER;
     }
-
 
 }
