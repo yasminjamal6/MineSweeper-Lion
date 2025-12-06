@@ -627,14 +627,13 @@ public class GameController {
                 if (i < lives) {
                     if (fullHeartImage != null) {
                         heartView.setImage(fullHeartImage);
-                        heartView.setEffect(null); // keep glow from CSS
+                        heartView.setOpacity(1.0);
                     }
                 } else {
                     if (emptyHeartImage != null) {
                         heartView.setImage(emptyHeartImage);
-                        heartView.setEffect(null); // remove glow for empty heart
+                        heartView.setOpacity(1.0);
                     } else if (fullHeartImage != null) {
-                        // If broken image is missing, fallback to dim full heart
                         heartView.setImage(fullHeartImage);
                         heartView.setOpacity(0.3);
                     }
