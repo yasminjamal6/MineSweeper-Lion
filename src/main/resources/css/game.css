@@ -366,3 +366,12 @@
     -fx-font-weight: bold;
 }
 
+.surprise-cell {
+    -fx-background-color: rgba(250, 204, 21, 0.4);
+}
+
+.surprise-used {
+    -fx-background-color: rgba(107,114,128,0.4);
+}
+
+
