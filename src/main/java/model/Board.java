@@ -73,8 +73,8 @@ public class Board {
                     continue;
                 }
                 Cell neighbor = cells[nr][nc];
-                // Skip already revealed or mine cells
-                if (neighbor.isRevealed() || neighbor.isMine()) {
+                // Skip already revealed, flagged, or mine cells
+                if (neighbor.isRevealed() || neighbor.isFlagged() || neighbor.isMine()) {
                     continue;
                 }
                 neighbor.setRevealed(true);
@@ -189,17 +189,18 @@ public class Board {
             return RevealResult.IGNORED;
         }
 
-        // 3) Reveal the cell
+        // 3) Mine → hit mine (only the clicked cell is revealed)
+        if (cell.isMine()) {
+            cell.setRevealed(true);
+            return RevealResult.HIT_MINE;
+        }
+
+        // 4) Reveal the cell
         cell.setRevealed(true);
         System.out.println("Reveal (" + row + "," + col + ") mine=" + cell.isMine()
                 + " adj=" + cell.getAdjacentMines());
         if (cell.getType() == CellType.QUESTION) {
             return RevealResult.QUESTION_CELL;
-        }
-
-        // 4) Mine → hit mine
-        if (cell.isMine()) {
-            return RevealResult.HIT_MINE;
         }
 
         // 5) No adjacent mines → expand empty area
