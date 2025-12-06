@@ -103,7 +103,7 @@ public class Board {
                 cell.setAdjacentMines(0);
                 cell.setType(CellType.REGULAR);
                 cell.setQuestion(null);
-
+                cell.setSurpriseUsed(false);
             }
         }
 
@@ -168,6 +168,34 @@ public class Board {
         System.out.println(">>> placed " + placed + " question cells");
     }
 
+    public void placeSurpriseCells(int surpriseCount) {
+        if (surpriseCount <= 0) {
+            return;
+        }
+
+        Random random = new Random();
+        int placed = 0;
+
+        int maxPossible = rows * cols;
+        surpriseCount = Math.min(surpriseCount, maxPossible);
+
+        while (placed < surpriseCount) {
+            int r = random.nextInt(rows);
+            int c = random.nextInt(cols);
+            Cell cell = cells[r][c];
+
+            if (cell.isMine()) continue;
+            if (cell.getType() == CellType.QUESTION) continue;
+            if (cell.getType() == CellType.SURPRISE) continue;
+
+            cell.setType(CellType.SURPRISE);
+            cell.setAdjacentMines(0);
+            placed++;
+        }
+
+        System.out.println(">>> placed " + placed + " surprise cells");
+    }
+
 
 
     /**
@@ -202,8 +230,8 @@ public class Board {
             return RevealResult.HIT_MINE;
         }
 
-        // 5) No adjacent mines → expand empty area
-        if (cell.getAdjacentMines() == 0) {
+        // 5) No adjacent mines → expand empty area (ONLY regular cells, not surprise/question)
+        if (cell.getAdjacentMines() == 0 && cell.getType() == CellType.REGULAR) {
             revealNeighbors(row, col);
             return RevealResult.EMPTY_AREA;
         }
