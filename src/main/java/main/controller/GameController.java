@@ -86,6 +86,8 @@ public class GameController {
     private model.Difficulty currentDifficulty;
     private Timeline timerTimeline;
     private long timerStartMillis;
+    private Image openGiftImage;
+
 
     /**
      * Initializes the controller after its root element has been completely processed by the FXMLLoader.
@@ -123,6 +125,19 @@ public class GameController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // Load open gift image
+        try {
+            InputStream openGift = getClass().getResourceAsStream("/images/openGift.png");
+            if (openGift != null) {
+                openGiftImage = new Image(openGift);
+            } else {
+                System.err.println("Could not load /images/openGift.png");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         // Player names and themes
         playerANameLabel.setText(GameSetupController.selectedPlayerAName);
@@ -315,13 +330,20 @@ public class GameController {
         if (cell.isSurpriseUsed()) {
             return;
         }
-
         triggerRandomSurprise();
-
         cell.setSurpriseUsed(true);
 
-        cellButton.setGraphic(null);
-        cellButton.setText("USED");
+        cellButton.setText("");
+        if (openGiftImage != null) {
+            ImageView iv = new ImageView(openGiftImage);
+            iv.setFitWidth(32);
+            iv.setFitHeight(32);
+            iv.setPreserveRatio(true);
+            cellButton.setGraphic(iv);
+        } else {
+            cellButton.setGraphic(null);
+            cellButton.setText("🎁");
+        }
         cellButton.setDisable(true);
     }
 
@@ -452,15 +474,26 @@ public class GameController {
         }
 
         else if (cell.getType() == CellType.SURPRISE) {
-            cellButton.setGraphic(null);
 
             if (cell.isSurpriseUsed()) {
-                cellButton.setText("USED");
+                cellButton.setText("");
+                if (openGiftImage != null) {
+                    ImageView iv = new ImageView(openGiftImage);
+                    iv.setFitWidth(32);
+                    iv.setFitHeight(32);
+                    iv.setPreserveRatio(true);
+                    cellButton.setGraphic(iv);
+                } else {
+                    cellButton.setGraphic(null);
+                    cellButton.setText("🎁");
+                }
+
                 cellButton.getStyleClass().remove("surprise-cell");
                 if (!cellButton.getStyleClass().contains("surprise-used")) {
                     cellButton.getStyleClass().add("surprise-used");
                 }
             } else {
+                cellButton.setGraphic(null);
                 cellButton.setText("🎁");
                 cellButton.getStyleClass().remove("surprise-used");
                 if (!cellButton.getStyleClass().contains("surprise-cell")) {
@@ -470,6 +503,7 @@ public class GameController {
 
             cellButton.setStyle(null);
         }
+
 
         else {
             cellButton.setGraphic(null);
@@ -523,21 +557,32 @@ public class GameController {
                             btn.getStyleClass().add("question-cell");
                         }
                     }
-                    // אם זו משבצת הפתעה שעדיין לא נוצלה
                     if (cell.getType() == CellType.SURPRISE && !cell.isSurpriseUsed()) {
+                        btn.setGraphic(null);
                         btn.setText("🎁");
                         if (!btn.getStyleClass().contains("surprise-cell")) {
                             btn.getStyleClass().add("surprise-cell");
                         }
                     }
 
-                    // אם זו משבצת הפתעה שכבר נוצלה
                     if (cell.getType() == CellType.SURPRISE && cell.isSurpriseUsed()) {
-                        btn.setText("USED");
+                        btn.setText("");
+                        if (openGiftImage != null) {
+                            ImageView iv = new ImageView(openGiftImage);
+                            iv.setFitWidth(32);
+                            iv.setFitHeight(32);
+                            iv.setPreserveRatio(true);
+                            btn.setGraphic(iv);
+                        } else {
+                            btn.setGraphic(null);
+                            btn.setText("🎁");
+                        }
+
                         if (!btn.getStyleClass().contains("surprise-used")) {
                             btn.getStyleClass().add("surprise-used");
                         }
                     }
+
 
                 }
             }
