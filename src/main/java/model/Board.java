@@ -227,23 +227,18 @@ public class Board {
         cell.setRevealed(true);
         System.out.println("Reveal (" + row + "," + col + ") mine=" + cell.isMine()
                 + " adj=" + cell.getAdjacentMines());
+
         if (cell.getType() == CellType.QUESTION) {
             return RevealResult.QUESTION_CELL;
         }
 
-        // 5) No adjacent mines → expand empty area
-        if (cell.getAdjacentMines() == 0) {
-        // 4) Mine → hit mine
-        if (cell.isMine()) {
-          return RevealResult.HIT_MINE;
+        // 5) No adjacent mines → expand empty area (ONLY regular cells)
+        if (cell.getAdjacentMines() == 0 && cell.getType() == CellType.REGULAR) {
+            revealNeighbors(row, col);
+            return RevealResult.EMPTY_AREA;
         }
-      // 5) No adjacent mines → expand empty area (ONLY regular cells, not surprise/question)
-      if (cell.getAdjacentMines() == 0 && cell.getType() == CellType.REGULAR) {
-        revealNeighbors(row, col);
-        return RevealResult.EMPTY_AREA;
-      }
-      // 6) Safe number cell
-      return RevealResult.SAFE_NUMBER;
+
+        return RevealResult.SAFE_NUMBER;
     }
 
 }
