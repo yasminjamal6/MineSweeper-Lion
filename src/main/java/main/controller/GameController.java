@@ -161,6 +161,11 @@ public class GameController {
         boardA.placeQuestionCells(questionCells);
         boardB.placeQuestionCells(questionCells);
 
+        int surpriseCells = currentDifficulty.getSurpriseCells();
+        boardA.placeSurpriseCells(surpriseCells);
+        boardB.placeSurpriseCells(surpriseCells);
+
+
         // Build board grids
         buildBoardGrid(boardAGrid, size, cellSize, true);
         buildBoardGrid(boardBGrid, size, cellSize, false);
@@ -264,38 +269,60 @@ public class GameController {
      * Enforces player turns, reveals cell in the model, updates UI, and handles mine hits & question cells.
      */
     private void handleCellClick(Button cellButton, boolean isBoardA, int row, int col) {
-        // Enforce turn: Player A can only click on board A, Player B only on board B
         if (isPlayerATurn && !isBoardA) return;
         if (!isPlayerATurn && isBoardA) return;
 
         System.out.println("Player clicked on: " + (isBoardA ? "A" : "B") +
                 " at (" + row + "," + col + ")");
 
-        // Get the correct board (A or B)
         Board board = isBoardA ? boardA : boardB;
+        Cell cell  = board.getCell(row, col);
 
-        // Reveal the cell in the model
+        if (cell.isRevealed()
+                && cell.getType() == CellType.SURPRISE
+                && !cell.isSurpriseUsed()) {
+
+            handleSurpriseActivation(cell, cellButton);
+
+            isPlayerATurn = !isPlayerATurn;
+            updateBoardHighlight();
+            return;
+        }
+        if (cell.isRevealed()
+                && cell.getType() == CellType.QUESTION) {
+
+            handleQuestionCell(board, row, col, cellButton);
+            return;
+        }
+
         RevealResult result = board.revealCell(row, col);
-
-        // Update the UI for this specific cell
         updateCellView(board, cellButton, row, col);
         refreshEntireBoard(board, isBoardA ? boardAGrid : boardBGrid);
 
         if (result == RevealResult.QUESTION_CELL) {
-            handleQuestionCell(isBoardA ? boardA : boardB, row, col, cellButton);
+            handleQuestionCell(board, row, col, cellButton);
         }
-
-
-        // אם זה מוקש – נוריד חיים
         if (result == RevealResult.HIT_MINE) {
             lives--;
             if (lives < 0) lives = 0;
             updateLivesUI(currentDifficulty);
         }
-
-        // Switch turn after a valid click
         isPlayerATurn = !isPlayerATurn;
         updateBoardHighlight();
+    }
+
+    private void handleSurpriseActivation(Cell cell, Button cellButton) {
+        if (cell.isSurpriseUsed()) {
+            return;
+        }
+
+        triggerRandomSurprise();
+
+        cell.setSurpriseUsed(true);
+
+        cellButton.setGraphic(null);
+        cellButton.setText("USED");
+        cellButton.setDisable(true);
     }
 
     /**
@@ -424,6 +451,26 @@ public class GameController {
             cellButton.setStyle(null);
         }
 
+        else if (cell.getType() == CellType.SURPRISE) {
+            cellButton.setGraphic(null);
+
+            if (cell.isSurpriseUsed()) {
+                cellButton.setText("USED");
+                cellButton.getStyleClass().remove("surprise-cell");
+                if (!cellButton.getStyleClass().contains("surprise-used")) {
+                    cellButton.getStyleClass().add("surprise-used");
+                }
+            } else {
+                cellButton.setText("🎁");
+                cellButton.getStyleClass().remove("surprise-used");
+                if (!cellButton.getStyleClass().contains("surprise-cell")) {
+                    cellButton.getStyleClass().add("surprise-cell");
+                }
+            }
+
+            cellButton.setStyle(null);
+        }
+
         else {
             cellButton.setGraphic(null);
             int num = cell.getAdjacentMines();
@@ -439,8 +486,13 @@ public class GameController {
             cellButton.setStyle(null);
         }
 
-        // אחרי שנחשף – לא ניתן ללחוץ שוב
-        cellButton.setDisable(true);
+        if (cell.getType() == CellType.SURPRISE && !cell.isSurpriseUsed()) {
+            cellButton.setDisable(false);
+        } else if (cell.getType() == CellType.QUESTION) {
+            cellButton.setDisable(false);
+        } else {
+            cellButton.setDisable(true);
+        }
 
         // לשמור על אטימות מלאה גם כשהכפתור disabled
         if (cellButton.getStyle() == null || !cellButton.getStyle().contains("-fx-opacity")) {
@@ -471,6 +523,22 @@ public class GameController {
                             btn.getStyleClass().add("question-cell");
                         }
                     }
+                    // אם זו משבצת הפתעה שעדיין לא נוצלה
+                    if (cell.getType() == CellType.SURPRISE && !cell.isSurpriseUsed()) {
+                        btn.setText("🎁");
+                        if (!btn.getStyleClass().contains("surprise-cell")) {
+                            btn.getStyleClass().add("surprise-cell");
+                        }
+                    }
+
+                    // אם זו משבצת הפתעה שכבר נוצלה
+                    if (cell.getType() == CellType.SURPRISE && cell.isSurpriseUsed()) {
+                        btn.setText("USED");
+                        if (!btn.getStyleClass().contains("surprise-used")) {
+                            btn.getStyleClass().add("surprise-used");
+                        }
+                    }
+
                 }
             }
         }

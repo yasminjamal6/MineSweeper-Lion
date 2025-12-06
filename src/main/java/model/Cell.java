@@ -9,6 +9,8 @@ public class Cell {
     private CellType type;
     private int adjacentMines;
     private Question question;
+    private boolean surpriseUsed;
+
 
     public Cell(int row, int col) {
         this.row = row;
@@ -18,6 +20,7 @@ public class Cell {
         this.type = CellType.REGULAR;
         this.adjacentMines = 0;
         this.question = null;
+        this.surpriseUsed = false;
     }
 
     public int getRow() {
@@ -97,5 +100,11 @@ public class Cell {
         return type == CellType.QUESTION && question != null; // Adjust enum name if needed
     }
 
+    public boolean isSurpriseUsed() {
+        return surpriseUsed;
+    }
 
+    public void setSurpriseUsed(boolean surpriseUsed) {
+        this.surpriseUsed = surpriseUsed;
+    }
 }
