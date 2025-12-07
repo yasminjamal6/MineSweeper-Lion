@@ -356,3 +356,9 @@
 .hearts-critical .heart-icon {
     -fx-effect: dropshadow(gaussian, rgba(248, 113, 113, 0.85), 18, 0.6, 0, 0);
 }
+.turn-label {
+    -fx-text-fill: #fde68a;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 0 6 0;
+}
