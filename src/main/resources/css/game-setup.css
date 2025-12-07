@@ -94,19 +94,23 @@ GLOBAL FONT
 .primary-action-btn:hover {
     -fx-background-color: linear-gradient(#fff3b0, #fdc739);
 }
-
-/* SECONDARY – Back to Home */
-.button.secondary-action-btn {
+/* BACK TO HOME – light mode */
+#backToHomeButton {
     -fx-background-color: rgba(255, 247, 231, 0.95);
     -fx-text-fill: #3b2304;
     -fx-border-color: rgba(210, 162, 58, 0.9);
     -fx-border-width: 1.6;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
     -fx-padding: 6 20;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
 }
 
-.button.secondary-action-btn:hover {
+#backToHomeButton:hover {
     -fx-background-color: rgba(255, 239, 210, 0.98);
 }
+
 
 .small-back-btn {
     -fx-padding: 4 16;
@@ -309,16 +313,15 @@ GLOBAL FONT
 .dark-mode .primary-action-btn:hover {
     -fx-background-color: linear-gradient(#fde047, #fb923c);
 }
-
-.dark-mode .secondary-action-btn {
+/* BACK TO HOME – dark mode */
+.dark-mode #backToHomeButton {
     -fx-background-color: rgba(15,23,42,0.9);
     -fx-text-fill: #facc15;
     -fx-border-color: rgba(250,204,21,0.8);
     -fx-border-width: 1.6;
-    -fx-padding: 6 20;
 }
 
-.dark-mode .secondary-action-btn:hover {
+.dark-mode #backToHomeButton:hover {
     -fx-background-color: rgba(8,12,20,1);
 }
 
