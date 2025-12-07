@@ -1,0 +1,179 @@
+/* ===== GLOBAL FONT ===== */
+.result-root {
+    -fx-font-family: "Segoe UI", "Arial";
+}
+
+/* ===== BACKGROUND FULL SCREEN GRADIENT ===== */
+.result-root {
+    -fx-background-color: linear-gradient(
+            #4c1d95 0%,
+            #7c3aed 25%,
+            #c026d3 55%,
+            #f97316 85%,
+            #1e1b4b 100%
+    );
+
+    -fx-alignment: center;
+}
+
+/* ===== MAIN CARD ===== */
+.result-card {
+    -fx-background-color: linear-gradient(
+            rgba(17, 24, 39, 0.95),
+            rgba(30, 27, 75, 0.95)
+    );
+
+    -fx-background-radius: 28;
+    -fx-border-radius: 28;
+    -fx-padding: 26 30 30 30;
+
+    -fx-border-color: #a855f7;
+    -fx-border-width: 3;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 30, 0.65, 0, 10);
+
+    -fx-max-width: 430;
+    -fx-max-height: 670;
+}
+
+/* ===== EMOJI ICON TOP ===== */
+.result-emoji {
+    -fx-font-size: 38;
+    -fx-padding: 0 0 10 0;
+}
+
+/* ===== TITLES ===== */
+.result-title {
+    -fx-text-fill: #f9fafb;
+    -fx-font-size: 28;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 4 0;
+}
+
+.result-subtitle {
+    -fx-text-fill: #e5e7eb;
+    -fx-opacity: 0.85;
+    -fx-font-size: 14;
+    -fx-padding: 0 0 16 0;
+}
+
+/* ===== SCORE GOLD BOX ===== */
+.score-box {
+    -fx-background-color: linear-gradient(#facc15, #f97316);
+    -fx-background-radius: 18;
+    -fx-padding: 16 10 16 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 20, 0.4, 0, 4);
+}
+
+.score-caption {
+    -fx-text-fill: #4c1d95;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+}
+
+.score-trophy {
+    -fx-font-size: 20;
+}
+
+.score-value {
+    -fx-font-size: 38;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e1b4b;
+}
+
+.score-details {
+    -fx-text-fill: #1e1b4b;
+    -fx-font-size: 14;
+}
+
+/* ===== PLAYERS PILLS ===== */
+.player-pill {
+    -fx-background-color: rgba(147,51,234,0.25);
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+
+    -fx-border-color: #a855f7;
+    -fx-border-width: 1.4;
+
+    -fx-padding: 10 16;
+}
+
+.player-emoji {
+    -fx-font-size: 22;
+}
+
+.player-name {
+    -fx-text-fill: #f9fafb;
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+}
+
+/* ===== HEARTS REMAINING ===== */
+.result-hearts {
+    -fx-text-fill: #facc15;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+}
+
+/* ===== QUOTE ===== */
+.result-quote {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 14;
+    -fx-padding: 6 0 14 0;
+    -fx-alignment: center;
+}
+
+/* ===== BUTTONS ===== */
+
+/* PRIMARY (משחק חדש) */
+.primary-button {
+    -fx-background-color: linear-gradient(#facc15, #f97316);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+    -fx-padding: 8 22;
+
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+
+    -fx-border-color: rgba(255,255,255,0.4);
+    -fx-border-width: 1.6;
+
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: linear-gradient(#fde047, #fb923c);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* SECONDARY (דף הבית) */
+.secondary-button {
+    -fx-background-color: rgba(0,0,0,0.45);
+    -fx-text-fill: #facc15;
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+
+    -fx-border-color: rgba(250,204,21,0.7);
+    -fx-border-width: 1.6;
+
+    -fx-padding: 8 22;
+
+    -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+    -fx-background-color: rgba(0,0,0,0.7);
+}
+
+/* ===== SMALL DIVIDER ===== */
+.divider {
+    -fx-background-color: #a855f7;
+    -fx-opacity: 0.4;
+    -fx-pref-height: 2;
+    -fx-background-radius: 2;
+}
