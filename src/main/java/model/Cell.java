@@ -22,6 +22,17 @@ public class Cell {
         this.question = null;
         this.surpriseUsed = false;
     }
+    private boolean questionUsed;
+    
+
+    public boolean isQuestionUsed() {
+        return questionUsed;
+    }
+
+    public void setQuestionUsed(boolean questionUsed) {
+        this.questionUsed = questionUsed;
+    }
+
 
     public int getRow() {
         return row;
