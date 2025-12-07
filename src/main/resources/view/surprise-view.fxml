@@ -61,10 +61,6 @@
                     </HBox>
                 </VBox>
 
-                <Button fx:id="okButton"
-                        text="Open the surprise! 🎊"
-                        onAction="#onClose"
-                        styleClass="primary-action-btn"/>
             </children>
         </VBox>
     </children>
