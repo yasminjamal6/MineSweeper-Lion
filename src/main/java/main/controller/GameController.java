@@ -6,6 +6,7 @@ import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -14,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -67,6 +69,7 @@ public class GameController {
 
     // Game State
     private int lives = 10;
+    private int previousLives;    // כמה לבבות היו לפני העדכון האחרון
     private int score = 0;
     private boolean isPlayerATurn = true;
 
@@ -152,12 +155,19 @@ public class GameController {
         // Difficulty and initial lives
         currentDifficulty = DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
         lives = currentDifficulty.getInitialLives();
+        previousLives = lives;
         score = 0;
 
         // Hearts bar + lives label
         buildHearts(currentDifficulty);
         updateLivesUI(currentDifficulty);
         scoreLabel.setText("Score: " + score + " 🏆");
+
+        // Tooltip קטן על שורת הלבבות
+        Tooltip heartsTip = new Tooltip(
+                "Hearts left. When they reach 0 – the hyenas take over!"
+        );
+        Tooltip.install(heartsBox, heartsTip);
 
         // Board size & cell size
         int size = getBoardSize(GameSetupController.selectedDifficulty);
@@ -567,8 +577,9 @@ public class GameController {
     private void refreshEntireBoard(Board board, GridPane grid) {
         for (Node node : grid.getChildren()) {
             if (node instanceof Button btn) {
-                int col = GridPane.getColumnIndex(btn);
-                int row = GridPane.getRowIndex(btn);
+                Integer col = GridPane.getColumnIndex(btn);
+                Integer row = GridPane.getRowIndex(btn);
+                if (col == null || row == null) continue;
 
                 Cell cell = board.getCell(row, col);
                 if (cell.isRevealed()) {
@@ -668,11 +679,40 @@ public class GameController {
         }
     }
 
+    private void playHeartLostAnimation(Node node) {
+        if (node == null) return;
+
+        ScaleTransition st = new ScaleTransition(Duration.millis(220), node);
+        st.setFromX(1.25);
+        st.setFromY(1.25);
+        st.setToX(1.0);
+        st.setToY(1.0);
+        st.setCycleCount(1);
+        st.play();
+    }
+
     private void updateLivesUI(model.Difficulty diff) {
         livesLabel.setText(lives + " / " + diff.getInitialLives());
 
+        // מצב קריטי – מעט לבבות
+        if (lives <= 2) {
+            if (!heartsBox.getStyleClass().contains("hearts-critical")) {
+                heartsBox.getStyleClass().add("hearts-critical");
+            }
+        } else {
+            heartsBox.getStyleClass().remove("hearts-critical");
+        }
+
         for (int i = 0; i < heartsBox.getChildren().size(); i++) {
             Node node = heartsBox.getChildren().get(i);
+
+            boolean wasFull = i < previousLives;
+            boolean isFullNow = i < lives;
+
+            // לב שעכשיו הפך ממלא לריק
+            if (wasFull && !isFullNow) {
+                playHeartLostAnimation(node);
+            }
 
             if (node instanceof ImageView heartView) {
                 if (i < lives) {
@@ -699,6 +739,9 @@ public class GameController {
                 }
             }
         }
+
+        // לזכור למהלך הבא
+        previousLives = lives;
     }
 
     // -------------------------------------------------------------------------
