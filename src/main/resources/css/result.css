@@ -165,7 +165,6 @@
     -fx-border-color: rgba(148,163,184,0.85);
     -fx-border-width: 1.2;
 }
-
 .secondary-button:hover {
     -fx-background-color: rgba(15,23,42,1);
 }
