@@ -279,10 +279,6 @@ public class GameController {
         timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
     }
 
-    /**
-     * Handles a left-click on a cell button.
-     * Enforces player turns, reveals cell in the model, updates UI, and handles mine hits & question cells.
-     */
     private void handleCellClick(Button cellButton, boolean isBoardA, int row, int col) {
         if (isPlayerATurn && !isBoardA) return;
         if (!isPlayerATurn && isBoardA) return;
@@ -293,6 +289,7 @@ public class GameController {
         Board board = isBoardA ? boardA : boardB;
         Cell cell  = board.getCell(row, col);
 
+        // ---- הפעלת משבצת הפתעה שכבר נחשפה ----
         if (cell.isRevealed()
                 && cell.getType() == CellType.SURPRISE
                 && !cell.isSurpriseUsed()) {
@@ -303,10 +300,18 @@ public class GameController {
             updateBoardHighlight();
             return;
         }
+
         if (cell.isRevealed()
                 && cell.getType() == CellType.QUESTION) {
 
-            handleQuestionCell(board, row, col, cellButton);
+            // אם עדיין לא USED – מפעילים את השאלה
+            if (!cell.isQuestionUsed()) {
+                handleQuestionCell(board, row, col, cellButton);
+            }
+
+            // בכל מקרה – זו הפעולה של השחקן בתור הזה
+            isPlayerATurn = !isPlayerATurn;
+            updateBoardHighlight();
             return;
         }
 
@@ -315,7 +320,9 @@ public class GameController {
         refreshEntireBoard(board, isBoardA ? boardAGrid : boardBGrid);
 
         if (result == RevealResult.QUESTION_CELL) {
-            handleQuestionCell(board, row, col, cellButton);
+            if (!cell.isQuestionUsed()) {
+                handleQuestionCell(board, row, col, cellButton);
+            }
         }
         if (result == RevealResult.HIT_MINE) {
             lives--;
@@ -346,22 +353,21 @@ public class GameController {
         }
         cellButton.setDisable(true);
     }
-
-    /**
-     * Handles QUESTION cells.
-     * 1. מבטיח שלתא תהיה שאלה מה-QuestionBank.
-     * 2. מציג אייקון ? על התא.
-     * 3. פותח את חלון ה-POPUP האמיתי עם השאלה.
-     */
     private void handleQuestionCell(Board board, int row, int col, Button cellButton) {
         System.out.println(">>> [handleQuestionCell] QUESTION cell at (" + row + "," + col + ")");
 
         Cell cell = board.getCell(row, col);
 
+        // --- אם השאלה כבר שומשה – לא מפעילים אותה שוב ---
+        if (cell.isQuestionUsed()) {
+            System.out.println(">>> Question already USED – ignoring click");
+            return;
+        }
+
         // 1) אם עדיין אין לתא שאלה – נגריל אחת לפי רמת הקושי
         if (!cell.hasQuestion()) {
-            QuestionLevel level = getLevelFromSetup();              // כבר קיימת אצלך
-            Question question = questionBank.getRandomQuestion(level);  // ← שימי לב לשם המתודה אצלך ב-QuestionBank
+            QuestionLevel level = getLevelFromSetup();
+            Question question = questionBank.getRandomQuestion(level); // לפי השם אצלך
             cell.setQuestion(question);
         }
 
@@ -376,13 +382,26 @@ public class GameController {
         Question question = cell.getQuestion();
         QuestionController controller = showQuestionPopup(question);
 
-        // כרגע רק נרשום ללוג את התוצאה – ניקוד/חיים נוסיף בצעד הבא
         if (controller != null) {
             boolean correct  = controller.isAnsweredCorrect();
             boolean answered = controller.wasAnswered();
             System.out.println(">>> Question result: answered=" + answered + ", correct=" + correct);
+
+            // --- מסמנים את המשבצת כ-USED אחרי שנענתה (נכון או לא) ---
+            if (answered) {
+                cell.setQuestionUsed(true);
+
+                // אפשר להשאיר "?" אבל לעצב אחרת ולנעול אותה
+                cellButton.setText("?");
+                cellButton.getStyleClass().remove("question-cell");
+                if (!cellButton.getStyleClass().contains("question-used-cell")) {
+                    cellButton.getStyleClass().add("question-used-cell");
+                }
+                cellButton.setDisable(true);
+            }
         }
     }
+
 
     /**
      * פותחת את חלון השאלה (question-view.fxml) ומחזירה את ה-QuestionController
@@ -432,18 +451,21 @@ public class GameController {
             return;
         }
 
-        // להסיר סטיילים ישנים של מספר/מוקש/שאלה
+        // לנקות סטיילים ישנים
         cellButton.getStyleClass().removeIf(
                 s -> s.startsWith("number-")
                         || s.equals("mine-icon")
                         || s.equals("question-cell")
+                        || s.equals("question-used-cell")
+                        || s.equals("surprise-cell")
+                        || s.equals("surprise-used")
         );
 
         if (!cellButton.getStyleClass().contains("cell-revealed")) {
             cellButton.getStyleClass().add("cell-revealed");
         }
 
-
+        // ---- מוקש ----
         if (cell.isMine()) {
             cellButton.setText("");
 
@@ -464,15 +486,7 @@ public class GameController {
             cellButton.setStyle("-fx-padding: 0;");
         }
 
-        else if (cell.getType() == CellType.QUESTION) {
-            cellButton.setGraphic(null);
-            cellButton.setText("?");
-            if (!cellButton.getStyleClass().contains("question-cell")) {
-                cellButton.getStyleClass().add("question-cell");
-            }
-            cellButton.setStyle(null);
-        }
-
+        // ---- משבצת הפתעה ----
         else if (cell.getType() == CellType.SURPRISE) {
 
             if (cell.isSurpriseUsed()) {
@@ -504,7 +518,29 @@ public class GameController {
             cellButton.setStyle(null);
         }
 
+        // ---- משבצת שאלה ----
+        else if (cell.getType() == CellType.QUESTION) {
+            cellButton.setGraphic(null);
+            cellButton.setText("?");
 
+            if (!cell.isQuestionUsed()) {
+                // שאלה שעדיין לא השתמשו בה
+                if (!cellButton.getStyleClass().contains("question-cell")) {
+                    cellButton.getStyleClass().add("question-cell");
+                }
+                // משאירים enabled – השורה למטה לא משנה ל-QUESTION
+            } else {
+                // משבצת שאלה USED – נעולה
+                if (!cellButton.getStyleClass().contains("question-used-cell")) {
+                    cellButton.getStyleClass().add("question-used-cell");
+                }
+                cellButton.setDisable(true);    // אי אפשר ללחוץ שוב
+            }
+
+            cellButton.setStyle(null);
+        }
+
+        // ---- תא מספר / ריק ----
         else {
             cellButton.setGraphic(null);
             int num = cell.getAdjacentMines();
@@ -520,10 +556,12 @@ public class GameController {
             cellButton.setStyle(null);
         }
 
+        // הפעלה / ביטול לחיצה לפי סוג התא
         if (cell.getType() == CellType.SURPRISE && !cell.isSurpriseUsed()) {
             cellButton.setDisable(false);
         } else if (cell.getType() == CellType.QUESTION) {
-            cellButton.setDisable(false);
+            // ל־QUESTION אנחנו מנהלים disable בתוך הבלוק למעלה (כש-used)
+            // אם לא used – נשאר ברירת המחדל (enabled)
         } else {
             cellButton.setDisable(true);
         }
@@ -550,13 +588,8 @@ public class GameController {
                 if (cell.isRevealed()) {
                     updateCellView(board, btn, row, col);
 
-                    // לוודא שוב שתאי שאלה נשארים עם "?"
-                    if (cell.getType() == CellType.QUESTION) {
-                        btn.setText("?");
-                        if (!btn.getStyleClass().contains("question-cell")) {
-                            btn.getStyleClass().add("question-cell");
-                        }
-                    }
+
+
                     if (cell.getType() == CellType.SURPRISE && !cell.isSurpriseUsed()) {
                         btn.setGraphic(null);
                         btn.setText("🎁");
