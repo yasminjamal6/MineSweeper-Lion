@@ -4,6 +4,7 @@ public enum CellType {
     MINE,
     NUMBER,
     REGULAR,
+    SURPRISE,
     QUESTION,
-    SURPRISE
+    QUESTION_USED
 }
