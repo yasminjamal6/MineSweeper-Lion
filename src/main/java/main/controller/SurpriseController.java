@@ -6,6 +6,9 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import model.ScoreRules;
 import javafx.scene.layout.VBox;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
+
 
 /**
  * Controller for the Surprise popup window.
@@ -47,7 +50,24 @@ public class SurpriseController {
             titleLabel.setText("Neutral Surprise");
             messageLabel.setText("No big change this time.");
         }
+        scheduleAutoClose();
+
     }
+    private void scheduleAutoClose() {
+        PauseTransition delay = new PauseTransition(Duration.seconds(4));
+        delay.setOnFinished(event -> closeWindow());
+        delay.play();
+    }
+
+    private void closeWindow() {
+        if (titleLabel != null && titleLabel.getScene() != null) {
+            Stage stage = (Stage) titleLabel.getScene().getWindow();
+            if (stage != null) {
+                stage.close();
+            }
+        }
+    }
+
 
     /**
      * Closes the surprise popup when the user confirms.
