@@ -8,19 +8,17 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.scene.control.Button;
 import model.Theme;
 import model.ThemeColors;
-
 
 public class GameSetupController {
 
@@ -39,7 +37,6 @@ public class GameSetupController {
 
     public static Theme selectedThemeA = ThemeColors.themes.get(0);
     public static Theme selectedThemeB = ThemeColors.themes.get(1);
-
 
     @FXML private StackPane root;
 
@@ -61,15 +58,13 @@ public class GameSetupController {
 
         rebuildPicker(themePickerA, selectedThemeA, true);
         rebuildPicker(themePickerB, selectedThemeB, false);
+
         root.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 SettingsController.refreshLanguageOnAllWindows();
             }
         });
-
     }
-
-
 
     /**
      * Navigates back to the home screen with a smooth fade transition.
@@ -84,7 +79,6 @@ public class GameSetupController {
             );
             Parent newRoot = loader.load();
 
-
             Scene scene = ((Node) event.getSource()).getScene();
 
             newRoot.setOpacity(0);
@@ -98,9 +92,6 @@ public class GameSetupController {
             e.printStackTrace();
         }
     }
-
-
-
 
     /**
      * Validates player input and starts the game if all data is valid.
@@ -128,8 +119,7 @@ public class GameSetupController {
             return;
         }
 
-
-        //   Length validation
+        // Length validation
         if (a.length() < 2 || a.length() > 12 || b.length() < 2 || b.length() > 12) {
             showAlert("Names must be 2 to 12 characters long.");
             return;
@@ -144,7 +134,6 @@ public class GameSetupController {
         selectedPlayerBName = b;
 
         switchSceneWithFade(event, "/view/game.fxml");
-
     }
 
     private void switchSceneWithFade(ActionEvent event, String fxmlPath) {
@@ -165,7 +154,7 @@ public class GameSetupController {
             ft.setToValue(1.0);
             ft.play();
 
-            //  Fix window size so it can't be smaller than the content
+            // Fix window size so it can't be smaller than the content
             stage.sizeToScene();                    // fit window to newRoot size
             stage.setMinWidth(stage.getWidth());    // don't allow smaller width
             stage.setMinHeight(stage.getHeight());  // don't allow smaller height
@@ -174,8 +163,6 @@ public class GameSetupController {
             e.printStackTrace();
         }
     }
-
-
 
     private void showAlert(String msg) {
         Alert alert = new Alert(Alert.AlertType.WARNING, msg, ButtonType.OK);
@@ -186,7 +173,6 @@ public class GameSetupController {
                 getClass().getResource("/css/alert.css").toExternalForm()
         );
         dialogPane.getStyleClass().add("lion-alert");
-
 
         alert.showAndWait();
     }
