@@ -11,6 +11,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.scene.media.AudioClip;
+
 
 import java.io.InputStream;
 
@@ -37,6 +39,28 @@ public class ResultController {
     private int hearts;
     private int heartValue;
 
+    private void playSound(String resourcePath) {
+        try {
+            var url = getClass().getResource(resourcePath);
+            if (url == null) {
+                System.err.println("Sound not found: " + resourcePath);
+                return;
+            }
+
+            System.out.println("Playing sound: " + url);
+
+            javax.sound.sampled.AudioInputStream ais =
+                    javax.sound.sampled.AudioSystem.getAudioInputStream(url);
+            javax.sound.sampled.Clip clip = javax.sound.sampled.AudioSystem.getClip();
+            clip.open(ais);
+            clip.start();
+
+        } catch (Exception e) {
+            System.err.println("Error playing sound: " + resourcePath);
+            e.printStackTrace();
+        }
+    }
+
     public void initAsWin(String playerA, String playerB,
                           int baseScore, int hearts, int heartValue) {
 
@@ -62,6 +86,8 @@ public class ResultController {
         heartsLabel.setText("Hearts: " + hearts);
 
         loadGif("/images/lion_win.gif");
+        playSound("/sound/win.mp3");
+
     }
 
     public void initAsLose(String playerA, String playerB,
@@ -89,6 +115,8 @@ public class ResultController {
         heartsLabel.setText("Hearts: " + hearts);
 
         loadGif("/images/lion_lose.gif");
+        playSound("/sound/lose.wav");
+
     }
 
     // ========================
