@@ -884,8 +884,7 @@ public class GameController {
     private void openResultScreen(boolean win) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/result-view.fxml"));
-            Parent resultRoot = loader.load();
-
+            Parent rootResult = loader.load();
             ResultController controller = loader.getController();
 
             String playerA = playerANameLabel.getText();
@@ -901,15 +900,18 @@ public class GameController {
             }
 
             Stage dialog = new Stage();
-            dialog.setTitle("תוצאת המשחק");
+            dialog.setTitle("Game Result");
 
             dialog.initOwner(root.getScene().getWindow());
             dialog.initModality(Modality.WINDOW_MODAL);
 
-            dialog.setScene(new Scene(resultRoot));
-            dialog.setWidth(450);
-            dialog.setHeight(700);
+            Scene scene = new Scene(rootResult);
+            dialog.setScene(scene);
+
+            // נותנים ל־FXML להחליט על הגודל (אחרי שהקטנו את הכרטיס)
+            dialog.sizeToScene();
             dialog.setResizable(false);
+
             dialog.show();
 
         } catch (Exception e) {
