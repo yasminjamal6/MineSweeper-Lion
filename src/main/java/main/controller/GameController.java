@@ -12,7 +12,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -23,6 +22,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+import javafx.scene.control.Alert;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import model.Difficulty;
@@ -37,7 +37,7 @@ import model.Theme;
 import model.Board;
 import model.Cell;
 import model.RevealResult;
-
+import javafx.stage.StageStyle;
 import java.io.InputStream;
 
 /**
@@ -89,10 +89,10 @@ public class GameController {
     private Image openGiftImage;
 
 
-    // -------------------------------------------------------------------------
-    // INITIALIZE
-    // -------------------------------------------------------------------------
-
+    /**
+     * Initializes the controller after its root element has been completely processed by the FXMLLoader.
+     * Sets player names, difficulty, lives, score, hearts bar, and builds the two game boards.
+     */
     @FXML
     private void initialize() {
         // Load mine image
@@ -138,6 +138,7 @@ public class GameController {
             e.printStackTrace();
         }
 
+
         // Player names and themes
         playerANameLabel.setText(GameSetupController.selectedPlayerAName);
         playerBNameLabel.setText(GameSetupController.selectedPlayerBName);
@@ -179,6 +180,7 @@ public class GameController {
         boardA.placeSurpriseCells(surpriseCells);
         boardB.placeSurpriseCells(surpriseCells);
 
+
         // Build board grids
         buildBoardGrid(boardAGrid, size, cellSize, true);
         buildBoardGrid(boardBGrid, size, cellSize, false);
@@ -202,10 +204,9 @@ public class GameController {
         startCountdown();
     }
 
-    // -------------------------------------------------------------------------
-    // TURN HIGHLIGHT + COUNTDOWN + TIMER
-    // -------------------------------------------------------------------------
-
+    /**
+     * Highlights the active player's board and dims the other board.
+     */
     private void updateBoardHighlight() {
         if (isPlayerATurn) {
             boardAContainer.getStyleClass().add("active-board");
@@ -222,6 +223,9 @@ public class GameController {
         }
     }
 
+    /**
+     * Shows a short countdown before players can start interacting with the boards.
+     */
     private void startCountdown() {
         if (countdownOverlay == null || countdownLabel == null) {
             return;
@@ -244,6 +248,9 @@ public class GameController {
         timeline.play();
     }
 
+    /**
+     * Starts the in-game timer and updates the timer label every second.
+     */
     private void startTimer() {
         if (timerLabel == null) {
             return;
@@ -272,20 +279,7 @@ public class GameController {
         timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
     }
 
-    // -------------------------------------------------------------------------
-    // CELL CLICK / GAME FLOW
-    // -------------------------------------------------------------------------
-
-    /**
-     * Handles a left-click on a cell button.
-     */
     private void handleCellClick(Button cellButton, boolean isBoardA, int row, int col) {
-        // אם אין לבבות – לא מאפשרים המשך משחק
-        if (lives <= 0) {
-            System.out.println("No hearts left – click ignored.");
-            return;
-        }
-
         if (isPlayerATurn && !isBoardA) return;
         if (!isPlayerATurn && isBoardA) return;
 
@@ -295,6 +289,7 @@ public class GameController {
         Board board = isBoardA ? boardA : boardB;
         Cell cell  = board.getCell(row, col);
 
+        // ---- הפעלת משבצת הפתעה שכבר נחשפה ----
         if (cell.isRevealed()
                 && cell.getType() == CellType.SURPRISE
                 && !cell.isSurpriseUsed()) {
@@ -305,10 +300,18 @@ public class GameController {
             updateBoardHighlight();
             return;
         }
+
         if (cell.isRevealed()
                 && cell.getType() == CellType.QUESTION) {
 
-            handleQuestionCell(board, row, col, cellButton);
+            // אם עדיין לא USED – מפעילים את השאלה
+            if (!cell.isQuestionUsed()) {
+                handleQuestionCell(board, row, col, cellButton);
+            }
+
+            // בכל מקרה – זו הפעולה של השחקן בתור הזה
+            isPlayerATurn = !isPlayerATurn;
+            updateBoardHighlight();
             return;
         }
 
@@ -317,7 +320,9 @@ public class GameController {
         refreshEntireBoard(board, isBoardA ? boardAGrid : boardBGrid);
 
         if (result == RevealResult.QUESTION_CELL) {
-            handleQuestionCell(board, row, col, cellButton);
+            if (!cell.isQuestionUsed()) {
+                handleQuestionCell(board, row, col, cellButton);
+            }
         }
         if (result == RevealResult.HIT_MINE) {
             lives--;
@@ -326,9 +331,6 @@ public class GameController {
         }
         isPlayerATurn = !isPlayerATurn;
         updateBoardHighlight();
-
-        // בדיקת סוף משחק אחרי כל מהלך
-        checkGameOver();
     }
 
     private void handleSurpriseActivation(Cell cell, Button cellButton) {
@@ -351,39 +353,32 @@ public class GameController {
         }
         cellButton.setDisable(true);
     }
-
-    /**
-     * How many points each remaining heart is worth at the end of the game.
-     */
-    private int getHeartToPointsValue(model.Difficulty diff) {
-        return switch (diff) {
-            case EASY   -> 5;
-            case MEDIUM -> 8;
-            case HARD   -> 12;
-        };
-    }
-
-    // -------------------------------------------------------------------------
-    // QUESTION CELLS
-    // -------------------------------------------------------------------------
-
     private void handleQuestionCell(Board board, int row, int col, Button cellButton) {
         System.out.println(">>> [handleQuestionCell] QUESTION cell at (" + row + "," + col + ")");
 
         Cell cell = board.getCell(row, col);
 
+        // --- אם השאלה כבר שומשה – לא מפעילים אותה שוב ---
+        if (cell.isQuestionUsed()) {
+            System.out.println(">>> Question already USED – ignoring click");
+            return;
+        }
+
+        // 1) אם עדיין אין לתא שאלה – נגריל אחת לפי רמת הקושי
         if (!cell.hasQuestion()) {
             QuestionLevel level = getLevelFromSetup();
-            Question question = questionBank.getRandomQuestion(level);
+            Question question = questionBank.getRandomQuestion(level); // לפי השם אצלך
             cell.setQuestion(question);
         }
 
+        // 2) אייקון שאלה על הכפתור
         cellButton.setGraphic(null);
         cellButton.setText("?");
         if (!cellButton.getStyleClass().contains("question-cell")) {
             cellButton.getStyleClass().add("question-cell");
         }
 
+        // 3) פתיחת חלון ה-POPUP עם השאלה
         Question question = cell.getQuestion();
         QuestionController controller = showQuestionPopup(question);
 
@@ -391,27 +386,47 @@ public class GameController {
             boolean correct  = controller.isAnsweredCorrect();
             boolean answered = controller.wasAnswered();
             System.out.println(">>> Question result: answered=" + answered + ", correct=" + correct);
+
+            // --- מסמנים את המשבצת כ-USED אחרי שנענתה (נכון או לא) ---
+            if (answered) {
+                cell.setQuestionUsed(true);
+
+                // אפשר להשאיר "?" אבל לעצב אחרת ולנעול אותה
+                cellButton.setText("?");
+                cellButton.getStyleClass().remove("question-cell");
+                if (!cellButton.getStyleClass().contains("question-used-cell")) {
+                    cellButton.getStyleClass().add("question-used-cell");
+                }
+                cellButton.setDisable(true);
+            }
         }
     }
 
+
+    /**
+     * פותחת את חלון השאלה (question-view.fxml) ומחזירה את ה-QuestionController
+     * אחרי שהחלון נסגר (showAndWait).
+     */
     private QuestionController showQuestionPopup(Question question) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/question-view.fxml")
+                    getClass().getResource("/view/question-view.fxml")   // ← לוודא שזה השם והנתיב הנכונים של ה-FXML שלך
             );
             Parent root = loader.load();
 
+            // controller של חלון השאלה
             QuestionController controller = loader.getController();
             controller.setQuestion(question);
 
             Stage dialog = new Stage();
             dialog.initOwner(scoreLabel.getScene().getWindow());
             dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initStyle(StageStyle.UNDECORATED);
             dialog.setTitle("שאלת טריוויה");
 
             Scene scene = new Scene(root);
             dialog.setScene(scene);
-            dialog.showAndWait();
+            dialog.showAndWait();   // מחכים עד שהשחקן יסיים לענות/שהזמן יגמר
 
             return controller;
 
@@ -421,31 +436,37 @@ public class GameController {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // CELL UI UPDATE
-    // -------------------------------------------------------------------------
 
+    /**
+     * Updates the visual state of a single cell button based on the underlying Cell model.
+     */
     private void updateCellView(Board board, Button cellButton, int row, int col) {
         Cell cell = board.getCell(row, col);
 
         cellButton.setStyle(null);
 
+        // אם התא לא נחשף – נשאיר אותו סגור
         if (!cell.isRevealed()) {
             cellButton.setText("");
             cellButton.setGraphic(null);
             return;
         }
 
+        // לנקות סטיילים ישנים
         cellButton.getStyleClass().removeIf(
                 s -> s.startsWith("number-")
                         || s.equals("mine-icon")
                         || s.equals("question-cell")
+                        || s.equals("question-used-cell")
+                        || s.equals("surprise-cell")
+                        || s.equals("surprise-used")
         );
 
         if (!cellButton.getStyleClass().contains("cell-revealed")) {
             cellButton.getStyleClass().add("cell-revealed");
         }
 
+        // ---- מוקש ----
         if (cell.isMine()) {
             cellButton.setText("");
 
@@ -464,16 +485,10 @@ public class GameController {
             }
 
             cellButton.setStyle("-fx-padding: 0;");
+        }
 
-        } else if (cell.getType() == CellType.QUESTION) {
-            cellButton.setGraphic(null);
-            cellButton.setText("?");
-            if (!cellButton.getStyleClass().contains("question-cell")) {
-                cellButton.getStyleClass().add("question-cell");
-            }
-            cellButton.setStyle(null);
-
-        } else if (cell.getType() == CellType.SURPRISE) {
+        // ---- משבצת הפתעה ----
+        else if (cell.getType() == CellType.SURPRISE) {
 
             if (cell.isSurpriseUsed()) {
                 cellButton.setText("");
@@ -502,8 +517,32 @@ public class GameController {
             }
 
             cellButton.setStyle(null);
+        }
 
-        } else {
+        // ---- משבצת שאלה ----
+        else if (cell.getType() == CellType.QUESTION) {
+            cellButton.setGraphic(null);
+            cellButton.setText("?");
+
+            if (!cell.isQuestionUsed()) {
+                // שאלה שעדיין לא השתמשו בה
+                if (!cellButton.getStyleClass().contains("question-cell")) {
+                    cellButton.getStyleClass().add("question-cell");
+                }
+                // משאירים enabled – השורה למטה לא משנה ל-QUESTION
+            } else {
+                // משבצת שאלה USED – נעולה
+                if (!cellButton.getStyleClass().contains("question-used-cell")) {
+                    cellButton.getStyleClass().add("question-used-cell");
+                }
+                cellButton.setDisable(true);    // אי אפשר ללחוץ שוב
+            }
+
+            cellButton.setStyle(null);
+        }
+
+        // ---- תא מספר / ריק ----
+        else {
             cellButton.setGraphic(null);
             int num = cell.getAdjacentMines();
             if (num == 0) {
@@ -518,14 +557,17 @@ public class GameController {
             cellButton.setStyle(null);
         }
 
+        // הפעלה / ביטול לחיצה לפי סוג התא
         if (cell.getType() == CellType.SURPRISE && !cell.isSurpriseUsed()) {
             cellButton.setDisable(false);
         } else if (cell.getType() == CellType.QUESTION) {
-            cellButton.setDisable(false);
+            // ל־QUESTION אנחנו מנהלים disable בתוך הבלוק למעלה (כש-used)
+            // אם לא used – נשאר ברירת המחדל (enabled)
         } else {
             cellButton.setDisable(true);
         }
 
+        // לשמור על אטימות מלאה גם כשהכפתור disabled
         if (cellButton.getStyle() == null || !cellButton.getStyle().contains("-fx-opacity")) {
             cellButton.setStyle(
                     (cellButton.getStyle() == null ? "" : cellButton.getStyle()) +
@@ -534,25 +576,9 @@ public class GameController {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // MINE CHECKS / REFRESH
-    // -------------------------------------------------------------------------
-
-    private boolean areAllMinesRevealed(Board board) {
-        int rows = board.getRows();
-        int cols = board.getCols();
-
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-                Cell cell = board.getCell(r, c);
-                if (cell.isMine() && !cell.isRevealed()) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
+    /**
+     * Refreshes all revealed cells on a given board grid to match the model.
+     */
     private void refreshEntireBoard(Board board, GridPane grid) {
         for (Node node : grid.getChildren()) {
             if (node instanceof Button btn) {
@@ -563,12 +589,8 @@ public class GameController {
                 if (cell.isRevealed()) {
                     updateCellView(board, btn, row, col);
 
-                    if (cell.getType() == CellType.QUESTION) {
-                        btn.setText("?");
-                        if (!btn.getStyleClass().contains("question-cell")) {
-                            btn.getStyleClass().add("question-cell");
-                        }
-                    }
+
+
                     if (cell.getType() == CellType.SURPRISE && !cell.isSurpriseUsed()) {
                         btn.setGraphic(null);
                         btn.setText("🎁");
@@ -594,15 +616,17 @@ public class GameController {
                             btn.getStyleClass().add("surprise-used");
                         }
                     }
+
+
                 }
             }
         }
     }
 
-    // -------------------------------------------------------------------------
-    // FLAG TOGGLE
-    // -------------------------------------------------------------------------
 
+    /**
+     * Toggles a flag (Simba's paw) on a cell when right-clicked.
+     */
     private void toggleFlag(Button cell) {
         if (cell.isDisabled()) return;
 
@@ -619,13 +643,14 @@ public class GameController {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // HEART BAR
-    // -------------------------------------------------------------------------
-
+    /**
+     * Builds the hearts bar at the top, with full hearts initially.
+     * Uses ImageView when images are available, otherwise falls back to emoji labels.
+     */
     private void buildHearts(model.Difficulty diff) {
         heartsBox.getChildren().clear();
 
+        // Gentle spacing so hearts don't overlap
         heartsBox.setSpacing(8);
         heartsBox.setPadding(new Insets(0));
 
@@ -635,14 +660,16 @@ public class GameController {
             Node heartNode;
 
             if (fullHeartImage != null) {
+                // Use image-based heart (full heart)
                 ImageView heartView = new ImageView(fullHeartImage);
                 heartView.setFitWidth(36);
                 heartView.setFitHeight(36);
-                heartView.setPreserveRatio(false);
+                heartView.setPreserveRatio(false); // enforce identical size for full and broken
                 heartView.setSmooth(true);
                 heartView.getStyleClass().add("heart-icon");
                 heartNode = heartView;
             } else {
+                // Fallback to text heart
                 Label heartLabel = new Label("❤");
                 heartLabel.getStyleClass().add("heart-icon");
                 heartLabel.setFont(Font.font(34));
@@ -651,6 +678,7 @@ public class GameController {
 
             HBox.setMargin(heartNode, Insets.EMPTY);
 
+            // Breathing animation
             FadeTransition ft = new FadeTransition(Duration.millis(1200), heartNode);
             ft.setFromValue(1.0);
             ft.setToValue(0.65);
@@ -663,12 +691,17 @@ public class GameController {
         }
     }
 
+    /**
+     * Updates the hearts bar and lives label according to current lives.
+     * Hearts before 'lives' = full, hearts after = broken/empty.
+     */
     private void updateLivesUI(model.Difficulty diff) {
         livesLabel.setText(lives + " / " + diff.getInitialLives());
 
         for (int i = 0; i < heartsBox.getChildren().size(); i++) {
             Node node = heartsBox.getChildren().get(i);
 
+            // Image-based hearts
             if (node instanceof ImageView heartView) {
                 if (i < lives) {
                     if (fullHeartImage != null) {
@@ -684,7 +717,9 @@ public class GameController {
                         heartView.setOpacity(0.3);
                     }
                 }
-            } else if (node instanceof Label heartLabel) {
+            }
+            // Fallback: label-based hearts (emoji)
+            else if (node instanceof Label heartLabel) {
                 if (i < lives) {
                     heartLabel.setText("❤");
                     heartLabel.setOpacity(1.0);
@@ -696,10 +731,9 @@ public class GameController {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // DIFFICULTY HELPERS
-    // -------------------------------------------------------------------------
-
+    /**
+     * Returns board size (number of rows/cols) based on difficulty.
+     */
     private int getBoardSize(GameSetupController.Difficulty diff) {
         return switch (diff) {
             case EASY    -> 9;
@@ -708,6 +742,9 @@ public class GameController {
         };
     }
 
+    /**
+     * Returns cell size (in pixels) based on difficulty.
+     */
     private int getCellSize(GameSetupController.Difficulty diff) {
         return switch (diff) {
             case EASY    -> 44;
@@ -716,6 +753,9 @@ public class GameController {
         };
     }
 
+    /**
+     * Returns number of mines based on difficulty.
+     */
     private int getMinesForDifficulty(GameSetupController.Difficulty diff) {
         return switch (diff) {
             case EASY    -> 10;
@@ -723,7 +763,10 @@ public class GameController {
             case HARD    -> 44;
         };
     }
-
+    /**
+     * Returns number of question cells based on difficulty.
+     * לפי המפרט: קל – 6, בינוני – 7, קשה – 11.
+     */
     private int getQuestionCountForDifficulty(GameSetupController.Difficulty diff) {
         return switch (diff) {
             case EASY    -> 6;
@@ -732,6 +775,10 @@ public class GameController {
         };
     }
 
+
+    /**
+     * Maps UI difficulty to question level.
+     */
     private QuestionLevel getLevelFromSetup() {
         GameSetupController.Difficulty d = GameSetupController.selectedDifficulty;
 
@@ -742,12 +789,9 @@ public class GameController {
         };
     }
 
-    // -------------------------------------------------------------------------
-    // SURPRISE CELLS / SCORE
-    // -------------------------------------------------------------------------
-
     /**
-     * Triggers a random surprise, updates lives & score, ואז בודק אם המשחק נגמר.
+     * Triggers a random surprise (good or bad), updates lives and score,
+     * then shows a popup describing the change.
      */
     private void triggerRandomSurprise() {
         Difficulty diff = DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
@@ -763,16 +807,12 @@ public class GameController {
         scoreLabel.setText("Score: " + score);
 
         updateLivesUI(diff);
-
-        // אם הפתעה הורידה את כל הלבבות – מיד מסיימים משחק
-        checkGameOver();
-        if (lives <= 0) {
-            return;
-        }
-
         showSurprisePopup(change);
     }
 
+    /**
+     * Shows a modal popup for the surprise result.
+     */
     private void showSurprisePopup(ScoreRules.ScoreChange change) {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -796,10 +836,9 @@ public class GameController {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // BUILD BOARD GRID
-    // -------------------------------------------------------------------------
-
+    /**
+     * Builds a fixed-size game board grid that looks visually balanced on the screen.
+     */
     private void buildBoardGrid(GridPane grid, int size, int cellSize, boolean isBoardA) {
         grid.getChildren().clear();
         grid.getColumnConstraints().clear();
@@ -846,84 +885,9 @@ public class GameController {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // GAME OVER + RESULT SCREEN
-    // -------------------------------------------------------------------------
-
     /**
-     * Checks if the game should end:
-     *  - LOSS : no hearts left
-     *  - WIN  : all mines on both boards are revealed
+     * Handles the "Back to Home" button click. Fades into the home view.
      */
-    private void checkGameOver() {
-
-
-
-        boolean noHeartsLeft = (lives <= 0);
-
-        boolean allMinesBoardA = areAllMinesRevealed(boardA);
-        boolean allMinesBoardB = areAllMinesRevealed(boardB);
-        boolean allMinesCleared = allMinesBoardA && allMinesBoardB;
-
-        System.out.println(">>> checkGameOver: lives=" + lives +
-                ", allMinesA=" + allMinesBoardA +
-                ", allMinesB=" + allMinesBoardB);
-
-        if (!noHeartsLeft && !allMinesCleared) {
-            return;
-        }
-
-        if (noHeartsLeft) {
-            System.out.println(">>> GAME OVER: LOSE");
-            openResultScreen(false);
-        } else if (allMinesCleared) {
-            System.out.println(">>> GAME OVER: WIN");
-            openResultScreen(true);
-        }
-    }
-    private void openResultScreen(boolean win) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/result-view.fxml"));
-            Parent rootResult = loader.load();
-            ResultController controller = loader.getController();
-
-            String playerA = playerANameLabel.getText();
-            String playerB = playerBNameLabel.getText();
-
-            int heartValue = getHeartToPointsValue(currentDifficulty);
-            int baseScoreValue = score;
-
-            if (win) {
-                controller.initAsWin(playerA, playerB, baseScoreValue, lives, heartValue);
-            } else {
-                controller.initAsLose(playerA, playerB, baseScoreValue, lives, heartValue);
-            }
-
-            Stage dialog = new Stage();
-            dialog.setTitle("Game Result");
-
-            dialog.initOwner(root.getScene().getWindow());
-            dialog.initModality(Modality.WINDOW_MODAL);
-
-            Scene scene = new Scene(rootResult);
-            dialog.setScene(scene);
-
-            // נותנים ל־FXML להחליט על הגודל (אחרי שהקטנו את הכרטיס)
-            dialog.sizeToScene();
-            dialog.setResizable(false);
-
-            dialog.show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    // -------------------------------------------------------------------------
-    // BACK TO HOME BUTTON (מהמסך של המשחק)
-    // -------------------------------------------------------------------------
-
     @FXML
     private void onBackToHome(javafx.event.ActionEvent event) {
         try {
