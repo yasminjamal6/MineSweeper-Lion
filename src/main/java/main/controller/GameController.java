@@ -37,7 +37,7 @@ import model.Theme;
 import model.Board;
 import model.Cell;
 import model.RevealResult;
-
+import javafx.stage.StageStyle;
 import java.io.InputStream;
 
 /**
@@ -421,6 +421,7 @@ public class GameController {
             Stage dialog = new Stage();
             dialog.initOwner(scoreLabel.getScene().getWindow());
             dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initStyle(StageStyle.UNDECORATED);
             dialog.setTitle("שאלת טריוויה");
 
             Scene scene = new Scene(root);
