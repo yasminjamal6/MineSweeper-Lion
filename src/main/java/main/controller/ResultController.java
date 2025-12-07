@@ -6,13 +6,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
+import java.io.InputStream;
+
 public class ResultController {
 
     @FXML private StackPane root;
+
+    @FXML private Label gifLabel;
+    @FXML private Label emojiLabel;
 
     @FXML private Label titleLabel;
     @FXML private Label subtitleLabel;
@@ -30,9 +37,6 @@ public class ResultController {
     private int hearts;
     private int heartValue;
 
-    // ========================
-    //     WIN SCREEN SETUP
-    // ========================
     public void initAsWin(String playerA, String playerB,
                           int baseScore, int hearts, int heartValue) {
 
@@ -43,8 +47,11 @@ public class ResultController {
         int bonus = hearts * heartValue;
         int total = baseScore + bonus;
 
-        titleLabel.setText("!המלך ניצח 👑");
-        subtitleLabel.setText("כל המוקשים נוטרלו ✔");
+        emojiLabel.setText("👑");
+        titleLabel.setText("The King has won!");
+        subtitleLabel.setText("All mines have been cleared.");
+        // משפט חדש, יותר חיובי
+        quoteLabel.setText("The savannah belongs to you.");
 
         playerALabel.setText(playerA);
         playerBLabel.setText(playerB);
@@ -52,13 +59,11 @@ public class ResultController {
         scoreValueLabel.setText(String.valueOf(total));
         scoreLabel.setText("(+" + bonus + " from hearts)");
 
-        heartsLabel.setText("לבבות: " + hearts);
-        quoteLabel.setText("Only kings survive the jungle");
+        heartsLabel.setText("Hearts: " + hearts);
+
+        loadGif("/images/lion_win.gif");
     }
 
-    // ========================
-    //     LOSE SCREEN SETUP
-    // ========================
     public void initAsLose(String playerA, String playerB,
                            int baseScore, int hearts, int heartValue) {
 
@@ -69,8 +74,11 @@ public class ResultController {
         int bonus = hearts * heartValue;
         int total = baseScore + bonus;
 
-        titleLabel.setText("הצבועים השתלטו! 😈");
-        subtitleLabel.setText("נגמרו הלבבות... 💔");
+        emojiLabel.setText("😈");
+        titleLabel.setText("Hyenas took over!");
+        subtitleLabel.setText("You ran out of hearts...");
+        // משפט חדש, פחות דכאוני 🙂
+        quoteLabel.setText("Every king gets another chance.");
 
         playerALabel.setText(playerA);
         playerBLabel.setText(playerB);
@@ -78,12 +86,35 @@ public class ResultController {
         scoreValueLabel.setText(String.valueOf(total));
         scoreLabel.setText("(+" + bonus + " from hearts)");
 
-        heartsLabel.setText("לבבות: " + hearts);
-        quoteLabel.setText("Even kings can fall");
+        heartsLabel.setText("Hearts: " + hearts);
+
+        loadGif("/images/lion_lose.gif");
     }
 
     // ========================
-    //       BUTTONS
+    //         GIF
+    // ========================
+    private void loadGif(String path) {
+        if (gifLabel == null) return;
+
+        try (InputStream is = getClass().getResourceAsStream(path)) {
+            if (is != null) {
+                Image image = new Image(is);
+                ImageView iv = new ImageView(image);
+                iv.setFitWidth(220);
+                iv.setPreserveRatio(true);
+                gifLabel.setGraphic(iv);
+                gifLabel.setText("");
+            } else {
+                gifLabel.setText(""); // no image – empty
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ========================
+    //        BUTTONS
     // ========================
 
     @FXML
@@ -100,17 +131,14 @@ public class ResultController {
     //  SWITCH MAIN WINDOW SCENE
     // ============================
     private void switchMainStageScene(String fxmlPath) {
-
         try {
-            // חלון התוצאה (הקטן)
+            // this is the small dialog window
             Stage dialogStage = (Stage) root.getScene().getWindow();
             Window owner = dialogStage.getOwner();
 
             if (owner instanceof Stage mainStage) {
-
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
                 Parent newRoot = loader.load();
-
                 Scene scene = new Scene(newRoot);
                 mainStage.setScene(scene);
                 mainStage.centerOnScreen();
