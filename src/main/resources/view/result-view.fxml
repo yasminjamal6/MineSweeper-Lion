@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="main.controller.ResultController"
+           fx:id="root"
+           stylesheets="@../css/result.css"
+           styleClass="result-root">
+
+    <children>
+        <VBox alignment="CENTER"
+              spacing="18"
+              maxWidth="420"
+              maxHeight="620"
+              styleClass="result-card">
+
+            <padding>
+                <Insets top="24" right="22" bottom="26" left="22"/>
+            </padding>
+
+            <children>
+
+                <Label fx:id="emojiLabel" text="😈" styleClass="result-emoji"/>
+
+                <Label fx:id="titleLabel" text="---" styleClass="result-title"/>
+
+                <Label fx:id="subtitleLabel" text="" styleClass="result-subtitle"/>
+
+                <!-- Score Box -->
+                <VBox alignment="CENTER" spacing="6" styleClass="score-box">
+                    <children>
+                        <HBox alignment="CENTER" spacing="6">
+                            <children>
+                                <Label text="🏆" styleClass="score-trophy"/>
+                                <Label text="Score" styleClass="score-caption"/>
+                                <Label text="🏆" styleClass="score-trophy"/>
+                            </children>
+                        </HBox>
+
+                        <Label fx:id="scoreValueLabel" text="0" styleClass="score-value"/>
+
+                        <Label fx:id="scoreLabel" text="(+0 from hearts)" styleClass="score-details"/>
+                    </children>
+                </VBox>
+
+                <!-- Players -->
+                <HBox alignment="CENTER" spacing="14">
+                    <children>
+
+                        <VBox alignment="CENTER" spacing="4" styleClass="player-pill">
+                            <children>
+                                <Label text="🦁" styleClass="player-emoji"/>
+                                <Label fx:id="playerALabel" text="Player A" styleClass="player-name"/>
+                            </children>
+                        </VBox>
+
+                        <VBox alignment="CENTER" spacing="4" styleClass="player-pill">
+                            <children>
+                                <Label text="🦁" styleClass="player-emoji"/>
+                                <Label fx:id="playerBLabel" text="Player B" styleClass="player-name"/>
+                            </children>
+                        </VBox>
+
+                    </children>
+                </HBox>
+
+                <Label fx:id="heartsLabel" text="לבבות: 0" styleClass="result-hearts"/>
+
+                <Region prefHeight="8" styleClass="divider"/>
+
+                <Label fx:id="quoteLabel" text="Even kings can fall"
+                       wrapText="true"
+                       styleClass="result-quote"/>
+
+                <HBox alignment="CENTER" spacing="14">
+                    <children>
+
+                        <Button fx:id="homeButton"
+                                text="דף הבית"
+                                onAction="#onHome"
+                                styleClass="result-button secondary-button"/>
+
+                        <Button fx:id="playAgainButton"
+                                text="משחק חדש"
+                                onAction="#onPlayAgain"
+                                styleClass="result-button primary-button"/>
+
+                    </children>
+                </HBox>
+
+            </children>
+        </VBox>
+    </children>
+</StackPane>
