@@ -1,8 +1,10 @@
 package main.controller;
 
+import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -11,8 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import javafx.scene.media.AudioClip;
-
+import javafx.util.Duration;
 
 import java.io.InputStream;
 
@@ -38,6 +39,17 @@ public class ResultController {
     private int baseScore;
     private int hearts;
     private int heartValue;
+
+    @FXML
+    private void initialize() {
+        // אנימציית Fade-In קלה לכל המסך
+        if (root != null) {
+            root.setOpacity(0);
+            FadeTransition ft = new FadeTransition(Duration.millis(250), root);
+            ft.setToValue(1.0);
+            ft.play();
+        }
+    }
 
     private void playSound(String resourcePath) {
         try {
@@ -74,7 +86,6 @@ public class ResultController {
         emojiLabel.setText("👑");
         titleLabel.setText("The King has won!");
         subtitleLabel.setText("All mines have been cleared.");
-        // משפט חדש, יותר חיובי
         quoteLabel.setText("The savannah belongs to you.");
 
         playerALabel.setText(playerA);
@@ -87,7 +98,6 @@ public class ResultController {
 
         loadGif("/images/lion_win.gif");
         playSound("/sound/win.mp3");
-
     }
 
     public void initAsLose(String playerA, String playerB,
@@ -103,7 +113,6 @@ public class ResultController {
         emojiLabel.setText("😈");
         titleLabel.setText("Hyenas took over!");
         subtitleLabel.setText("You ran out of hearts...");
-        // משפט חדש, פחות דכאוני 🙂
         quoteLabel.setText("Every king gets another chance.");
 
         playerALabel.setText(playerA);
@@ -116,7 +125,6 @@ public class ResultController {
 
         loadGif("/images/lion_lose.gif");
         playSound("/sound/lose.wav");
-
     }
 
     // ========================
@@ -134,7 +142,7 @@ public class ResultController {
                 gifLabel.setGraphic(iv);
                 gifLabel.setText("");
             } else {
-                gifLabel.setText(""); // no image – empty
+                gifLabel.setText("");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -160,23 +168,38 @@ public class ResultController {
     // ============================
     private void switchMainStageScene(String fxmlPath) {
         try {
-            // this is the small dialog window
+            // זה חלון התוצאה הקטן (dialog)
             Stage dialogStage = (Stage) root.getScene().getWindow();
             Window owner = dialogStage.getOwner();
 
-            if (owner instanceof Stage mainStage) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-                Parent newRoot = loader.load();
-                Scene scene = new Scene(newRoot);
-                mainStage.setScene(scene);
-                mainStage.centerOnScreen();
-            }
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent newRoot = loader.load();
 
-            dialogStage.close();
+            if (owner instanceof Stage mainStage) {
+                Scene scene = mainStage.getScene();
+                if (scene == null) {
+                    scene = new Scene(newRoot);
+                    mainStage.setScene(scene);
+                } else {
+                    scene.setRoot(newRoot);
+                }
+
+                // להתאים גודל חלון לגודל המסך החדש
+                mainStage.sizeToScene();
+                mainStage.setMinWidth(mainStage.getWidth());
+                mainStage.setMinHeight(mainStage.getHeight());
+
+                // לסגור את חלון התוצאה
+                dialogStage.close();
+            } else {
+                // במקרה שאין owner (למשל כשמריצים רק את ה־FXML לבד)
+                Scene scene = dialogStage.getScene();
+                scene.setRoot(newRoot);
+                dialogStage.sizeToScene();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }
