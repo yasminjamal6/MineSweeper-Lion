@@ -43,6 +43,7 @@
                        text="Lions took over!"
                        styleClass="result-title"/>
 
+
                 <Label fx:id="subtitleLabel"
                        text="No hearts left..."
                        styleClass="result-subtitle"/>
