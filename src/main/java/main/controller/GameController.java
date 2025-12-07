@@ -42,6 +42,7 @@ import javafx.stage.StageStyle;
 
 import java.io.InputStream;
 
+
 /**
  * Main controller for the game view.
  * Handles UI initialization, game flow logic, cell interactions, and transitions.
@@ -63,6 +64,9 @@ public class GameController {
     @FXML private StackPane countdownOverlay;
     @FXML private Label countdownLabel;
     @FXML private Label timerLabel;
+    @FXML private Label turnALabel;
+    @FXML private Label turnBLabel;
+
 
     private Board boardA;
     private Board boardB;
@@ -222,14 +226,31 @@ public class GameController {
 
             boardBContainer.getStyleClass().add("inactive-board");
             boardBContainer.getStyleClass().remove("active-board");
+
+            if (turnALabel != null && turnBLabel != null) {
+                turnALabel.setText("👑 " + playerANameLabel.getText() + " – your turn");
+                turnALabel.setVisible(true);
+
+                turnBLabel.setVisible(false);
+            }
+
         } else {
             boardBContainer.getStyleClass().add("active-board");
             boardBContainer.getStyleClass().remove("inactive-board");
 
             boardAContainer.getStyleClass().add("inactive-board");
             boardAContainer.getStyleClass().remove("active-board");
+
+            if (turnALabel != null && turnBLabel != null) {
+                turnBLabel.setText("🦁 " + playerBNameLabel.getText() + " – your turn");
+                turnBLabel.setVisible(true);
+
+                turnALabel.setVisible(false);
+            }
         }
     }
+
+
 
     private void startCountdown() {
         if (countdownOverlay == null || countdownLabel == null) {

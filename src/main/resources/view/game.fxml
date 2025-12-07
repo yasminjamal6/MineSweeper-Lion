@@ -10,7 +10,7 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="main.controller.GameController"
             fx:id="root"
-            prefWidth="1200.0" prefHeight="800.0"
+            prefWidth="1200.0" prefHeight="700.0"
             stylesheets="@../css/game.css"
             styleClass="game-root">
 
@@ -100,6 +100,12 @@
                         </HBox>
                     </VBox>
 
+                    <!-- תור של שחקן A -->
+                    <Label fx:id="turnALabel"
+                           text="Your turn"
+                           alignment="CENTER"
+                           styleClass="turn-label"/>
+
                     <Label text="Board A" styleClass="board-title"/>
 
                     <StackPane fx:id="boardAContainer"
@@ -136,6 +142,11 @@
                             <Label text="MINES" styleClass="mines-text"/>
                         </HBox>
                     </VBox>
+                    <!-- תור של שחקן B -->
+                    <Label fx:id="turnBLabel"
+                           text="Your turn"
+                           alignment="CENTER"
+                           styleClass="turn-label"/>
 
                     <Label text="Board B" styleClass="board-title"/>
 
