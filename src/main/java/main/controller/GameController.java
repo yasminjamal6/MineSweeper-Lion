@@ -165,7 +165,7 @@ public class GameController {
         // Hearts bar + lives label
         buildHearts(currentDifficulty);
         updateLivesUI(currentDifficulty);
-        scoreLabel.setText("Score: " + score + " 🏆");
+        updateScoreLabel();
 
         // Tooltip קטן על שורת הלבבות
         Tooltip heartsTip = new Tooltip(
@@ -322,6 +322,8 @@ public class GameController {
         Board board = isBoardA ? boardA : boardB;
         Cell cell  = board.getCell(row, col);
 
+        int revealedBefore = countRevealed(board);
+
         // SURPRISE that is already revealed but not used yet
         if (cell.isRevealed()
                 && cell.getType() == CellType.SURPRISE
@@ -353,6 +355,9 @@ public class GameController {
         updateCellView(board, cellButton, row, col);
         refreshEntireBoard(board, isBoardA ? boardAGrid : boardBGrid);
 
+        int revealedAfter = countRevealed(board);
+        int newlyRevealed = Math.max(0, revealedAfter - revealedBefore);
+
         if (result == RevealResult.QUESTION_CELL) {
             if (!cell.isQuestionUsed()) {
                 handleQuestionCell(board, row, col, cellButton);
@@ -362,6 +367,10 @@ public class GameController {
             lives--;
             if (lives < 0) lives = 0;
             updateLivesUI(currentDifficulty);
+        }
+        if (newlyRevealed > 0 && result != RevealResult.HIT_MINE && result != RevealResult.IGNORED) {
+            score += newlyRevealed;
+            updateScoreLabel();
         }
 
         isPlayerATurn = !isPlayerATurn;
@@ -640,6 +649,24 @@ public class GameController {
     // FLAG TOGGLE
     // -------------------------------------------------------------------------
 
+    /**
+     * Counts revealed cells on a board to support per-tile scoring.
+     */
+    private int countRevealed(Board board) {
+        int count = 0;
+        for (Cell[] row : board.getCells()) {
+            for (Cell c : row) {
+                if (c.isRevealed()) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Toggles a flag (Simba's paw) on a cell when right-clicked.
+     */
     private void toggleFlag(Button cell) {
         if (cell.isDisabled()) return;
 
@@ -700,6 +727,16 @@ public class GameController {
         }
     }
 
+    private void updateScoreLabel() {
+        if (scoreLabel != null) {
+            scoreLabel.setText("Score: " + score + " 🏆");
+        }
+    }
+
+    /**
+     * Updates the hearts bar and lives label according to current lives.
+     * Hearts before 'lives' = full, hearts after = broken/empty.
+     */
     private void playHeartLostAnimation(Node node) {
         if (node == null) return;
 
