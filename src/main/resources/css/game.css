@@ -9,26 +9,20 @@
     -fx-background-color: rgba(0, 0, 0, 0.80); /* darker like the initial screen */
 }
 
-
 .top-bar {
     -fx-background-color: linear-gradient(
-        to right,
-        rgba(127, 27, 27, 0.60),   /* red-900/60 */
-        rgba(157, 23, 77, 0.60)    /* pink-900/60 */
+            to right,
+            rgba(127, 27, 27, 0.60),   /* red-900/60 */
+            rgba(157, 23, 77, 0.60)    /* pink-900/60 */
     );
     -fx-padding: 12 18;
     -fx-background-radius: 18;
     -fx-border-radius: 18;
 
-    /* מסגרת צהובה עדינה */
     -fx-border-color: rgba(255, 193, 7, 0.35);
     -fx-border-width: 1.6;
-
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 20, 0.3, 0, 4);
 }
-
-
-
 
 .score-label {
     -fx-text-fill: #fef3c7;
@@ -56,12 +50,9 @@
     -fx-effect: dropshadow(gaussian, rgba(255,110,145,0.9), 18, 0.6, 0, 0);
 }
 
-
-
 .heart-icon {
     -fx-effect: dropshadow(gaussian, rgba(255, 110, 145, 0.75), 18, 0.45, 0, 0);
 }
-
 
 .countdown-overlay {
     -fx-background-color: rgba(0, 0, 0, 0.25);
@@ -94,8 +85,6 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 12, 0.25, 0, 3);
 }
 
-
-
 /*  LIVES COUNTER */
 .lives-counter {
     -fx-text-fill: #fef9c3;
@@ -110,8 +99,7 @@
     -fx-padding: 4 14;
 }
 
-
- /*PLAYER HEADERS ABOVE EACH BOARD*/
+/*PLAYER HEADERS ABOVE EACH BOARD*/
 .player-header {
     -fx-background-color: rgba(0,0,0,0.75);
     -fx-background-radius: 999;
@@ -121,9 +109,9 @@
 
 .player-header-a {
     -fx-background-color: linear-gradient(
-        to right,
-        rgba(255, 120, 120, 0.35),   /* ורוד-אדום בהיר */
-        rgba(200, 60, 60, 0.35)      /* אדום-כהה בהיר */
+            to right,
+            rgba(255, 120, 120, 0.35),
+            rgba(200, 60, 60, 0.35)
     );
     -fx-border-color: rgba(255, 190, 120, 0.55);
     -fx-border-width: 1.8;
@@ -131,19 +119,17 @@
     -fx-border-radius: 18;
 }
 
-
 .player-header-b {
     -fx-background-color: linear-gradient(
-        to right,
-        rgba(255, 200, 90, 0.38),   /* זהב בהיר */
-        rgba(230, 150, 40, 0.38)    /* כתום-זהב */
+            to right,
+            rgba(255, 200, 90, 0.38),
+            rgba(230, 150, 40, 0.38)
     );
     -fx-border-color: rgba(255, 220, 140, 0.75);
     -fx-border-width: 1.8;
     -fx-background-radius: 18;
     -fx-border-radius: 18;
 }
-
 
 .player-icon {
     -fx-font-size: 20px;
@@ -155,14 +141,12 @@
     -fx-font-weight: 900;
 }
 
-
-
- /*MINES CHIP*/
+/*MINES CHIP*/
 .mines-chip {
     -fx-background-color: linear-gradient(
-        to right,
-        rgba(210, 60, 60, 0.65),   /* אדום בהיר */
-        rgba(140, 30, 30, 0.65)    /* בורדו בהיר */
+            to right,
+            rgba(210, 60, 60, 0.65),
+            rgba(140, 30, 30, 0.65)
     );
     -fx-background-radius: 20;
     -fx-border-radius: 20;
@@ -170,7 +154,6 @@
     -fx-border-width: 1.4;
     -fx-padding: 6 14;
 }
-
 
 .mines-icon {
     -fx-text-fill: #fee2e2;
@@ -189,14 +172,12 @@
     -fx-font-weight: 700;
 }
 
-
 /*BOARD TITLES*/
 .board-title {
     -fx-text-fill: #fef3c7;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
 }
-
 
 /*BOARD CONTAINERS*/
 .board-container {
@@ -211,11 +192,8 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 20, 0.4, 0, 4);
 }
 
-
-
 /*BOARD CELLS*/
 .cell-button {
-
     -fx-background-color: linear-gradient(to bottom right, #1f2933, #111827);
     -fx-text-fill: #ffffff;
     -fx-font-size: 18px;
@@ -226,8 +204,6 @@
     -fx-border-radius: 8;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 8, 0.3, 0, 2);
 }
-
-
 
 .cell-button:hover {
     -fx-background-color: linear-gradient(to bottom right, #374151, #111827);
@@ -265,8 +241,6 @@
     -fx-font-weight: 900;
 }
 
-
-
 .mine-cell {
     -fx-background-color: #450a0a;
     -fx-text-fill: #fde68a;
@@ -274,7 +248,6 @@
     -fx-font-weight: 900;
     -fx-effect: dropshadow(gaussian, rgba(239,68,68,0.9), 20, 0.6, 0, 0);
 }
-
 
 .cell-button:hover {
     -fx-background-color: linear-gradient(to bottom right, #374151, #111827);
@@ -289,8 +262,6 @@
 .orange-cell {
     -fx-background-color: linear-gradient(to bottom right, #dc2626, #ef4444);
 }
-
-
 
 .back-home-btn {
     -fx-background-color: rgba(0, 0, 0, 0.55);
@@ -315,6 +286,7 @@
     -fx-border-color: rgba(255, 214, 98, 0.65);
     -fx-border-width: 1.6;
 }
+
 .inactive-board {
     -fx-opacity: 0.55;
     -fx-effect: none;
@@ -366,6 +338,12 @@
     -fx-font-weight: bold;
 }
 
+.question-used-cell {
+    -fx-background-color: rgba(120, 120, 120, 0.9);
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
 .surprise-cell {
     -fx-background-color: rgba(250, 204, 21, 0.4);
 }
@@ -374,4 +352,13 @@
     -fx-background-color: rgba(107,114,128,0.4);
 }
 
-
+/* -------- חדש: מצב חירום כשהלבבות כמעט נגמרים -------- */
+.hearts-critical .heart-icon {
+    -fx-effect: dropshadow(gaussian, rgba(248, 113, 113, 0.85), 18, 0.6, 0, 0);
+}
+.turn-label {
+    -fx-text-fill: #fde68a;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 0 6 0;
+}
