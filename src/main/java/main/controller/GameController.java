@@ -26,6 +26,8 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import model.GameHistory;
+import model.GameHistoryManager;
 import model.Difficulty;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -41,6 +43,7 @@ import model.RevealResult;
 import javafx.stage.StageStyle;
 
 import java.io.InputStream;
+import java.time.LocalDateTime;
 
 
 /**
@@ -76,6 +79,7 @@ public class GameController {
     private int previousLives;    // כמה לבבות היו לפני העדכון האחרון
     private int score = 0;
     private boolean isPlayerATurn = true;
+    private boolean historySaved = false;
 
     private final QuestionBank questionBank = new QuestionBank();
     private Theme playerATheme;
@@ -88,6 +92,7 @@ public class GameController {
     // Heart images (full + broken)
     private Image fullHeartImage;
     private Image emptyHeartImage;
+    private LocalDateTime startedAt;
 
     // Keep difficulty for lives updates
     private model.Difficulty currentDifficulty;
@@ -144,6 +149,7 @@ public class GameController {
             e.printStackTrace();
         }
 
+
         // Player names and themes
         playerANameLabel.setText(GameSetupController.selectedPlayerAName);
         playerBNameLabel.setText(GameSetupController.selectedPlayerBName);
@@ -161,6 +167,7 @@ public class GameController {
         lives = currentDifficulty.getInitialLives();
         previousLives = lives;
         score = 0;
+        startedAt = LocalDateTime.now();
 
         // Hearts bar + lives label
         buildHearts(currentDifficulty);
@@ -191,6 +198,7 @@ public class GameController {
         int surpriseCells = currentDifficulty.getSurpriseCells();
         boardA.placeSurpriseCells(surpriseCells);
         boardB.placeSurpriseCells(surpriseCells);
+
 
         // Build board grids
         buildBoardGrid(boardAGrid, size, cellSize, true);
@@ -734,6 +742,22 @@ public class GameController {
     }
 
     /**
+     * Converts remaining lives into points once before saving history.
+     */
+    private void convertRemainingLivesToPoints() {
+        if (currentDifficulty == null) {
+            currentDifficulty = DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
+        }
+        int bonus = ScoreRules.livesToPoints(currentDifficulty, lives);
+        if (bonus != 0) {
+            score += bonus;
+        }
+        lives = 0;
+        updateScoreLabel();
+        updateLivesUI(currentDifficulty);
+    }
+
+    /**
      * Updates the hearts bar and lives label according to current lives.
      * Hearts before 'lives' = full, hearts after = broken/empty.
      */
@@ -1013,6 +1037,7 @@ public class GameController {
     }
 
     private void openResultScreen(boolean win) {
+        persistHistoryIfNeeded(win);
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/view/result-view.fxml")
@@ -1058,6 +1083,7 @@ public class GameController {
 
     @FXML
     private void onBackToHome(javafx.event.ActionEvent event) {
+        persistHistoryIfNeeded(lives > 0);
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/view/home-view.fxml")
@@ -1075,5 +1101,47 @@ public class GameController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Records the current game outcome into the history manager.
+     */
+    private void saveGameHistory(int livesAtEnd, boolean success) {
+        try {
+            String playerA = GameSetupController.selectedPlayerAName;
+            String playerB = GameSetupController.selectedPlayerBName;
+            Difficulty difficulty = currentDifficulty != null
+                    ? currentDifficulty
+                    : DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
+
+            LocalDateTime endedAt = LocalDateTime.now();
+
+            GameHistory history = new GameHistory(
+                    playerA,
+                    playerB,
+                    difficulty,
+                    score,
+                    livesAtEnd,
+                    success,
+                    startedAt,
+                    endedAt
+            );
+            GameHistoryManager.addGame(history);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Ensures history is saved only once, converting remaining lives to points.
+     */
+    private void persistHistoryIfNeeded(boolean success) {
+        if (historySaved) {
+            return;
+        }
+        int livesAtEnd = lives;
+        convertRemainingLivesToPoints();
+        saveGameHistory(livesAtEnd, success);
+        historySaved = true;
     }
 }
