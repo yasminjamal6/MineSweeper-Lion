@@ -1,6 +1,11 @@
 package main.controller;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.ParallelTransition;
+import javafx.animation.TranslateTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +20,8 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Theme;
@@ -34,9 +41,14 @@ public class GameSetupController {
 
     @FXML private HBox themePickerA;
     @FXML private HBox themePickerB;
+    @FXML private VBox mainCard;
+    @FXML private HBox playersRow;
+    @FXML private VBox difficultyBox;
+    @FXML private HBox startRow;
 
     public static Theme selectedThemeA = ThemeColors.themes.get(0);
     public static Theme selectedThemeB = ThemeColors.themes.get(1);
+
 
     @FXML private StackPane root;
 
@@ -64,7 +76,12 @@ public class GameSetupController {
                 SettingsController.refreshLanguageOnAllWindows();
             }
         });
+
+        playIntroAnimation();
+
     }
+
+
 
     /**
      * Navigates back to the home screen with a smooth fade transition.
@@ -79,6 +96,7 @@ public class GameSetupController {
             );
             Parent newRoot = loader.load();
 
+
             Scene scene = ((Node) event.getSource()).getScene();
 
             newRoot.setOpacity(0);
@@ -92,6 +110,76 @@ public class GameSetupController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Adds a smooth entrance animation similar to the home page.
+     */
+    private void playIntroAnimation() {
+        if (mainCard == null || playersRow == null || difficultyBox == null || startRow == null) {
+            return;
+        }
+
+        mainCard.setOpacity(0);
+        playersRow.setOpacity(0);
+        difficultyBox.setOpacity(0);
+        startRow.setOpacity(0);
+
+        mainCard.setTranslateY(-30);
+        playersRow.setTranslateY(20);
+        difficultyBox.setTranslateY(30);
+        startRow.setTranslateY(40);
+
+        FadeTransition mainFade = new FadeTransition(Duration.millis(520), mainCard);
+        mainFade.setFromValue(0);
+        mainFade.setToValue(1);
+
+        TranslateTransition mainSlide = new TranslateTransition(Duration.millis(520), mainCard);
+        mainSlide.setFromY(-30);
+        mainSlide.setToY(0);
+        mainSlide.setInterpolator(Interpolator.EASE_OUT);
+
+        FadeTransition playersFade = new FadeTransition(Duration.millis(540), playersRow);
+        playersFade.setFromValue(0);
+        playersFade.setToValue(1);
+        playersFade.setDelay(Duration.millis(120));
+
+        TranslateTransition playersSlide = new TranslateTransition(Duration.millis(540), playersRow);
+        playersSlide.setFromY(20);
+        playersSlide.setToY(0);
+        playersSlide.setInterpolator(Interpolator.EASE_OUT);
+        playersSlide.setDelay(Duration.millis(120));
+
+        FadeTransition diffFade = new FadeTransition(Duration.millis(560), difficultyBox);
+        diffFade.setFromValue(0);
+        diffFade.setToValue(1);
+        diffFade.setDelay(Duration.millis(240));
+
+        TranslateTransition diffSlide = new TranslateTransition(Duration.millis(560), difficultyBox);
+        diffSlide.setFromY(30);
+        diffSlide.setToY(0);
+        diffSlide.setInterpolator(Interpolator.EASE_OUT);
+        diffSlide.setDelay(Duration.millis(240));
+
+        FadeTransition startFade = new FadeTransition(Duration.millis(580), startRow);
+        startFade.setFromValue(0);
+        startFade.setToValue(1);
+        startFade.setDelay(Duration.millis(340));
+
+        TranslateTransition startSlide = new TranslateTransition(Duration.millis(580), startRow);
+        startSlide.setFromY(40);
+        startSlide.setToY(0);
+        startSlide.setInterpolator(Interpolator.EASE_OUT);
+        startSlide.setDelay(Duration.millis(340));
+
+        new ParallelTransition(
+                mainFade, mainSlide,
+                playersFade, playersSlide,
+                diffFade, diffSlide,
+                startFade, startSlide
+        ).play();
+    }
+
+
 
     /**
      * Validates player input and starts the game if all data is valid.

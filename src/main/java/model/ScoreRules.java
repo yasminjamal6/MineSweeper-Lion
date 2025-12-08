@@ -45,6 +45,29 @@ public final class ScoreRules {
         return ScoreChange.of(1, 0);
     }
 
+    /**
+     * Cost paid when activating a question or surprise tile.
+     * Returns a negative points delta for the given difficulty.
+     */
+    public static ScoreChange activationCost(Difficulty difficulty) {
+        if (difficulty == null) {
+            return ScoreChange.of(0, 0);
+        }
+        int cost = difficulty.getActivationCostPoints();
+        return ScoreChange.of(-Math.abs(cost), 0);
+    }
+
+    /**
+     * Converts remaining lives into points at game end.
+     * Each life is worth the absolute activation cost for the difficulty.
+     */
+    public static int livesToPoints(Difficulty difficulty, int remainingLives) {
+        if (difficulty == null || remainingLives <= 0) {
+            return 0;
+        }
+        return remainingLives * Math.abs(difficulty.getActivationCostPoints());
+    }
+
     public static ScoreChange questionAnswered(Difficulty difficulty,
                                                QuestionLevel level,
                                                boolean correct) {
