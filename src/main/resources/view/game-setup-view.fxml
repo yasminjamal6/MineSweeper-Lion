@@ -28,17 +28,15 @@
                     minHeight="0">
 
             <children>
-                <VBox alignment="CENTER"
-                      spacing="24"
+                <VBox alignment="TOP_CENTER"
+                      fx:id="mainCard"
+                      spacing="14"
                       AnchorPane.topAnchor="0"
                       AnchorPane.bottomAnchor="0"
                       AnchorPane.leftAnchor="0"
                       AnchorPane.rightAnchor="0"
-                      style="-fx-padding: 10 80 10 80;">
-
-                    <VBox alignment="TOP_CENTER"
-                          spacing="14"
-                          styleClass="card-main">
+                      style="-fx-padding: 10 80 10 80;"
+                      styleClass="card-main">
 
                         <!-- Back to home -->
                         <HBox alignment="CENTER_RIGHT">
@@ -64,7 +62,7 @@
                         </VBox>
 
                         <!-- Players -->
-                        <HBox alignment="CENTER" spacing="22">
+                        <HBox alignment="CENTER" spacing="22" fx:id="playersRow">
 
                             <!-- Player A -->
                             <VBox spacing="10" styleClass="player-card">
@@ -143,7 +141,6 @@
                                 text="Start the Adventure 🦁" />
 
                     </VBox>
-                </VBox>
             </children>
         </AnchorPane>
     </children>
