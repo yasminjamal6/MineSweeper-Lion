@@ -11,11 +11,6 @@
 
     <AnchorPane styleClass="question-root">
 
-        <!-- X close -->
-        <Button text="✕" onAction="#onClose"
-                styleClass="close-btn"
-                AnchorPane.topAnchor="16" AnchorPane.leftAnchor="16"/>
-
         <!-- header -->
         <VBox alignment="CENTER" spacing="6"
               AnchorPane.topAnchor="20" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
