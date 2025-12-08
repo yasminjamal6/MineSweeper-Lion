@@ -366,11 +366,7 @@ public class GameController {
         int revealedAfter = countRevealed(board);
         int newlyRevealed = Math.max(0, revealedAfter - revealedBefore);
 
-        if (result == RevealResult.QUESTION_CELL) {
-            if (!cell.isQuestionUsed()) {
-                handleQuestionCell(board, row, col, cellButton);
-            }
-        }
+
         if (result == RevealResult.HIT_MINE) {
             lives--;
             if (lives < 0) lives = 0;
