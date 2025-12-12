@@ -97,7 +97,7 @@ public class ResultController {
         heartsLabel.setText("Hearts: " + hearts);
 
         loadGif("/images/lion_win.gif");
-        playSound("/sound/win.mp3");
+        playSound("/sound/WIN.wav");
     }
 
     public void initAsLose(String playerA, String playerB,
