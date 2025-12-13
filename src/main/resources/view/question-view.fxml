@@ -4,44 +4,93 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<StackPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1"
+<StackPane xmlns="http://javafx.com/javafx/23"
+           xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="main.controller.QuestionController"
            stylesheets="@/css/question.css"
            prefWidth="700" prefHeight="520">
 
     <AnchorPane styleClass="question-root">
 
-        <!-- header -->
-        <VBox alignment="CENTER" spacing="6"
-              AnchorPane.topAnchor="20" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
-            <Label text="שאלת טריוויה ⚡" styleClass="title"/>
-            <Label fx:id="categoryLabel" text="" styleClass="category"/>
+        <!-- Savanna glows (sun + haze) -->
+        <Pane styleClass="bg-glow bg-glow-1" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"/>
+        <Pane styleClass="bg-glow bg-glow-2" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0"/>
+
+        <!-- Main Pride Rock Card -->
+        <VBox styleClass="question-card"
+              alignment="TOP_CENTER"
+              spacing="18"
+              AnchorPane.topAnchor="28"
+              AnchorPane.bottomAnchor="28"
+              AnchorPane.leftAnchor="44"
+              AnchorPane.rightAnchor="44">
+
+            <padding>
+                <Insets top="22" right="22" bottom="22" left="22"/>
+            </padding>
+
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="12" styleClass="header-row">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="PRIDE ROCK TRIVIA 🦁" styleClass="title"/>
+                    <Label fx:id="categoryLabel" text="Savanna Lore" styleClass="category"/>
+                </VBox>
+
+                <!-- Timer -->
+                <StackPane styleClass="timer-badge">
+                    <Label fx:id="timerLabel" text="30" styleClass="timer"/>
+                </StackPane>
+            </HBox>
+
+            <!-- Question Box -->
+            <VBox styleClass="question-box" alignment="CENTER" spacing="10">
+                <padding>
+                    <Insets top="16" right="16" bottom="16" left="16"/>
+                </padding>
+
+                <Label fx:id="questionLabel"
+                       text="The Circle of Life begins with..."
+                       wrapText="true"
+                       styleClass="question-text"/>
+            </VBox>
+
+            <!-- Answers (2x2) -->
+            <GridPane hgap="14" vgap="14" alignment="CENTER" styleClass="answers-grid">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50"/>
+                    <ColumnConstraints percentWidth="50"/>
+                </columnConstraints>
+
+                <Button fx:id="ansBtn0"
+                        text="A) Roar of Courage"
+                        onAction="#onAnswerClick"
+                        styleClass="answer-btn"
+                        GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+
+                <Button fx:id="ansBtn1"
+                        text="B) Pride &amp; Honor"
+                        onAction="#onAnswerClick"
+                        styleClass="answer-btn"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="0"/>
+
+                <Button fx:id="ansBtn2"
+                        text="C) Wisdom of Mufasa"
+                        onAction="#onAnswerClick"
+                        styleClass="answer-btn"
+                        GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+                <Button fx:id="ansBtn3"
+                        text="D) Shadow of Scar"
+                        onAction="#onAnswerClick"
+                        styleClass="answer-btn"
+                        GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            </GridPane>
+
+            <!-- Footer hint -->
+            <Label text="Choose wisely before the sun sets over the Pride Lands."
+                   styleClass="hint"/>
         </VBox>
-
-        <!-- timer -->
-        <Label fx:id="timerLabel" text="30"
-               styleClass="timer"
-               AnchorPane.topAnchor="20" AnchorPane.rightAnchor="20"/>
-
-        <!-- question text -->
-        <Label fx:id="questionLabel" wrapText="true"
-               styleClass="question-text"
-               AnchorPane.topAnchor="110" AnchorPane.leftAnchor="60" AnchorPane.rightAnchor="60"/>
-
-        <!-- answers -->
-        <VBox spacing="20" alignment="CENTER"
-              AnchorPane.topAnchor="220"
-              AnchorPane.leftAnchor="0"
-              AnchorPane.rightAnchor="0">
-
-            <Button fx:id="ansBtn0" onAction="#onAnswerClick" styleClass="answer-btn"/>
-            <Button fx:id="ansBtn1" onAction="#onAnswerClick" styleClass="answer-btn"/>
-            <Button fx:id="ansBtn2" onAction="#onAnswerClick" styleClass="answer-btn"/>
-            <Button fx:id="ansBtn3" onAction="#onAnswerClick" styleClass="answer-btn"/>
-
-        </VBox>
-
-
 
     </AnchorPane>
 </StackPane>
