@@ -1,5 +1,6 @@
 package main.controller;
 
+import javafx.scene.control.ContentDisplay;
 import model.CellType;
 import model.Question;
 import javafx.animation.Animation;
@@ -99,6 +100,42 @@ public class GameController {
     private Timeline timerTimeline;
     private long timerStartMillis;
     private Image openGiftImage;
+
+    private static final double GIFT_ICON_SIZE = 18;
+
+    private void setGiftOpenedGraphic(Button btn) {
+        btn.setText("");
+        btn.setGraphicTextGap(0);
+        btn.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+
+        if (openGiftImage != null) {
+            ImageView iv = new ImageView(openGiftImage);
+            iv.setFitWidth(GIFT_ICON_SIZE);
+            iv.setFitHeight(GIFT_ICON_SIZE);
+            iv.setPreserveRatio(true);
+            btn.setGraphic(iv);
+        } else {
+            btn.setGraphic(null);
+            btn.setText("🎁");
+            btn.setContentDisplay(ContentDisplay.TEXT_ONLY);
+        }
+    }
+
+    private void setGiftClosedText(Button btn) {
+        btn.setGraphic(null);
+        btn.setContentDisplay(ContentDisplay.TEXT_ONLY);
+        btn.setGraphicTextGap(0);
+
+        btn.setTextOverrun(javafx.scene.control.OverrunStyle.CLIP);
+        btn.setEllipsisString("");
+
+        btn.setText("🎁");
+
+        if (GameSetupController.selectedDifficulty == GameSetupController.Difficulty.HARD) {
+            btn.setStyle((btn.getStyle() == null ? "" : btn.getStyle()) + "-fx-font-size: 14px;");
+        }
+    }
+
 
     // -------------------------------------------------------------------------
     // INITIALIZE
@@ -218,6 +255,9 @@ public class GameController {
         boardBGrid.prefHeightProperty().bind(boardBContainer.heightProperty().subtract(44));
 
         updateBoardHighlight();
+
+        boardAGrid.setMinSize(0, 0);
+        boardBGrid.setMinSize(0, 0);
 
         // Show countdown overlay before play begins
         startCountdown();
@@ -391,18 +431,9 @@ public class GameController {
         triggerRandomSurprise();
         cell.setSurpriseUsed(true);
 
-        cellButton.setText("");
-        if (openGiftImage != null) {
-            ImageView iv = new ImageView(openGiftImage);
-            iv.setFitWidth(32);
-            iv.setFitHeight(32);
-            iv.setPreserveRatio(true);
-            cellButton.setGraphic(iv);
-        } else {
-            cellButton.setGraphic(null);
-            cellButton.setText("🎁");
-        }
+        setGiftOpenedGraphic(cellButton);
         cellButton.setDisable(true);
+
     }
 
     // -------------------------------------------------------------------------
@@ -533,14 +564,9 @@ public class GameController {
             if (cell.isSurpriseUsed()) {
                 cellButton.setText("");
                 if (openGiftImage != null) {
-                    ImageView iv = new ImageView(openGiftImage);
-                    iv.setFitWidth(32);
-                    iv.setFitHeight(32);
-                    iv.setPreserveRatio(true);
-                    cellButton.setGraphic(iv);
+                    setGiftOpenedGraphic(cellButton);
                 } else {
-                    cellButton.setGraphic(null);
-                    cellButton.setText("🎁");
+                    setGiftClosedText(cellButton);
                 }
 
                 cellButton.getStyleClass().remove("surprise-cell");
@@ -548,15 +574,12 @@ public class GameController {
                     cellButton.getStyleClass().add("surprise-used");
                 }
             } else {
-                cellButton.setGraphic(null);
-                cellButton.setText("🎁");
+                setGiftClosedText(cellButton);
                 cellButton.getStyleClass().remove("surprise-used");
                 if (!cellButton.getStyleClass().contains("surprise-cell")) {
                     cellButton.getStyleClass().add("surprise-cell");
                 }
             }
-
-            cellButton.setStyle(null);
         }
 
         else if (cell.getType() == CellType.QUESTION) {
@@ -620,26 +643,14 @@ public class GameController {
                     updateCellView(board, btn, row, col);
 
                     if (cell.getType() == CellType.SURPRISE && !cell.isSurpriseUsed()) {
-                        btn.setGraphic(null);
-                        btn.setText("🎁");
+                        setGiftClosedText(btn);
                         if (!btn.getStyleClass().contains("surprise-cell")) {
                             btn.getStyleClass().add("surprise-cell");
                         }
                     }
 
                     if (cell.getType() == CellType.SURPRISE && cell.isSurpriseUsed()) {
-                        btn.setText("");
-                        if (openGiftImage != null) {
-                            ImageView iv = new ImageView(openGiftImage);
-                            iv.setFitWidth(32);
-                            iv.setFitHeight(32);
-                            iv.setPreserveRatio(true);
-                            btn.setGraphic(iv);
-                        } else {
-                            btn.setGraphic(null);
-                            btn.setText("🎁");
-                        }
-
+                        setGiftOpenedGraphic(btn);
                         if (!btn.getStyleClass().contains("surprise-used")) {
                             btn.getStyleClass().add("surprise-used");
                         }
@@ -943,6 +954,10 @@ public class GameController {
                 Button cell = new Button();
                 cell.getStyleClass().add("cell-button");
                 cell.setMnemonicParsing(false);
+
+                cell.setTextOverrun(javafx.scene.control.OverrunStyle.CLIP);
+                cell.setEllipsisString("");
+                cell.setGraphicTextGap(0);
 
                 Theme theme = isBoardA ? playerATheme : playerBTheme;
 
