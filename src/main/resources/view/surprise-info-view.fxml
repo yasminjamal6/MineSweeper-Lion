@@ -22,13 +22,14 @@
 
             <children>
 
+                <!-- Header -->
                 <VBox spacing="6" alignment="CENTER">
                     <Label fx:id="titleLabel"
-                           text="Savannah Surprise Tile!"
+                           text="Pride Lands Surprise 🦁"
                            styleClass="header-title"/>
 
                     <Label fx:id="subtitleLabel"
-                           text="A 50-50 chance for a good or bad surprise in the Lion King world."
+                           text="The Circle of Life decides your fate — fortune or misfortune awaits."
                            wrapText="true"
                            styleClass="header-subtitle"/>
                 </VBox>
@@ -36,45 +37,49 @@
                 <Pane styleClass="header-separator"
                       prefHeight="1" maxWidth="Infinity"/>
 
+                <!-- Icon -->
                 <Label text="🎁" styleClass="gift-icon"/>
 
-                <HBox alignment="CENTER"
-                      styleClass="cost-box">
+                <!-- Cost -->
+                <HBox alignment="CENTER" styleClass="cost-box">
                     <Label fx:id="costLabel"
-                           text="Activation cost: 8 points"
+                           text="Offering to the Pride: 8 Honor Points"
                            styleClass="cost-text"/>
                 </HBox>
 
-                <HBox spacing="16" alignment="CENTER"
-                      styleClass="outcomes-row">
+                <!-- Outcomes -->
+                <HBox spacing="16" alignment="CENTER" styleClass="outcomes-row">
 
-                    <VBox spacing="8"
-                          alignment="CENTER"
+                    <!-- Bad -->
+                    <VBox spacing="8" alignment="CENTER"
                           styleClass="outcome-card bad-card">
                         <Label text="☠" styleClass="outcome-icon"/>
-                        <Label text="Bad Surprise"
+                        <Label text="Scar’s Curse"
                                styleClass="outcome-title"/>
                         <Label fx:id="badDetailsLabel"
-                               text="-1 Lion Heart and -8 points"
+                               text="-1 Lion Heart • -8 Honor Points"
                                styleClass="outcome-details"/>
                     </VBox>
 
-                    <VBox spacing="8"
-                          alignment="CENTER"
+                    <!-- Good -->
+                    <VBox spacing="8" alignment="CENTER"
                           styleClass="outcome-card good-card">
                         <Label text="✨" styleClass="outcome-icon"/>
-                        <Label text="Good Surprise"
+                        <Label text="Mufasa’s Blessing"
                                styleClass="outcome-title"/>
                         <Label fx:id="goodDetailsLabel"
-                               text="+1 Lion Heart and +8 points"
+                               text="+1 Lion Heart • +8 Honor Points"
                                styleClass="outcome-details"/>
                     </VBox>
+
                 </HBox>
 
+                <!-- Action -->
                 <Button fx:id="openButton"
-                        text="Open the surprise! 🎁"
+                        text="Face Your Destiny 🐾"
                         onAction="#onOpenSurprise"
                         styleClass="open-surprise-btn"/>
+
             </children>
         </VBox>
     </children>

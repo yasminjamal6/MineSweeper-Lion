@@ -75,6 +75,11 @@ public class GameController {
     private Board boardA;
     private Board boardB;
 
+    // to prevent farming +1 by flagging/unflagging the same mine
+    private boolean[][] mineFlagRewardedA;
+    private boolean[][] mineFlagRewardedB;
+
+
     // Game State
     private int lives = 10;
     private int previousLives;    // כמה לבבות היו לפני העדכון האחרון
@@ -220,6 +225,10 @@ public class GameController {
         // Board size & cell size
         int size = getBoardSize(GameSetupController.selectedDifficulty);
         int cellSize = getCellSize(GameSetupController.selectedDifficulty);
+
+        mineFlagRewardedA = new boolean[size][size];
+        mineFlagRewardedB = new boolean[size][size];
+
         this.mineImageSize = cellSize * 0.70;
 
         // Boards
@@ -355,7 +364,6 @@ public class GameController {
     // -------------------------------------------------------------------------
 
     private void handleCellClick(Button cellButton, boolean isBoardA, int row, int col) {
-        // אם אין לבבות – לא ממשיכים לשחק
         if (lives <= 0) {
             System.out.println("No hearts left – click ignored.");
             return;
@@ -369,6 +377,10 @@ public class GameController {
 
         Board board = isBoardA ? boardA : boardB;
         Cell cell  = board.getCell(row, col);
+
+        if (!cell.isRevealed() && cellButton.getStyleClass().contains("paw-flag")) {
+            return;
+        }
 
         int revealedBefore = countRevealed(board);
 
@@ -420,7 +432,6 @@ public class GameController {
         isPlayerATurn = !isPlayerATurn;
         updateBoardHighlight();
 
-        // בדיקת סוף משחק אחרי כל מהלך
         checkGameOver();
     }
 
@@ -679,24 +690,45 @@ public class GameController {
         return count;
     }
 
-    /**
-     * Toggles a flag (Simba's paw) on a cell when right-clicked.
-     */
-    private void toggleFlag(Button cell) {
-        if (cell.isDisabled()) return;
+    private void toggleFlag(Button cellButton, boolean isBoardA, int row, int col) {
 
-        String current = cell.getText();
+        if (isPlayerATurn && !isBoardA) return;
+        if (!isPlayerATurn && isBoardA) return;
 
-        if ("🐾".equals(current)) {
-            cell.setText("");
-            cell.getStyleClass().remove("paw-flag");
-        } else {
-            cell.setText("🐾");
-            if (!cell.getStyleClass().contains("paw-flag")) {
-                cell.getStyleClass().add("paw-flag");
-            }
+        Board board = isBoardA ? boardA : boardB;
+        Cell cell = board.getCell(row, col);
+
+        if (cellButton.isDisabled() || cell.isRevealed()) return;
+
+        boolean flagged = cellButton.getStyleClass().contains("paw-flag");
+
+        if (flagged) {
+            cellButton.setText("");
+            cellButton.getStyleClass().remove("paw-flag");
+            return;
         }
+
+        cellButton.setText("🐾");
+        if (!cellButton.getStyleClass().contains("paw-flag")) {
+            cellButton.getStyleClass().add("paw-flag");
+        }
+
+        if (cell.isMine()) {
+            boolean[][] rewarded = isBoardA ? mineFlagRewardedA : mineFlagRewardedB;
+
+            // +1 only once per mine cell
+            if (!rewarded[row][col]) {
+                score += 1;
+                rewarded[row][col] = true;
+                updateScoreLabel();
+            }
+            return;
+        }
+
+        score -= 3;
+        updateScoreLabel();
     }
+
 
     // -------------------------------------------------------------------------
     // HEART BAR
@@ -972,10 +1004,17 @@ public class GameController {
                 cell.setOnAction(e -> handleCellClick(cell, isBoardA, rowIndex, colIndex));
 
                 cell.setOnMouseClicked(event -> {
-                    if (event.getButton() == MouseButton.SECONDARY) {
-                        toggleFlag(cell);
+                    boolean isRightClick = event.getButton() == MouseButton.SECONDARY;
+                    boolean isMacCtrlClick = event.getButton() == MouseButton.PRIMARY && event.isControlDown();
+
+                    if (isRightClick || isMacCtrlClick) {
+                        toggleFlag(cell, isBoardA, rowIndex, colIndex);
+                        event.consume();
                     }
+
                 });
+
+
 
                 cell.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 

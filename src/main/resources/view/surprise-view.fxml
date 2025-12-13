@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -15,7 +14,11 @@
            styleClass="surprise-root">
 
     <children>
-        <VBox spacing="16.0" alignment="CENTER" styleClass="surprise-card">
+        <!-- Click anywhere to close (optional) -->
+        <VBox spacing="16.0"
+              alignment="CENTER"
+              styleClass="surprise-card"
+              onMouseClicked="#onClose">
             <padding>
                 <Insets top="24.0" right="24.0" bottom="24.0" left="24.0"/>
             </padding>
@@ -23,15 +26,15 @@
             <children>
 
                 <Label fx:id="iconLabel"
-                       text="🎁"
+                       text="🦁"
                        styleClass="surprise-icon"/>
 
                 <Label fx:id="titleLabel"
-                       text="Surprise!"
+                       text="The Circle of Life"
                        styleClass="surprise-title"/>
 
                 <Label fx:id="messageLabel"
-                       text="Click to reveal your surprise!"
+                       text="Your destiny has been revealed."
                        wrapText="true"
                        styleClass="surprise-message"/>
 
@@ -41,7 +44,7 @@
                       styleClass="result-box">
 
                     <Label fx:id="resultTitleLabel"
-                           text="You earned:"
+                           text="The Pride Grants You:"
                            styleClass="result-title"/>
 
                     <HBox spacing="24" alignment="CENTER">
