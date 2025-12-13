@@ -1,45 +1,94 @@
-/* Root background overlay */
+/* Root overlay */
 .surprise-root {
-    -fx-background-color: rgba(0, 0, 0, 0.9);
+    -fx-background-color: rgba(15, 5, 5, 0.92);
     -fx-padding: 16;
 }
 
-/* Main surprise card container */
-.surprise-card {
-    -fx-background-radius: 24;
-    -fx-border-radius: 24;
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #7c3aedee 0%, #db2777ee 100%);
-    -fx-border-color: #e9d5ff;
-    -fx-border-width: 4;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.65), 30, 0.25, 0, 12);
-    -fx-spacing: 16;
+/* Main card (Pride Rock) */
+.surprise-card,
+.surprise-main-card {
+    -fx-background-radius: 26;
+    -fx-border-radius: 26;
+
+    -fx-background-color: linear-gradient(
+        to bottom right,
+        #2b1208,
+        #5a2a0c,
+        #9b4b16
+    );
+
+    -fx-border-color: #d2a650;
+    -fx-border-width: 3;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.65), 30, 0.3, 0, 12);
 }
 
-/* Icon displayed at the top (emoji or symbol) */
-.surprise-icon {
-    -fx-font-size: 72px;
-    -fx-padding: 0 0 8 0;
-}
-
-/* Title text (e.g., “Good Surprise!” or “Bad Luck!”) */
+/* Titles */
+.header-title,
 .surprise-title {
-    -fx-text-fill: white;
+    -fx-text-fill: #f6d27a;
     -fx-font-size: 26px;
     -fx-font-weight: 900;
-    -fx-text-alignment: center;
-    -fx-alignment: center;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.8), 8, 0.3, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 8, 0.3, 0, 2);
 }
 
-/* Message text under the title */
+.header-subtitle,
 .surprise-message {
-    -fx-text-fill: #f9fafb;
-    -fx-font-size: 15px;
+    -fx-text-fill: #fff3d6;
+    -fx-font-size: 14px;
     -fx-text-alignment: center;
-    -fx-alignment: center;
 }
 
-/* Box displaying result details (points/lives change) */
+/* Gift / icon */
+.gift-icon,
+.surprise-icon {
+    -fx-font-size: 72px;
+}
+
+/* Cost box */
+.cost-box {
+    -fx-background-color: rgba(255, 240, 200, 0.08);
+    -fx-border-color: #d2a650;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+    -fx-padding: 8 16;
+}
+
+.cost-text {
+    -fx-text-fill: #ffe9c7;
+    -fx-font-weight: bold;
+}
+
+/* Outcome cards */
+.outcome-card {
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-padding: 12;
+    -fx-border-width: 2;
+}
+
+.good-card {
+    -fx-background-color: rgba(47, 162, 79, 0.25);
+    -fx-border-color: #86efac;
+}
+
+.bad-card {
+    -fx-background-color: rgba(184, 47, 47, 0.25);
+    -fx-border-color: #fecaca;
+}
+
+.outcome-title {
+    -fx-text-fill: #fff3d6;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.outcome-details {
+    -fx-text-fill: #fef3c7;
+    -fx-font-size: 13px;
+}
+
+/* Result box */
 .result-box {
     -fx-background-radius: 18;
     -fx-border-radius: 18;
@@ -47,64 +96,42 @@
     -fx-border-width: 2;
 }
 
-/* Positive result box (good surprise) */
 .result-box-good {
-    -fx-background-color: rgba(22,163,74,0.3);
+    -fx-background-color: rgba(47, 162, 79, 0.3);
     -fx-border-color: #86efac;
 }
 
-/* Negative result box (bad surprise) */
 .result-box-bad {
-    -fx-background-color: rgba(220,38,38,0.3);
+    -fx-background-color: rgba(184, 47, 47, 0.3);
     -fx-border-color: #fecaca;
 }
 
-/* Result label title (e.g., “Points”, “Lives”) */
 .result-title {
-    -fx-text-fill: white;
+    -fx-text-fill: #f6d27a;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
 }
 
-/* Emoji or small icon near result */
-.result-emoji {
-    -fx-font-size: 20px;
-}
-
-/* Numeric or textual value of the result */
 .result-value {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
 }
 
-/* Positive text color for added value */
-.result-positive {
-    -fx-text-fill: #bbf7d0;
-}
-
-/* Negative text color for deducted value */
-.result-negative {
-    -fx-text-fill: #fecaca;
-}
-
-/* Main action button (e.g., “Continue” or “OK”) */
+/* Button */
+.open-surprise-btn,
 .primary-action-btn {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-fill: white;
+    -fx-text-fill: #2b1208;
 
-    -fx-background-color: rgba(255, 255, 255, 0.2);
-    -fx-border-color: rgba(255, 255, 255, 0.5);
-    -fx-border-width: 2;
-
-    -fx-background-radius: 9999;
-    -fx-border-radius: 9999;
-    -fx-padding: 12 20;
+    -fx-background-color: linear-gradient(to bottom, #f6d27a, #d2a650);
+    -fx-background-radius: 999;
+    -fx-padding: 12 24;
 
     -fx-cursor: hand;
 }
 
-/* Hover effect for the main action button */
+.open-surprise-btn:hover,
 .primary-action-btn:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.3);
+    -fx-background-color: linear-gradient(to bottom, #ffe6a6, #f6d27a);
 }
