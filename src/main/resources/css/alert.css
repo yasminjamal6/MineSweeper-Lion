@@ -20,3 +20,47 @@
 .lion-alert .button:hover {
     -fx-background-color: linear-gradient(to right, #facc15, #f97316);
 }
+
+.resume-alert {
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 100% 100%,
+            #ffd447 0%,
+            #ff9240 45%,
+            #ff3b3b 100%
+    );
+    -fx-padding: 18;
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-border-color: rgba(255, 225, 140, 0.95);
+    -fx-border-width: 3;
+    -fx-font-family: "Segoe UI", "Arial";
+}
+
+.resume-alert .header-panel .label,
+.resume-alert .content .label {
+    -fx-text-fill: #fff9f3;
+    -fx-font-weight: bold;
+}
+
+.resume-alert .header-panel .label {
+    -fx-font-size: 16px;
+}
+
+.resume-alert .content .label {
+    -fx-font-size: 13px;
+}
+
+.resume-alert .button {
+    -fx-background-color: rgba(0, 0, 0, 0.55);
+    -fx-text-fill: #ffe9c2;
+    -fx-font-weight: bold;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-color: rgba(255, 215, 255, 0.7);
+    -fx-border-width: 1.6;
+    -fx-padding: 6 18 6 18;
+}
+
+.resume-alert .button:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.75);
+}

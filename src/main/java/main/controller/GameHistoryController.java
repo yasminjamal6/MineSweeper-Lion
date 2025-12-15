@@ -320,6 +320,7 @@ public class GameHistoryController {
         GameSetupController.selectedDifficulty = availableResume.difficultyEnum;
         GameSetupController.selectedThemeA = findThemeById(availableResume.playerAThemeId, GameSetupController.selectedThemeA);
         GameSetupController.selectedThemeB = findThemeById(availableResume.playerBThemeId, GameSetupController.selectedThemeB);
+        GameSetupController.skipResumePrompt = true;
 
         Parent root = FXMLLoader.load(
                 getClass().getResource("/view/game.fxml")
@@ -335,13 +336,12 @@ public class GameHistoryController {
                 return null;
             }
             try (var stream = Files.list(dir)) {
-                Optional<Path> first = stream
+                Optional<ResumeInfo> latest = stream
                         .filter(p -> p.getFileName().toString().endsWith(".json"))
-                        .findFirst();
-                if (first.isEmpty()) {
-                    return null;
-                }
-                return readResumeInfo(first.get());
+                        .map(this::readResumeInfo)
+                        .filter(r -> r != null)
+                        .max((a, b) -> Long.compare(a.lastUpdatedMillis, b.lastUpdatedMillis));
+                return latest.orElse(null);
             }
         } catch (Exception e) {
             return null;
@@ -356,6 +356,11 @@ public class GameHistoryController {
                 return null;
             }
             info.difficultyEnum = info.parseDifficulty();
+            try {
+                info.lastUpdatedMillis = Files.getLastModifiedTime(path).toMillis();
+            } catch (Exception ignored) {
+                info.lastUpdatedMillis = 0;
+            }
             return info.difficultyEnum != null ? info : null;
         } catch (Exception e) {
             return null;
@@ -382,6 +387,7 @@ public class GameHistoryController {
         String playerBThemeId;
 
         transient GameSetupController.Difficulty difficultyEnum;
+        transient long lastUpdatedMillis;
 
         GameSetupController.Difficulty parseDifficulty() {
             try {
