@@ -48,6 +48,7 @@ public class GameSetupController {
 
     public static Theme selectedThemeA = ThemeColors.themes.get(0);
     public static Theme selectedThemeB = ThemeColors.themes.get(1);
+    public static boolean skipResumePrompt = false;
 
 
     @FXML private StackPane root;

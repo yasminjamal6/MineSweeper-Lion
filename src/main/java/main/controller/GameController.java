@@ -30,6 +30,9 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import model.GameHistory;
 import model.GameHistoryManager;
 import model.Difficulty;
@@ -161,48 +164,6 @@ public class GameController {
         }
     }
 
-    private void showResumeDialog(GameSaveData savedState) {
-        if (savedState == null) {
-            startNewGameFlow();
-            return;
-        }
-
-        if (resumeOverlay == null) {
-            resumeSavedGame(savedState);
-            return;
-        }
-
-        pendingSavedGame = savedState;
-        resumeOverlay.setVisible(true);
-        resumeOverlay.setMouseTransparent(false);
-        resumeOverlay.toFront();
-    }
-
-    @FXML
-    private void onResumeContinue() {
-        if (pendingSavedGame != null) {
-            hideResumeOverlay();
-            resumeSavedGame(pendingSavedGame);
-        } else {
-            hideResumeOverlay();
-            startNewGameFlow();
-        }
-    }
-
-    @FXML
-    private void onResumeNewGame() {
-        hideResumeOverlay();
-        clearSavedGame();
-        startNewGameFlow();
-    }
-
-    private void hideResumeOverlay() {
-        if (resumeOverlay != null) {
-            resumeOverlay.setVisible(false);
-            resumeOverlay.setMouseTransparent(true);
-        }
-    }
-
     private void attachWindowHandlers() {
         if (root == null) {
             return;
@@ -308,6 +269,41 @@ public class GameController {
         boardBGrid.prefHeightProperty().bind(boardBContainer.heightProperty().subtract(44));
     }
 
+    private void showResumeDialog(GameSaveData savedState) {
+        pendingSavedGame = savedState;
+        if (resumeOverlay == null) {
+            resumeSavedGame(savedState);
+            return;
+        }
+        resumeOverlay.setVisible(true);
+        resumeOverlay.setMouseTransparent(false);
+        resumeOverlay.toFront();
+    }
+
+    @FXML
+    private void onResumeContinue() {
+        if (pendingSavedGame != null) {
+            resumeSavedGame(pendingSavedGame);
+        } else {
+            startNewGameFlow();
+        }
+        hideResumeOverlay();
+    }
+
+    @FXML
+    private void onResumeNewGame() {
+        clearSavedGame();
+        hideResumeOverlay();
+        startNewGameFlow();
+    }
+
+    private void hideResumeOverlay() {
+        if (resumeOverlay != null) {
+            resumeOverlay.setVisible(false);
+            resumeOverlay.setMouseTransparent(true);
+        }
+    }
+
     private void resumeSavedGame(GameSaveData savedState) {
         try {
             GameSetupController.Difficulty savedDifficulty =
@@ -367,7 +363,6 @@ public class GameController {
             updateBoardHighlight();
 
             timerElapsedMillis = Math.max(0, savedState.timerElapsedMillis);
-            hideResumeOverlay();
             clearCountdownOverlay();
             startTimer();
         } catch (Exception e) {
@@ -494,6 +489,36 @@ public class GameController {
         return Optional.empty();
     }
 
+    private void showResumePrompt(GameSaveData savedState) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Resume Game");
+        alert.setHeaderText("A previous game is in progress");
+        alert.setContentText("Continue where you left off or start a fresh game?");
+
+        ButtonType continueBtn = new ButtonType("Continue");
+        ButtonType newGameBtn = new ButtonType("New Game");
+        alert.getButtonTypes().setAll(continueBtn, newGameBtn);
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(
+                getClass().getResource("/css/alert.css").toExternalForm()
+        );
+        dialogPane.getStyleClass().add("resume-alert");
+
+        if (root != null && root.getScene() != null) {
+            alert.initOwner(root.getScene().getWindow());
+        }
+        alert.initModality(Modality.APPLICATION_MODAL);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == continueBtn) {
+            resumeSavedGame(savedState);
+        } else {
+            clearSavedGame();
+            startNewGameFlow();
+        }
+    }
+
     // -------------------------------------------------------------------------
     // SAVE / LOAD
     // -------------------------------------------------------------------------
@@ -524,6 +549,7 @@ public class GameController {
         data.score = score;
         data.timerElapsedMillis = timerElapsedMillis;
         data.startedAtIso = startedAt != null ? SAVE_TIME_FORMAT.format(startedAt) : null;
+        data.lastUpdatedEpochMillis = System.currentTimeMillis();
         data.boardA = buildSavedBoard(boardA, mineFlagRewardedA, playerATheme);
         data.boardB = buildSavedBoard(boardB, mineFlagRewardedB, playerBTheme);
 
@@ -566,7 +592,7 @@ public class GameController {
     private GameSaveData loadGameState() {
         String key = currentSaveKey();
         if (key == null) return null;
-        GameSaveData data = SavedGameRepository.load(key);
+        GameSaveData data = SavedGameRepository.loadLatest(key);
         if (data == null) {
             return null;
         }
@@ -660,19 +686,19 @@ public class GameController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (resumeOverlay != null) {
-            resumeOverlay.setVisible(false);
-            resumeOverlay.setMouseTransparent(true);
-        }
-
         Platform.runLater(() -> {
             attachWindowHandlers();
             GameSaveData savedState = loadGameState();
             if (savedState != null && savedState.status == SaveStatus.IN_PROGRESS) {
+                if (GameSetupController.skipResumePrompt) {
+                    GameSetupController.skipResumePrompt = false;
+                    resumeSavedGame(savedState);
+                    return;
+                }
                 showResumeDialog(savedState);
-            } else {
-                startNewGameFlow();
+                return;
             }
+            startNewGameFlow();
         });
     }
 
@@ -1633,6 +1659,7 @@ public class GameController {
         int score;
         long timerElapsedMillis;
         String startedAtIso;
+        long lastUpdatedEpochMillis;
         SavedBoard boardA;
         SavedBoard boardB;
     }
@@ -1672,7 +1699,7 @@ public class GameController {
             }
         }
 
-        static GameSaveData load(String key) {
+        static GameSaveData loadLatest(String key) {
             try (BufferedReader reader = Files.newBufferedReader(pathForKey(key))) {
                 return GSON.fromJson(reader, GameSaveData.class);
             } catch (IOException | JsonSyntaxException e) {
