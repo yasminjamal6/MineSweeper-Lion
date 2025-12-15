@@ -85,6 +85,22 @@
     -fx-background-color: rgba(0,0,0,0.7);
 }
 
+.gh-btn-resume {
+    -fx-background-color: linear-gradient(#fbbf24, #f59e0b);
+    -fx-text-fill: #0f0a05;
+    -fx-font-weight: bold;
+    -fx-font-size: 12;
+    -fx-padding: 6 18;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: rgba(242,211,157,0.8);
+    -fx-border-width: 1.2;
+}
+
+.gh-btn-resume:disabled {
+    -fx-opacity: 0.55;
+}
+
 /* STATS CARDS*/
 .gh-stats-row {
     -fx-alignment: center;
@@ -175,6 +191,41 @@
     -fx-font-weight: bold;
     -fx-font-size: 14;
     -fx-alignment: CENTER;
+}
+
+.gh-resume-card {
+    -fx-background-color: linear-gradient(to bottom, rgba(156,117,72,0.95), rgba(126,92,54,0.95));
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-border-color: rgba(242,211,157,0.95);
+    -fx-border-width: 1.8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 20, 0.42, 0, 6);
+    -fx-padding: 16 20;
+}
+
+.gh-resume-title {
+    -fx-text-fill: #f7e3c0;
+    -fx-font-size: 16;
+    -fx-font-weight: 900;
+}
+
+.gh-resume-subtitle {
+    -fx-text-fill: #f5d8a0;
+    -fx-font-size: 12;
+    -fx-font-weight: 600;
+}
+
+.gh-resume-btn {
+    -fx-background-color: linear-gradient(#fbbf24, #f59e0b);
+    -fx-text-fill: #0f0a05;
+    -fx-font-weight: bold;
+    -fx-font-size: 12;
+    -fx-padding: 6 18;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: rgba(242,211,157,0.8);
+    -fx-border-width: 1.2;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0.3, 0, 2);
 }
 
 /* TABLEVIEW ROWS*/

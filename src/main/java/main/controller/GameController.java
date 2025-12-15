@@ -1,5 +1,8 @@
 package main.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import javafx.application.Platform;
 import javafx.scene.control.ContentDisplay;
 import model.CellType;
 import model.Question;
@@ -38,13 +41,23 @@ import model.ScoreRules;
 import model.SurpriseType;
 import javafx.scene.layout.HBox;
 import model.Theme;
+import model.ThemeColors;
 import model.Board;
 import model.Cell;
 import model.RevealResult;
 import javafx.stage.StageStyle;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Optional;
 
 
 /**
@@ -66,6 +79,7 @@ public class GameController {
     @FXML private StackPane boardBContainer;
     @FXML private AnchorPane root;
     @FXML private StackPane countdownOverlay;
+    @FXML private StackPane resumeOverlay;
     @FXML private Label countdownLabel;
     @FXML private Label timerLabel;
     @FXML private Label turnALabel;
@@ -104,7 +118,13 @@ public class GameController {
     private model.Difficulty currentDifficulty;
     private Timeline timerTimeline;
     private long timerStartMillis;
+    private long timerElapsedMillis;
+    private boolean timerRunning;
     private Image openGiftImage;
+    private GameSaveData pendingSavedGame;
+
+    private static final Gson GSON = new Gson();
+    private static final DateTimeFormatter SAVE_TIME_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     private static final double GIFT_ICON_SIZE = 18;
 
@@ -139,6 +159,456 @@ public class GameController {
         if (GameSetupController.selectedDifficulty == GameSetupController.Difficulty.HARD) {
             btn.setStyle((btn.getStyle() == null ? "" : btn.getStyle()) + "-fx-font-size: 14px;");
         }
+    }
+
+    private void showResumeDialog(GameSaveData savedState) {
+        if (savedState == null) {
+            startNewGameFlow();
+            return;
+        }
+
+        if (resumeOverlay == null) {
+            resumeSavedGame(savedState);
+            return;
+        }
+
+        pendingSavedGame = savedState;
+        resumeOverlay.setVisible(true);
+        resumeOverlay.setMouseTransparent(false);
+        resumeOverlay.toFront();
+    }
+
+    @FXML
+    private void onResumeContinue() {
+        if (pendingSavedGame != null) {
+            hideResumeOverlay();
+            resumeSavedGame(pendingSavedGame);
+        } else {
+            hideResumeOverlay();
+            startNewGameFlow();
+        }
+    }
+
+    @FXML
+    private void onResumeNewGame() {
+        hideResumeOverlay();
+        clearSavedGame();
+        startNewGameFlow();
+    }
+
+    private void hideResumeOverlay() {
+        if (resumeOverlay != null) {
+            resumeOverlay.setVisible(false);
+            resumeOverlay.setMouseTransparent(true);
+        }
+    }
+
+    private void attachWindowHandlers() {
+        if (root == null) {
+            return;
+        }
+        Scene scene = root.getScene();
+        if (scene == null) {
+            return;
+        }
+        scene.windowProperty().addListener((obs, oldWindow, newWindow) -> {
+            if (newWindow != null) {
+                Stage stage = (Stage) newWindow;
+                stage.setOnHiding(e -> saveGameState(SaveStatus.IN_PROGRESS));
+                stage.setOnCloseRequest(e -> saveGameState(SaveStatus.IN_PROGRESS));
+            }
+        });
+        if (scene.getWindow() != null) {
+            Stage stage = (Stage) scene.getWindow();
+            stage.setOnHiding(e -> saveGameState(SaveStatus.IN_PROGRESS));
+            stage.setOnCloseRequest(e -> saveGameState(SaveStatus.IN_PROGRESS));
+        }
+    }
+
+    private void startNewGameFlow() {
+        historySaved = false;
+        timerElapsedMillis = 0;
+        timerRunning = false;
+        startedAt = LocalDateTime.now();
+        isPlayerATurn = true;
+
+        playerANameLabel.setText(GameSetupController.selectedPlayerAName);
+        playerBNameLabel.setText(GameSetupController.selectedPlayerBName);
+
+        playerATheme = GameSetupController.selectedThemeA;
+        playerBTheme = GameSetupController.selectedThemeB;
+
+        GameSetupController.Difficulty selectedDifficulty = GameSetupController.selectedDifficulty;
+
+        int mines = getMinesForDifficulty(selectedDifficulty);
+        playerAMinesLabel.setText(String.valueOf(mines));
+        playerBMinesLabel.setText(String.valueOf(mines));
+
+        currentDifficulty = DifficultyMapper.toModel(selectedDifficulty);
+        lives = currentDifficulty.getInitialLives();
+        previousLives = lives;
+        score = 0;
+
+        buildHearts(currentDifficulty);
+        updateLivesUI(currentDifficulty);
+        updateScoreLabel();
+        installHeartsTooltip();
+
+        int size = getBoardSize(selectedDifficulty);
+        int cellSize = getCellSize(selectedDifficulty);
+
+        mineFlagRewardedA = new boolean[size][size];
+        mineFlagRewardedB = new boolean[size][size];
+
+        this.mineImageSize = cellSize * 0.70;
+
+        boardA = new Board(size, size, playerATheme);
+        boardB = new Board(size, size, playerBTheme);
+
+        boardA.generate(currentDifficulty);
+        boardB.generate(currentDifficulty);
+        int questionCells = getQuestionCountForDifficulty(selectedDifficulty);
+        boardA.placeQuestionCells(questionCells);
+        boardB.placeQuestionCells(questionCells);
+
+        int surpriseCells = currentDifficulty.getSurpriseCells();
+        boardA.placeSurpriseCells(surpriseCells);
+        boardB.placeSurpriseCells(surpriseCells);
+
+        buildBoardGrid(boardAGrid, size, cellSize, true);
+        buildBoardGrid(boardBGrid, size, cellSize, false);
+
+        applyLayoutBindings();
+        updateBoardHighlight();
+
+        boardAGrid.setMinSize(0, 0);
+        boardBGrid.setMinSize(0, 0);
+
+        startCountdown();
+    }
+
+    private void installHeartsTooltip() {
+        Tooltip heartsTip = new Tooltip(
+                "Hearts left. When they reach 0 – the hyenas take over!"
+        );
+        Tooltip.install(heartsBox, heartsTip);
+    }
+
+    private void applyLayoutBindings() {
+        boardAContainer.prefWidthProperty().bind(root.widthProperty().multiply(0.48));
+        boardBContainer.prefWidthProperty().bind(root.widthProperty().multiply(0.48));
+
+        boardAContainer.prefHeightProperty().bind(root.heightProperty().multiply(0.72));
+        boardBContainer.prefHeightProperty().bind(root.heightProperty().multiply(0.72));
+
+        boardAGrid.prefWidthProperty().bind(boardAContainer.widthProperty().subtract(44));
+        boardAGrid.prefHeightProperty().bind(boardAContainer.heightProperty().subtract(44));
+
+        boardBGrid.prefWidthProperty().bind(boardBContainer.widthProperty().subtract(44));
+        boardBGrid.prefHeightProperty().bind(boardBContainer.heightProperty().subtract(44));
+    }
+
+    private void resumeSavedGame(GameSaveData savedState) {
+        try {
+            GameSetupController.Difficulty savedDifficulty =
+                    GameSetupController.Difficulty.valueOf(savedState.difficulty);
+
+            GameSetupController.selectedDifficulty = savedDifficulty;
+            GameSetupController.selectedPlayerAName = savedState.playerAName;
+            GameSetupController.selectedPlayerBName = savedState.playerBName;
+
+            playerATheme = findThemeById(savedState.playerAThemeId, GameSetupController.selectedThemeA);
+            playerBTheme = findThemeById(savedState.playerBThemeId, GameSetupController.selectedThemeB);
+            GameSetupController.selectedThemeA = playerATheme;
+            GameSetupController.selectedThemeB = playerBTheme;
+
+            playerANameLabel.setText(savedState.playerAName);
+            playerBNameLabel.setText(savedState.playerBName);
+
+            int mines = getMinesForDifficulty(savedDifficulty);
+            playerAMinesLabel.setText(String.valueOf(mines));
+            playerBMinesLabel.setText(String.valueOf(mines));
+
+            currentDifficulty = DifficultyMapper.toModel(savedDifficulty);
+            lives = savedState.lives;
+            previousLives = lives;
+            score = savedState.score;
+            isPlayerATurn = savedState.isPlayerATurn;
+            historySaved = false;
+            startedAt = parseDate(savedState.startedAtIso).orElse(LocalDateTime.now());
+
+            buildHearts(currentDifficulty);
+            updateLivesUI(currentDifficulty);
+            updateScoreLabel();
+            installHeartsTooltip();
+
+            int size = savedState.boardSize;
+            int cellSize = getCellSize(savedDifficulty);
+            this.mineImageSize = cellSize * 0.70;
+
+            mineFlagRewardedA = ensureMineRewards(savedState.boardA != null ? savedState.boardA.mineFlagRewarded : null, size);
+            mineFlagRewardedB = ensureMineRewards(savedState.boardB != null ? savedState.boardB.mineFlagRewarded : null, size);
+
+            boardA = new Board(size, size, playerATheme);
+            boardB = new Board(size, size, playerBTheme);
+
+            applySavedBoard(boardA, savedState.boardA);
+            applySavedBoard(boardB, savedState.boardB);
+
+            buildBoardGrid(boardAGrid, size, cellSize, true);
+            buildBoardGrid(boardBGrid, size, cellSize, false);
+            applyLayoutBindings();
+
+            boardAGrid.setMinSize(0, 0);
+            boardBGrid.setMinSize(0, 0);
+
+            applyBoardStateToUI(boardA, boardAGrid);
+            applyBoardStateToUI(boardB, boardBGrid);
+            updateBoardHighlight();
+
+            timerElapsedMillis = Math.max(0, savedState.timerElapsedMillis);
+            hideResumeOverlay();
+            clearCountdownOverlay();
+            startTimer();
+        } catch (Exception e) {
+            e.printStackTrace();
+            startNewGameFlow();
+        }
+    }
+
+    private void applySavedBoard(Board board, SavedBoard savedBoard) {
+        if (board == null || savedBoard == null || savedBoard.cells == null) {
+            return;
+        }
+        for (int r = 0; r < Math.min(board.getRows(), savedBoard.cells.length); r++) {
+            SavedCell[] savedRow = savedBoard.cells[r];
+            if (savedRow == null) {
+                continue;
+            }
+            for (int c = 0; c < Math.min(board.getCols(), savedRow.length); c++) {
+                SavedCell savedCell = savedRow[c];
+                if (savedCell == null) {
+                    continue;
+                }
+                Cell cell = board.getCell(r, c);
+
+                if (savedCell.type == CellType.MINE) {
+                    cell.setMine(true);
+                } else if (savedCell.type != null) {
+                    cell.setType(savedCell.type);
+                }
+
+                cell.setAdjacentMines(savedCell.adjacentMines);
+                cell.setRevealed(savedCell.revealed);
+                cell.setFlagged(savedCell.flagged);
+                cell.setSurpriseUsed(savedCell.surpriseUsed);
+                cell.setQuestionUsed(savedCell.questionUsed);
+                if (savedCell.question != null) {
+                    cell.setQuestion(savedCell.question);
+                }
+            }
+        }
+    }
+
+    private boolean[][] ensureMineRewards(boolean[][] saved, int size) {
+        if (saved != null && saved.length == size) {
+            boolean valid = true;
+            for (boolean[] row : saved) {
+                if (row == null || row.length != size) {
+                    valid = false;
+                    break;
+                }
+            }
+            if (valid) {
+                return saved;
+            }
+        }
+        return new boolean[size][size];
+    }
+
+    private void applyBoardStateToUI(Board board, GridPane grid) {
+        for (Node node : grid.getChildren()) {
+            if (node instanceof Button btn) {
+                Integer col = GridPane.getColumnIndex(btn);
+                Integer row = GridPane.getRowIndex(btn);
+                if (col == null || row == null) continue;
+
+                Cell cell = board.getCell(row, col);
+
+                btn.getStyleClass().remove("paw-flag");
+                btn.setText("");
+
+                if (cell.isFlagged() && !cell.isRevealed()) {
+                    btn.setText("🐾");
+                    if (!btn.getStyleClass().contains("paw-flag")) {
+                        btn.getStyleClass().add("paw-flag");
+                    }
+                }
+
+                if (cell.isRevealed()) {
+                    updateCellView(board, btn, row, col);
+
+                    if (cell.getType() == CellType.SURPRISE && !cell.isSurpriseUsed()) {
+                        setGiftClosedText(btn);
+                        if (!btn.getStyleClass().contains("surprise-cell")) {
+                            btn.getStyleClass().add("surprise-cell");
+                        }
+                    }
+
+                    if (cell.getType() == CellType.SURPRISE && cell.isSurpriseUsed()) {
+                        setGiftOpenedGraphic(btn);
+                        if (!btn.getStyleClass().contains("surprise-used")) {
+                            btn.getStyleClass().add("surprise-used");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void clearCountdownOverlay() {
+        if (countdownOverlay != null) {
+            countdownOverlay.setVisible(false);
+            countdownOverlay.setMouseTransparent(true);
+        }
+    }
+
+    private Theme findThemeById(String id, Theme fallback) {
+        if (id != null) {
+            for (Theme theme : ThemeColors.themes) {
+                if (id.equals(theme.id)) {
+                    return theme;
+                }
+            }
+        }
+        return fallback != null ? fallback : ThemeColors.themes.get(0);
+    }
+
+    private Optional<LocalDateTime> parseDate(String value) {
+        try {
+            if (value != null && !value.isBlank()) {
+                return Optional.of(LocalDateTime.parse(value, SAVE_TIME_FORMAT));
+            }
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    // -------------------------------------------------------------------------
+    // SAVE / LOAD
+    // -------------------------------------------------------------------------
+
+    private void saveGameState(SaveStatus status) {
+        String key = currentSaveKey();
+        if (key == null) {
+            return;
+        }
+
+        if (historySaved || status == SaveStatus.COMPLETED || boardA == null || boardB == null || lives <= 0) {
+            SavedGameRepository.delete(key);
+            return;
+        }
+
+        pauseTimer();
+
+        GameSaveData data = new GameSaveData();
+        data.status = status;
+        data.difficulty = GameSetupController.selectedDifficulty.name();
+        data.boardSize = boardA.getRows();
+        data.playerAName = playerANameLabel.getText();
+        data.playerBName = playerBNameLabel.getText();
+        data.playerAThemeId = playerATheme != null ? playerATheme.id : null;
+        data.playerBThemeId = playerBTheme != null ? playerBTheme.id : null;
+        data.isPlayerATurn = isPlayerATurn;
+        data.lives = lives;
+        data.score = score;
+        data.timerElapsedMillis = timerElapsedMillis;
+        data.startedAtIso = startedAt != null ? SAVE_TIME_FORMAT.format(startedAt) : null;
+        data.boardA = buildSavedBoard(boardA, mineFlagRewardedA, playerATheme);
+        data.boardB = buildSavedBoard(boardB, mineFlagRewardedB, playerBTheme);
+
+        SavedGameRepository.save(key, data);
+    }
+
+    private SavedBoard buildSavedBoard(Board board, boolean[][] mineRewarded, Theme theme) {
+        SavedBoard saved = new SavedBoard();
+        saved.themeId = theme != null ? theme.id : null;
+
+        int rows = board.getRows();
+        int cols = board.getCols();
+
+        saved.cells = new SavedCell[rows][cols];
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                Cell cell = board.getCell(r, c);
+                SavedCell sc = new SavedCell();
+
+                sc.revealed = cell.isRevealed();
+                sc.flagged = cell.isFlagged();
+                sc.type = cell.getType();
+                sc.adjacentMines = cell.getAdjacentMines();
+                sc.surpriseUsed = cell.isSurpriseUsed();
+                sc.questionUsed = cell.isQuestionUsed();
+                sc.question = cell.getQuestion();
+
+                saved.cells[r][c] = sc;
+            }
+        }
+
+        if (mineRewarded != null && mineRewarded.length == rows) {
+            saved.mineFlagRewarded = mineRewarded;
+        } else {
+            saved.mineFlagRewarded = new boolean[rows][cols];
+        }
+        return saved;
+    }
+
+    private GameSaveData loadGameState() {
+        String key = currentSaveKey();
+        if (key == null) return null;
+        GameSaveData data = SavedGameRepository.load(key);
+        if (data == null) {
+            return null;
+        }
+        if (data.status == null || data.boardSize <= 0 || data.difficulty == null) {
+            SavedGameRepository.delete(key);
+            return null;
+        }
+        if (data.status == SaveStatus.COMPLETED) {
+            return null;
+        }
+        return data;
+    }
+
+    private void clearSavedGame() {
+        String key = currentSaveKey();
+        if (key != null) {
+            SavedGameRepository.delete(key);
+        }
+    }
+
+    private String currentSaveKey() {
+        String a = GameSetupController.selectedPlayerAName;
+        String b = GameSetupController.selectedPlayerBName;
+        GameSetupController.Difficulty diff = GameSetupController.selectedDifficulty;
+        if (a == null || b == null || diff == null) {
+            return null;
+        }
+        int size = getBoardSize(diff);
+        return makeSaveKey(a, b, diff.name(), size);
+    }
+
+    private String makeSaveKey(String playerA, String playerB, String difficulty, int size) {
+        String normA = normalizeName(playerA);
+        String normB = normalizeName(playerB);
+        String[] pair = new String[]{normA, normB};
+        Arrays.sort(pair);
+        String base = pair[0] + "_" + pair[1] + "_" + (difficulty == null ? "" : difficulty.toLowerCase()) + "_" + size;
+        return base.replaceAll("[^a-z0-9_-]", "_");
+    }
+
+    private String normalizeName(String name) {
+        return name == null ? "" : name.trim().toLowerCase();
     }
 
 
@@ -190,86 +660,20 @@ public class GameController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if (resumeOverlay != null) {
+            resumeOverlay.setVisible(false);
+            resumeOverlay.setMouseTransparent(true);
+        }
 
-
-        // Player names and themes
-        playerANameLabel.setText(GameSetupController.selectedPlayerAName);
-        playerBNameLabel.setText(GameSetupController.selectedPlayerBName);
-
-        playerATheme = GameSetupController.selectedThemeA;
-        playerBTheme = GameSetupController.selectedThemeB;
-
-        // Mines count per difficulty
-        int mines = getMinesForDifficulty(GameSetupController.selectedDifficulty);
-        playerAMinesLabel.setText(String.valueOf(mines));
-        playerBMinesLabel.setText(String.valueOf(mines));
-
-        // Difficulty and initial lives
-        currentDifficulty = DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
-        lives = currentDifficulty.getInitialLives();
-        previousLives = lives;
-        score = 0;
-        startedAt = LocalDateTime.now();
-
-        // Hearts bar + lives label
-        buildHearts(currentDifficulty);
-        updateLivesUI(currentDifficulty);
-        updateScoreLabel();
-
-        // Tooltip קטן על שורת הלבבות
-        Tooltip heartsTip = new Tooltip(
-                "Hearts left. When they reach 0 – the hyenas take over!"
-        );
-        Tooltip.install(heartsBox, heartsTip);
-
-        // Board size & cell size
-        int size = getBoardSize(GameSetupController.selectedDifficulty);
-        int cellSize = getCellSize(GameSetupController.selectedDifficulty);
-
-        mineFlagRewardedA = new boolean[size][size];
-        mineFlagRewardedB = new boolean[size][size];
-
-        this.mineImageSize = cellSize * 0.70;
-
-        // Boards
-        boardA = new Board(size, size, playerATheme);
-        boardB = new Board(size, size, playerBTheme);
-
-        boardA.generate(currentDifficulty);
-        boardB.generate(currentDifficulty);
-        int questionCells = getQuestionCountForDifficulty(GameSetupController.selectedDifficulty);
-        boardA.placeQuestionCells(questionCells);
-        boardB.placeQuestionCells(questionCells);
-
-        int surpriseCells = currentDifficulty.getSurpriseCells();
-        boardA.placeSurpriseCells(surpriseCells);
-        boardB.placeSurpriseCells(surpriseCells);
-
-
-        // Build board grids
-        buildBoardGrid(boardAGrid, size, cellSize, true);
-        buildBoardGrid(boardBGrid, size, cellSize, false);
-
-        // Responsive containers
-        boardAContainer.prefWidthProperty().bind(root.widthProperty().multiply(0.48));
-        boardBContainer.prefWidthProperty().bind(root.widthProperty().multiply(0.48));
-
-        boardAContainer.prefHeightProperty().bind(root.heightProperty().multiply(0.72));
-        boardBContainer.prefHeightProperty().bind(root.heightProperty().multiply(0.72));
-
-        boardAGrid.prefWidthProperty().bind(boardAContainer.widthProperty().subtract(44));
-        boardAGrid.prefHeightProperty().bind(boardAContainer.heightProperty().subtract(44));
-
-        boardBGrid.prefWidthProperty().bind(boardBContainer.widthProperty().subtract(44));
-        boardBGrid.prefHeightProperty().bind(boardBContainer.heightProperty().subtract(44));
-
-        updateBoardHighlight();
-
-        boardAGrid.setMinSize(0, 0);
-        boardBGrid.setMinSize(0, 0);
-
-        // Show countdown overlay before play begins
-        startCountdown();
+        Platform.runLater(() -> {
+            attachWindowHandlers();
+            GameSaveData savedState = loadGameState();
+            if (savedState != null && savedState.status == SaveStatus.IN_PROGRESS) {
+                showResumeDialog(savedState);
+            } else {
+                startNewGameFlow();
+            }
+        });
     }
 
     // -------------------------------------------------------------------------
@@ -337,11 +741,13 @@ public class GameController {
         }
 
         timerStartMillis = System.currentTimeMillis();
-        timerLabel.setText("00:00");
+        timerRunning = true;
 
         if (timerTimeline != null) {
             timerTimeline.stop();
         }
+
+        updateTimerLabel();
 
         timerTimeline = new Timeline(
                 new KeyFrame(Duration.ZERO, e -> updateTimerLabel()),
@@ -352,11 +758,27 @@ public class GameController {
     }
 
     private void updateTimerLabel() {
-        long elapsedMillis = System.currentTimeMillis() - timerStartMillis;
+        long elapsedMillis = currentElapsedMillis();
         long totalSeconds = elapsedMillis / 1000;
         long minutes = totalSeconds / 60;
         long seconds = totalSeconds % 60;
         timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
+    }
+
+    private void pauseTimer() {
+        timerElapsedMillis = currentElapsedMillis();
+        if (timerTimeline != null) {
+            timerTimeline.stop();
+        }
+        timerRunning = false;
+    }
+
+    private long currentElapsedMillis() {
+        long base = timerElapsedMillis;
+        if (timerRunning) {
+            base += (System.currentTimeMillis() - timerStartMillis);
+        }
+        return base;
     }
 
     // -------------------------------------------------------------------------
@@ -1072,10 +1494,8 @@ public class GameController {
             return;
         }
 
-        // עצירת הטיימר
-        if (timerTimeline != null) {
-            timerTimeline.stop();
-        }
+        pauseTimer();
+        saveGameState(SaveStatus.COMPLETED);
 
         if (noHeartsLeft) {
             System.out.println(">>> GAME OVER: LOSE");
@@ -1133,7 +1553,7 @@ public class GameController {
 
     @FXML
     private void onBackToHome(javafx.event.ActionEvent event) {
-        persistHistoryIfNeeded(lives > 0);
+        saveGameState(SaveStatus.IN_PROGRESS);
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/view/home-view.fxml")
@@ -1193,5 +1613,80 @@ public class GameController {
         convertRemainingLivesToPoints();
         saveGameHistory(livesAtEnd, success);
         historySaved = true;
+    }
+
+    private enum SaveStatus {
+        IN_PROGRESS,
+        COMPLETED
+    }
+
+    private static class GameSaveData {
+        SaveStatus status;
+        String difficulty;
+        int boardSize;
+        String playerAName;
+        String playerBName;
+        String playerAThemeId;
+        String playerBThemeId;
+        boolean isPlayerATurn;
+        int lives;
+        int score;
+        long timerElapsedMillis;
+        String startedAtIso;
+        SavedBoard boardA;
+        SavedBoard boardB;
+    }
+
+    private static class SavedBoard {
+        SavedCell[][] cells;
+        String themeId;
+        boolean[][] mineFlagRewarded;
+    }
+
+    private static class SavedCell {
+        boolean revealed;
+        boolean flagged;
+        CellType type;
+        int adjacentMines;
+        boolean surpriseUsed;
+        boolean questionUsed;
+        Question question;
+    }
+
+    private static class SavedGameRepository {
+        private static Path dir() throws IOException {
+            Path dir = Paths.get(System.getProperty("user.home"), ".minesweeper-lion");
+            Files.createDirectories(dir);
+            return dir;
+        }
+
+        private static Path pathForKey(String key) throws IOException {
+            return dir().resolve(key + ".json");
+        }
+
+        static void save(String key, GameSaveData data) {
+            try (BufferedWriter writer = Files.newBufferedWriter(pathForKey(key))) {
+                GSON.toJson(data, writer);
+            } catch (IOException e) {
+                System.err.println("Failed to save game state: " + e.getMessage());
+            }
+        }
+
+        static GameSaveData load(String key) {
+            try (BufferedReader reader = Files.newBufferedReader(pathForKey(key))) {
+                return GSON.fromJson(reader, GameSaveData.class);
+            } catch (IOException | JsonSyntaxException e) {
+                delete(key);
+                return null;
+            }
+        }
+
+        static void delete(String key) {
+            try {
+                Files.deleteIfExists(pathForKey(key));
+            } catch (IOException e) {
+                System.err.println("Failed to clear saved game: " + e.getMessage());
+            }
+        }
     }
 }
