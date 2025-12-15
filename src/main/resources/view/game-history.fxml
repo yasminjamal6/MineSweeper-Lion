@@ -46,10 +46,6 @@
 
                 <!-- RIGHT: BUTTONS -->
                 <HBox spacing="8" alignment="CENTER_RIGHT">
-                    <Button fx:id="resumeBtn"
-                            text="Resume Saved Game"
-                            onAction="#onResumeSavedGame"
-                            styleClass="gh-btn-resume"/>
                     <Button text="New Game"
                             onAction="#onNewGame"
                             styleClass="gh-btn-primary"/>
