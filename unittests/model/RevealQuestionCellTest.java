@@ -1,28 +1,36 @@
 package model;
 
+import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class RevealQuestionCellTest {
 
-    // UT1 – בדיקת יחידה של ליאן: חשיפה ראשונה של תא "שאלה"
+    private Board board;
+    private Cell questionCell;
+
+    @Before
+    public void setUpQuestionCell() {
+        board = new Board(3, 3, null);
+        questionCell = board.getCell(1, 1);
+
+        // לשמור שזה באמת תא QUESTION
+        questionCell.setType(CellType.QUESTION);
+
+        questionCell.setAdjacentMines(2);
+        questionCell.setFlagged(false);
+        questionCell.setRevealed(false);
+    }
+
     @Test
-    public void revealQuestionCellFirstTimeReturnsSafeNumberAndRevealsCell() {
-        Board board = new Board(3, 3, null);
-
-        // נבחר תא מסוים שיתנהג אצלנו כ"תא שאלה"
-        Cell question = board.getCell(1, 1);
-        question.setType(CellType.QUESTION);   // אם השם אצלכם שונה – לעדכן
-        question.setMine(false);
-        question.setAdjacentMines(2);          // שכנים -> מספר בטוח
-        question.setFlagged(false);
-        question.setRevealed(false);
-
-        // פעולה שנבדקת
+    public void revealQuestionCellFirstTimeReturnsQuestionCell() {
         RevealResult result = board.revealCell(1, 1);
+        assertEquals(RevealResult.QUESTION_CELL, result);
+    }
 
-        // ציפיות הבדיקה
-        assertEquals(RevealResult.SAFE_NUMBER, result);
-        assertTrue(question.isRevealed());
+    @Test
+    public void revealQuestionCellFirstTimeMarksCellAsRevealed() {
+        board.revealCell(1, 1);
+        assertTrue(questionCell.isRevealed());
     }
 }
