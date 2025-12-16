@@ -1,30 +1,62 @@
 package model;
 
+import org.junit.Before;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
-public class  RevealCellMineTest {
+public class RevealCellMineTest {
 
-    @Test
-    public void constructorCreatesGridAndStoresTheme() {
-        Theme theme = new Theme("id", "name", "preview", "cell", "revealed");
-        Board board = new Board(2, 3, theme);
+    private Theme theme;
+    private Board themedBoard;
 
-        assertEquals(2, board.getRows());
-        assertEquals(3, board.getCols());
-        assertSame(theme, board.getTheme());
-        assertEquals(2, board.getCells().length);
-        assertEquals(3, board.getCells()[0].length);
-        Cell last = board.getCell(1, 2);
-        assertEquals(1, last.getRow());
-        assertEquals(2, last.getCol());
+    @Before
+    public void setUpThemedBoard() {
+        theme = new Theme("id", "name", "preview", "cell", "revealed");
+        themedBoard = new Board(2, 3, theme);
     }
 
     @Test
-    public void generatePlacesExpectedNumberOfMinesAndResetsState() {
-        Board board = new Board(Difficulty.EASY.getRows(), Difficulty.EASY.getCols(), null);
+    public void constructorSetsRows() {
+        assertEquals(2, themedBoard.getRows());
+    }
 
-        // dirty one cell so we know generate resets it
+    @Test
+    public void constructorSetsCols() {
+        assertEquals(3, themedBoard.getCols());
+    }
+
+    @Test
+    public void constructorStoresThemeReference() {
+        assertSame(theme, themedBoard.getTheme());
+    }
+
+    @Test
+    public void constructorInitializesGridRowCount() {
+        assertEquals(2, themedBoard.getCells().length);
+    }
+
+    @Test
+    public void constructorInitializesGridColumnCount() {
+        assertEquals(3, themedBoard.getCells()[0].length);
+    }
+
+    @Test
+    public void constructorSetsCellRowCoordinate() {
+        Cell last = themedBoard.getCell(1, 2);
+
+        assertEquals(1, last.getRow());
+    }
+
+    @Test
+    public void constructorSetsCellColumnCoordinate() {
+        Cell last = themedBoard.getCell(1, 2);
+
+        assertEquals(2, last.getCol());
+    }
+
+    private Board generateDirtyEasyBoard() {
+        Board board = new Board(Difficulty.EASY.getRows(), Difficulty.EASY.getCols(), null);
         Cell dirty = board.getCell(0, 0);
         dirty.setMine(true);
         dirty.setFlagged(true);
@@ -32,34 +64,95 @@ public class  RevealCellMineTest {
         dirty.setAdjacentMines(3);
 
         board.generate(Difficulty.EASY);
+        return board;
+    }
+
+    @Test
+    public void generatePlacesExpectedNumberOfMines() {
+        Board board = generateDirtyEasyBoard();
 
         int mines = 0;
         for (int r = 0; r < board.getRows(); r++) {
             for (int c = 0; c < board.getCols(); c++) {
-                Cell cell = board.getCell(r, c);
-                if (cell.isMine()) {
+                if (board.getCell(r, c).isMine()) {
                     mines++;
-                } else {
-                    assertTrue(cell.getAdjacentMines() >= 0);
                 }
-                assertFalse(cell.isFlagged());
-                assertFalse(cell.isRevealed());
             }
         }
+
         assertEquals(Difficulty.EASY.getMines(), mines);
     }
 
     @Test
-    public void revealOutOfBoundsIsIgnored() {
+    public void generateResetsAllFlags() {
+        Board board = generateDirtyEasyBoard();
+
+        boolean anyFlagged = false;
+        for (int r = 0; r < board.getRows() && !anyFlagged; r++) {
+            for (int c = 0; c < board.getCols(); c++) {
+                if (board.getCell(r, c).isFlagged()) {
+                    anyFlagged = true;
+                    break;
+                }
+            }
+        }
+
+        assertFalse(anyFlagged);
+    }
+
+    @Test
+    public void generateResetsAllRevealStates() {
+        Board board = generateDirtyEasyBoard();
+
+        boolean anyRevealed = false;
+        for (int r = 0; r < board.getRows() && !anyRevealed; r++) {
+            for (int c = 0; c < board.getCols(); c++) {
+                if (board.getCell(r, c).isRevealed()) {
+                    anyRevealed = true;
+                    break;
+                }
+            }
+        }
+
+        assertFalse(anyRevealed);
+    }
+
+    @Test
+    public void generateEnsuresNonMinesHaveValidAdjacentCounts() {
+        Board board = generateDirtyEasyBoard();
+
+        boolean anyNegativeAdjacent = false;
+        for (int r = 0; r < board.getRows() && !anyNegativeAdjacent; r++) {
+            for (int c = 0; c < board.getCols(); c++) {
+                Cell cell = board.getCell(r, c);
+                if (!cell.isMine() && cell.getAdjacentMines() < 0) {
+                    anyNegativeAdjacent = true;
+                    break;
+                }
+            }
+        }
+
+        assertFalse(anyNegativeAdjacent);
+    }
+
+    @Test
+    public void revealOutOfBoundsReturnsIgnored() {
         Board board = new Board(2, 2, null);
         RevealResult result = board.revealCell(-1, 0);
 
         assertEquals(RevealResult.IGNORED, result);
+    }
+
+    @Test
+    public void revealOutOfBoundsDoesNotChangeCells() {
+        Board board = new Board(2, 2, null);
+        board.revealCell(-1, 0);
+
         assertFalse(board.getCell(0, 0).isRevealed());
     }
 
     @Test
-    public void revealFlaggedCellIsIgnored() {
+    public void revealFlaggedCellReturnsIgnored() {
         Board board = new Board(2, 2, null);
         Cell cell = board.getCell(0, 0);
         cell.setFlagged(true);
@@ -67,11 +160,21 @@ public class  RevealCellMineTest {
         RevealResult result = board.revealCell(0, 0);
 
         assertEquals(RevealResult.IGNORED, result);
+    }
+
+    @Test
+    public void revealFlaggedCellLeavesCellHidden() {
+        Board board = new Board(2, 2, null);
+        Cell cell = board.getCell(0, 0);
+        cell.setFlagged(true);
+
+        board.revealCell(0, 0);
+
         assertFalse(cell.isRevealed());
     }
 
     @Test
-    public void revealAlreadyRevealedCellIsIgnored() {
+    public void revealAlreadyRevealedCellReturnsIgnored() {
         Board board = new Board(2, 2, null);
         Cell cell = board.getCell(0, 0);
         cell.setRevealed(true);
@@ -79,6 +182,16 @@ public class  RevealCellMineTest {
         RevealResult result = board.revealCell(0, 0);
 
         assertEquals(RevealResult.IGNORED, result);
+    }
+
+    @Test
+    public void revealAlreadyRevealedCellStaysRevealed() {
+        Board board = new Board(2, 2, null);
+        Cell cell = board.getCell(0, 0);
+        cell.setRevealed(true);
+
+        board.revealCell(0, 0);
+
         assertTrue(cell.isRevealed());
     }
 
@@ -86,7 +199,6 @@ public class  RevealCellMineTest {
     public void testRevealMineReturnsHitMine() {
         Board board = new Board(3, 3, null);
 
-        // make (1,1) a mine and make sure it's hidden & not flagged
         Cell cell = board.getCell(1, 1);
         cell.setMine(true);
         cell.setRevealed(false);
@@ -106,11 +218,26 @@ public class  RevealCellMineTest {
         RevealResult result = board.revealCell(0, 0);
 
         assertEquals(RevealResult.SAFE_NUMBER, result);
-        assertTrue(cell.isRevealed());
     }
 
     @Test
-    public void revealEmptyAreaFloodFillsNeighbors() {
+    public void revealSafeNumberRevealsCell() {
+        Board board = new Board(2, 2, null);
+        Cell cell = board.getCell(0, 0);
+        cell.setAdjacentMines(2);
+
+        board.revealCell(0, 0);
+
+        assertTrue(cell.isRevealed());
+    }
+
+    private static class FloodFillContext {
+        Board board;
+        Cell origin;
+        RevealResult result;
+    }
+
+    private FloodFillContext createFloodFillContext() {
         Board board = new Board(3, 3, null);
 
         // place one mine, mark a revealed neighbor, and mix zero/number neighbors
@@ -127,12 +254,59 @@ public class  RevealCellMineTest {
 
         RevealResult result = board.revealCell(1, 1);
 
-        assertEquals(RevealResult.EMPTY_AREA, result);
-        assertTrue(origin.isRevealed());
-        assertTrue(board.getCell(1, 2).isRevealed());
-        assertTrue(board.getCell(2, 2).isRevealed());
-        assertTrue(board.getCell(2, 1).isRevealed());
-        assertFalse(board.getCell(0, 0).isRevealed());
-        assertTrue(board.getCell(0, 1).isRevealed());
+        FloodFillContext context = new FloodFillContext();
+        context.board = board;
+        context.origin = origin;
+        context.result = result;
+        return context;
+    }
+
+    @Test
+    public void revealEmptyAreaReturnsEmptyArea() {
+        FloodFillContext context = createFloodFillContext();
+
+        assertEquals(RevealResult.EMPTY_AREA, context.result);
+    }
+
+    @Test
+    public void revealEmptyAreaRevealsOriginCell() {
+        FloodFillContext context = createFloodFillContext();
+
+        assertTrue(context.origin.isRevealed());
+    }
+
+    @Test
+    public void revealEmptyAreaRevealsZeroNeighborToRight() {
+        FloodFillContext context = createFloodFillContext();
+
+        assertTrue(context.board.getCell(1, 2).isRevealed());
+    }
+
+    @Test
+    public void revealEmptyAreaRevealsZeroNeighborDiagonally() {
+        FloodFillContext context = createFloodFillContext();
+
+        assertTrue(context.board.getCell(2, 2).isRevealed());
+    }
+
+    @Test
+    public void revealEmptyAreaRevealsNumberedNeighbor() {
+        FloodFillContext context = createFloodFillContext();
+
+        assertTrue(context.board.getCell(2, 1).isRevealed());
+    }
+
+    @Test
+    public void revealEmptyAreaDoesNotRevealMine() {
+        FloodFillContext context = createFloodFillContext();
+
+        assertFalse(context.board.getCell(0, 0).isRevealed());
+    }
+
+    @Test
+    public void revealEmptyAreaLeavesAlreadyRevealedNeighborVisible() {
+        FloodFillContext context = createFloodFillContext();
+
+        assertTrue(context.board.getCell(0, 1).isRevealed());
     }
 }
