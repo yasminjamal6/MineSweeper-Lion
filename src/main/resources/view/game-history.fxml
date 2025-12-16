@@ -56,6 +56,22 @@
 
             </HBox>
 
+            <!-- RESUME CARD -->
+            <HBox fx:id="resumeCard"
+                  spacing="14"
+                  alignment="CENTER_LEFT"
+                  styleClass="gh-resume-card">
+                <VBox alignment="CENTER_LEFT" spacing="4">
+                    <Label text="Resume Game" styleClass="gh-resume-title"/>
+                    <Label text="Pick up where you left off, no progress lost."
+                           styleClass="gh-resume-subtitle"/>
+                </VBox>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Button text="Continue"
+                        onAction="#onResumeSavedGame"
+                        styleClass="gh-resume-btn"/>
+            </HBox>
+
             <!-- STATS CARDS ROW -->
             <HBox fx:id="statsRow"
                   spacing="16"
