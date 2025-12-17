@@ -64,3 +64,74 @@
 .resume-alert .button:hover {
     -fx-background-color: rgba(0, 0, 0, 0.75);
 }
+
+/* =========================
+   DELETE CONFIRMATION ALERT
+   ========================= */
+
+.del-dialog {
+    -fx-background-color: linear-gradient(#020617, #0f172a, #1e293b);
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-border-color: rgba(168,85,247,0.85);
+    -fx-border-width: 2;
+    -fx-padding: 14;
+}
+
+/* Header area */
+.del-dialog .header-panel {
+    -fx-background-color: transparent;
+    -fx-padding: 10 12 6 12;
+}
+
+.del-dialog .header-panel .label {
+    -fx-text-fill: #fde68a;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/* Content text */
+.del-dialog .content.label {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 13px;
+    -fx-padding: 8 12 12 12;
+}
+
+/* Buttons area */
+.del-dialog .button-bar {
+    -fx-padding: 0 12 10 12;
+}
+
+.del-dialog .button-bar .button {
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 6 18;
+    -fx-cursor: hand;
+}
+
+/* Cancel button (outline) */
+.del-dialog .button-bar .button:cancel {
+    -fx-background-color: rgba(0,0,0,0.45);
+    -fx-text-fill: #facc15;
+    -fx-border-color: rgba(250,204,21,0.7);
+    -fx-border-width: 1.4;
+}
+
+.del-dialog .button-bar .button:cancel:hover {
+    -fx-background-color: rgba(0,0,0,0.7);
+}
+
+/* Delete button (danger) */
+.del-dialog .button-bar .button:default {
+    -fx-background-color: rgba(239, 68, 68, 0.85);
+    -fx-text-fill: white;
+    -fx-border-color: rgba(255,255,255,0.25);
+    -fx-border-width: 1.2;
+}
+
+.del-dialog .button-bar .button:default:hover {
+    -fx-background-color: rgba(239, 68, 68, 1.0);
+}
+
