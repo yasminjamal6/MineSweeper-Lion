@@ -873,8 +873,7 @@ public class GameController {
             updateLivesUI(currentDifficulty);
         }
         if (newlyRevealed > 0 && result != RevealResult.HIT_MINE && result != RevealResult.IGNORED) {
-            score += newlyRevealed;
-            updateScoreLabel();
+            addScore(newlyRevealed);
         }
 
         isPlayerATurn = !isPlayerATurn;
@@ -1166,15 +1165,12 @@ public class GameController {
 
             // +1 only once per mine cell
             if (!rewarded[row][col]) {
-                score += 1;
+                addScore(1);
                 rewarded[row][col] = true;
-                updateScoreLabel();
             }
             return;
         }
-
-        score -= 3;
-        updateScoreLabel();
+        addScore(-3);
     }
 
 
@@ -1228,6 +1224,12 @@ public class GameController {
         }
     }
 
+    private void addScore(int delta) {
+        score = Math.max(0, score + delta);
+        updateScoreLabel();
+    }
+
+
     /**
      * Converts remaining lives into points once before saving history.
      */
@@ -1237,10 +1239,9 @@ public class GameController {
         }
         int bonus = ScoreRules.livesToPoints(currentDifficulty, lives);
         if (bonus != 0) {
-            score += bonus;
+            addScore(bonus);
         }
         lives = 0;
-        updateScoreLabel();
         updateLivesUI(currentDifficulty);
     }
 
@@ -1373,9 +1374,7 @@ public class GameController {
         lives += change.getLivesDelta();
         if (lives < 0) lives = 0;
 
-        score += change.getPointsDelta();
-        scoreLabel.setText("Score: " + score);
-
+        addScore(change.getPointsDelta());
         updateLivesUI(diff);
 
         // אם ההפתעה גמרה את כל הלבבות – מיד מסיימים משחק, בלי פופאפ
