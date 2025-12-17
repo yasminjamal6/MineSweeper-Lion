@@ -1,5 +1,7 @@
 package main.controller;
 
+import javafx.geometry.Insets;
+import java.util.Optional;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -16,6 +18,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.control.*;
+
 
 /**
  * Controller for the Home screen.
@@ -26,7 +30,7 @@ import javafx.util.Duration;
  * </p>
  */
 public class HomeController {
-
+    private static final String ADMIN_PASSWORD = "lionking"; // תשני למה שאת רוצה
     @FXML private VBox heroSection;
     @FXML private VBox buttonsSection;
     @FXML private HBox featuresRow;
@@ -213,6 +217,22 @@ public class HomeController {
 
     @FXML
     private void onQuestionManager(ActionEvent e) {
+
+        // 1) מבקשים סיסמה
+        if (!requestAdminAccess()) {
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+            a.setTitle("Access denied");
+            a.setHeaderText("The pride remains protected.");
+            a.setContentText("Incorrect password :( ");
+            DialogPane dp = a.getDialogPane();
+            dp.getStylesheets().add(getClass().getResource("/css/alert.css").toExternalForm());
+            dp.getStyleClass().add("lion-alert");
+
+            a.showAndWait();
+            return;
+        }
+
+        // 2) אם נכון -> נכנסים למסך
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/view/question-manager-view.fxml")
@@ -228,4 +248,39 @@ public class HomeController {
             ex.printStackTrace();
         }
     }
+
+
+    private boolean requestAdminAccess() {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Pride Rock – Admin Access");
+        dialog.setHeaderText("Only guardians of the pride may enter.");
+
+        DialogPane dp = dialog.getDialogPane();
+
+        // משתמשים באותו CSS כמו ה-Confirmation שיש לך
+        dp.getStylesheets().add(getClass().getResource("/css/alert.css").toExternalForm());
+        dp.getStyleClass().add("admin-dialog"); // נוסיף את העיצוב בצעד 4
+
+        ButtonType enterBtn  = new ButtonType("Enter", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelBtn = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        dp.getButtonTypes().setAll(cancelBtn, enterBtn);
+
+        Label msg = new Label("Enter the admin password to manage questions:");
+        PasswordField pf = new PasswordField();
+        pf.setPromptText("Admin password");
+
+        VBox box = new VBox(10, msg, pf);
+        box.setPadding(new Insets(10, 10, 10, 10));
+        dp.setContent(box);
+
+        // מחזיר את הטקסט רק אם לחצו Enter
+        dialog.setResultConverter(bt -> bt == enterBtn ? pf.getText() : null);
+
+        Optional<String> result = dialog.showAndWait();
+        if (result.isEmpty() || result.get() == null) return false; // X / Cancel
+
+        return result.get().equals(ADMIN_PASSWORD);
+    }
 }
+
