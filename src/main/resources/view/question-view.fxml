@@ -33,7 +33,16 @@
             <HBox alignment="CENTER_LEFT" spacing="12" styleClass="header-row">
                 <VBox spacing="4" HBox.hgrow="ALWAYS">
                     <Label text="PRIDE ROCK TRIVIA 🦁" styleClass="title"/>
-                    <Label fx:id="categoryLabel" text="Savanna Lore" styleClass="category"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label fx:id="categoryLabel"
+                               text="Savanna Lore"
+                               styleClass="category"/>
+
+                        <Label fx:id="levelLabel"
+                               text="LEVEL"
+                               visible="false"
+                               styleClass="level-badge"/>
+                    </HBox>
                 </VBox>
 
                 <!-- Timer -->
