@@ -23,6 +23,8 @@ public class QuestionController {
     @FXML private Label questionLabel;
     @FXML private Label categoryLabel;
     @FXML private Label timerLabel;
+    @FXML private Label levelLabel;
+
 
     @FXML private Button ansBtn0, ansBtn1, ansBtn2, ansBtn3;
 
@@ -53,6 +55,35 @@ public class QuestionController {
         questionLabel.setText(q.getText());
         categoryLabel.setText("");
         categoryLabel.setVisible(false);
+
+        if (levelLabel != null) {
+            String levelText = "LEVEL: UNKNOWN";
+
+            if (q.getLevel() != null) {
+                levelText = switch (q.getLevel()) {
+                    case EASY -> "LEVEL: EASY";
+                    case MEDIUM -> "LEVEL: MEDIUM";
+                    case HARD -> "LEVEL: HARD";
+                    case EXPERT -> "LEVEL: EXPERT";
+                    default -> "LEVEL: UNKNOWN";
+                };
+            }
+
+            levelLabel.setText(levelText);
+            levelLabel.setVisible(true);
+
+            levelLabel.getStyleClass().removeAll("level-easy", "level-medium", "level-hard", "level-expert");
+
+            if (q.getLevel() != null) {
+                switch (q.getLevel()) {
+                    case EASY -> levelLabel.getStyleClass().add("level-easy");
+                    case MEDIUM -> levelLabel.getStyleClass().add("level-medium");
+                    case HARD -> levelLabel.getStyleClass().add("level-hard");
+                    case EXPERT -> levelLabel.getStyleClass().add("level-expert");
+                    default -> { }
+                }
+            }
+        }
 
         String[] opts = q.getOptions();
         for (int i = 0; i < 4; i++) {

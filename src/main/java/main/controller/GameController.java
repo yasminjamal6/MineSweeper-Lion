@@ -909,8 +909,7 @@ public class GameController {
         }
 
         if (!cell.hasQuestion()) {
-            QuestionLevel level = getLevelFromSetup();
-            Question question = questionBank.getRandomQuestion(level);
+            Question question = questionBank.getRandomQuestionAnyLevel();
             cell.setQuestion(question);
         }
 

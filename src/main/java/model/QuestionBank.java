@@ -33,6 +33,13 @@ public class QuestionBank {
     private final Random random = new Random();
 
     private String headerLine = "id,Question,Difficulty,A,B,C,D,Correct";
+    private final java.util.List<Question> allQuestions = new java.util.ArrayList<>();
+
+    public Question getRandomQuestionAnyLevel() {
+        List<Question> all = getAllQuestions();
+        if (all.isEmpty()) return null;
+        return all.get(random.nextInt(all.size()));
+    }
 
     public QuestionBank() {
         for (QuestionLevel level : QuestionLevel.values()) {
