@@ -64,6 +64,7 @@ public class QuestionController {
                     case EASY -> "LEVEL: EASY";
                     case MEDIUM -> "LEVEL: MEDIUM";
                     case HARD -> "LEVEL: HARD";
+                    case EXPERT -> "LEVEL: EXPERT";
                     default -> "LEVEL: UNKNOWN";
                 };
             }
@@ -71,13 +72,15 @@ public class QuestionController {
             levelLabel.setText(levelText);
             levelLabel.setVisible(true);
 
-            levelLabel.getStyleClass().removeAll("level-easy", "level-medium", "level-hard");
+            levelLabel.getStyleClass().removeAll("level-easy", "level-medium", "level-hard", "level-expert");
+
             if (q.getLevel() != null) {
                 switch (q.getLevel()) {
                     case EASY -> levelLabel.getStyleClass().add("level-easy");
                     case MEDIUM -> levelLabel.getStyleClass().add("level-medium");
                     case HARD -> levelLabel.getStyleClass().add("level-hard");
-                    default -> {}
+                    case EXPERT -> levelLabel.getStyleClass().add("level-expert");
+                    default -> { }
                 }
             }
         }
