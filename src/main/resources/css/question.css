@@ -185,3 +185,23 @@
     -fx-font-weight: 700;
     -fx-font-style: italic;
 }
+.level-badge {
+    -fx-background-color: rgba(0,0,0,0.25);
+    -fx-padding: 4 10;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-color: rgba(210, 166, 80, 0.7);
+    -fx-border-width: 1.2;
+    -fx-font-weight: 900;
+    -fx-font-size: 12px;
+}
+
+.level-easy   { -fx-text-fill: #4ade80; }   /* green */
+.level-medium { -fx-text-fill: #fbbf24; }   /* yellow */
+.level-hard   { -fx-text-fill: #f87171; }   /* red */
+
+.level-expert {
+    -fx-background-color: rgba(160, 70, 25, 0.95);
+    -fx-border-color: rgba(246, 210, 122, 0.95);
+    -fx-text-fill: #fff3d6;
+}
