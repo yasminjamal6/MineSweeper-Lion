@@ -108,14 +108,30 @@ public class QuestionManagerController {
                         deleteBtn.setOnAction(e -> {
                             Question q = getTableView().getItems().get(getIndex());
 
-                            Alert confirm = new Alert(
-                                    Alert.AlertType.CONFIRMATION,
-                                    "Delete this question?\n\n" + q.getText(),
-                                    ButtonType.YES, ButtonType.NO
-                            );
+                            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+                            confirm.setTitle("Confirmation");
+                            confirm.setHeaderText("Delete this question?");
+                            confirm.setContentText(q.getText());
 
-                            Optional<ButtonType> res = confirm.showAndWait();
-                            if (res.isPresent() && res.get() == ButtonType.YES) {
+                            DialogPane dp = confirm.getDialogPane();
+                            dp.getStylesheets().add(getClass().getResource("/css/alert.css").toExternalForm());
+                            dp.getStyleClass().add("del-dialog");   // זה ה-class שנעצב ב-CSS
+
+// כפתורים עם טקסט ברור
+                            ButtonType deleteType = new ButtonType("Delete", ButtonBar.ButtonData.YES);
+                            ButtonType cancelType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                            confirm.getButtonTypes().setAll(cancelType, deleteType);
+
+// לתת "Delete" כ-default (אם את רוצה ש-Enter ימחק) - אופציונלי:
+                            Button deleteBtnNode = (Button) dp.lookupButton(deleteType);
+                            deleteBtnNode.setDefaultButton(true);
+
+
+
+
+                            Optional<ButtonType> result = confirm.showAndWait();
+
+                            if (result.isPresent() && result.get() == deleteType) {
                                 questionBank.removeQuestion(q);
                                 getTableView().getItems().remove(q);
                                 getTableView().refresh();
