@@ -199,3 +199,9 @@
 .level-easy   { -fx-text-fill: #4ade80; }   /* green */
 .level-medium { -fx-text-fill: #fbbf24; }   /* yellow */
 .level-hard   { -fx-text-fill: #f87171; }   /* red */
+
+.level-expert {
+    -fx-background-color: rgba(160, 70, 25, 0.95);
+    -fx-border-color: rgba(246, 210, 122, 0.95);
+    -fx-text-fill: #fff3d6;
+}
