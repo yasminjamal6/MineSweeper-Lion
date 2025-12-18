@@ -1420,14 +1420,22 @@ public class GameController {
         grid.getColumnConstraints().clear();
         grid.getRowConstraints().clear();
 
+        grid.setHgap(0);
+        grid.setVgap(0);
+        grid.setPadding(Insets.EMPTY);
+
+
         for (int i = 0; i < size; i++) {
             ColumnConstraints colConst = new ColumnConstraints();
             colConst.setPercentWidth(100.0 / size);
+            colConst.setFillWidth(true);
             grid.getColumnConstraints().add(colConst);
 
             RowConstraints rowConst = new RowConstraints();
             rowConst.setPercentHeight(100.0 / size);
+            rowConst.setFillHeight(true);
             grid.getRowConstraints().add(rowConst);
+
         }
 
         for (int row = 0; row < size; row++) {
@@ -1435,7 +1443,10 @@ public class GameController {
                 Button cell = new Button();
                 cell.getStyleClass().add("cell-button");
                 cell.setMnemonicParsing(false);
-
+                cell.setPadding(Insets.EMPTY);
+                cell.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                GridPane.setFillWidth(cell, true);
+                GridPane.setFillHeight(cell, true);
                 cell.setTextOverrun(javafx.scene.control.OverrunStyle.CLIP);
                 cell.setEllipsisString("");
                 cell.setGraphicTextGap(0);
