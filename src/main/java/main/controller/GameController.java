@@ -61,7 +61,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Optional;
-import javafx.beans.value.ChangeListener;
 
 
 /**
@@ -131,7 +130,6 @@ public class GameController {
     private static final DateTimeFormatter SAVE_TIME_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     private static final double GIFT_ICON_SIZE = 18;
-    private boolean responsiveListenersInstalled = false;
 
     private void setGiftOpenedGraphic(Button btn) {
         btn.setText("");
@@ -247,9 +245,6 @@ public class GameController {
         boardAGrid.setMinSize(0, 0);
         boardBGrid.setMinSize(0, 0);
 
-        ensureResponsiveListeners();
-        updateBoardScaling();
-
         startCountdown();
     }
 
@@ -261,69 +256,17 @@ public class GameController {
     }
 
     private void applyLayoutBindings() {
-        boardAContainer.setMinSize(0, 0);
-        boardBContainer.setMinSize(0, 0);
+        boardAContainer.prefWidthProperty().bind(root.widthProperty().multiply(0.48));
+        boardBContainer.prefWidthProperty().bind(root.widthProperty().multiply(0.48));
+
+        boardAContainer.prefHeightProperty().bind(root.heightProperty().multiply(0.72));
+        boardBContainer.prefHeightProperty().bind(root.heightProperty().multiply(0.72));
 
         boardAGrid.prefWidthProperty().bind(boardAContainer.widthProperty().subtract(44));
         boardAGrid.prefHeightProperty().bind(boardAContainer.heightProperty().subtract(44));
 
         boardBGrid.prefWidthProperty().bind(boardBContainer.widthProperty().subtract(44));
         boardBGrid.prefHeightProperty().bind(boardBContainer.heightProperty().subtract(44));
-    }
-
-    private void ensureResponsiveListeners() {
-        if (responsiveListenersInstalled || root == null) {
-            return;
-        }
-        responsiveListenersInstalled = true;
-        ChangeListener<Number> listener = (obs, oldVal, newVal) -> updateBoardScaling();
-        root.widthProperty().addListener(listener);
-        root.heightProperty().addListener(listener);
-    }
-
-    /**
-     * Scale fonts/gaps so cells stay readable when the window gets smaller.
-     */
-    private void updateBoardScaling() {
-        adjustGridScaling(boardA, boardAContainer, boardAGrid);
-        adjustGridScaling(boardB, boardBContainer, boardBGrid);
-    }
-
-    private void adjustGridScaling(Board board, StackPane container, GridPane grid) {
-        if (board == null || container == null || grid == null) {
-            return;
-        }
-        double availableWidth = Math.max(0, container.getWidth() - 44);
-        double availableHeight = Math.max(0, container.getHeight() - 44);
-        double side = Math.min(availableWidth, availableHeight);
-        int size = board.getRows();
-        if (side <= 0 || size <= 0) {
-            return;
-        }
-
-        double cellSize = side / size;
-        double fontSize = clamp(cellSize * 0.6, 10, 20);
-        double gap = cellSize < 24 ? 1 : 2;
-        grid.setHgap(gap);
-        grid.setVgap(gap);
-
-        for (Node node : grid.getChildren()) {
-            if (node instanceof Button btn) {
-                String baseStyle = btn.getStyle();
-                StringBuilder style = new StringBuilder();
-                if (baseStyle != null && !baseStyle.isEmpty()) {
-                    style.append(baseStyle);
-                }
-                style.append("; -fx-font-size: ").append(fontSize).append("px;");
-                btn.setStyle(style.toString());
-                double pad = Math.max(0, cellSize * 0.15);
-                btn.setPadding(new Insets(pad, pad, pad, pad));
-            }
-        }
-    }
-
-    private double clamp(double value, double min, double max) {
-        return Math.max(min, Math.min(max, value));
     }
 
     private void showResumeDialog(GameSaveData savedState) {
@@ -418,9 +361,6 @@ public class GameController {
             applyBoardStateToUI(boardA, boardAGrid);
             applyBoardStateToUI(boardB, boardBGrid);
             updateBoardHighlight();
-
-            ensureResponsiveListeners();
-            updateBoardScaling();
 
             timerElapsedMillis = Math.max(0, savedState.timerElapsedMillis);
             clearCountdownOverlay();
@@ -1520,7 +1460,8 @@ public class GameController {
 
                 });
 
-                cell.setMinSize(0, 0);
+
+
                 cell.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
                 grid.add(cell, col, row);
