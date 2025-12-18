@@ -1511,7 +1511,7 @@ public class GameController {
 
         boolean allMinesBoardA = areAllMinesRevealed(boardA);
         boolean allMinesBoardB = areAllMinesRevealed(boardB);
-        boolean allMinesCleared = allMinesBoardA && allMinesBoardB;
+        boolean allMinesCleared = allMinesBoardA || allMinesBoardB;
 
         System.out.println(">>> checkGameOver: lives=" + lives +
                 ", allMinesA=" + allMinesBoardA +
