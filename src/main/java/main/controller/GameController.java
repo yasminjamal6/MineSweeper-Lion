@@ -826,7 +826,7 @@ public class GameController {
         Board board = isBoardA ? boardA : boardB;
         Cell cell  = board.getCell(row, col);
 
-        if (!cell.isRevealed() && cellButton.getStyleClass().contains("paw-flag")) {
+        if (!cell.isRevealed() && (cell.isFlagged() || cellButton.getStyleClass().contains("paw-flag"))) {
             return;
         }
 
@@ -1146,30 +1146,33 @@ public class GameController {
 
         if (cellButton.isDisabled() || cell.isRevealed()) return;
 
-        boolean flagged = cellButton.getStyleClass().contains("paw-flag");
+        boolean flagged = cell.isFlagged() || cellButton.getStyleClass().contains("paw-flag");
 
         if (flagged) {
+            cell.setFlagged(false);
             cellButton.setText("");
             cellButton.getStyleClass().remove("paw-flag");
-            return;
-        }
-
-        cellButton.setText("🐾");
-        if (!cellButton.getStyleClass().contains("paw-flag")) {
-            cellButton.getStyleClass().add("paw-flag");
-        }
-
-        if (cell.isMine()) {
-            boolean[][] rewarded = isBoardA ? mineFlagRewardedA : mineFlagRewardedB;
-
-            // +1 only once per mine cell
-            if (!rewarded[row][col]) {
-                addScore(1);
-                rewarded[row][col] = true;
+        } else {
+            cell.setFlagged(true);
+            cellButton.setText("🐾");
+            if (!cellButton.getStyleClass().contains("paw-flag")) {
+                cellButton.getStyleClass().add("paw-flag");
             }
-            return;
+
+            if (cell.isMine()) {
+                boolean[][] rewarded = isBoardA ? mineFlagRewardedA : mineFlagRewardedB;
+
+                // +1 only once per mine cell
+                if (!rewarded[row][col]) {
+                    addScore(1);
+                    rewarded[row][col] = true;
+                }
+            } else {
+                addScore(-3);
+            }
         }
-        addScore(-3);
+
+        checkGameOver();
     }
 
 
@@ -1482,7 +1485,7 @@ public class GameController {
         };
     }
 
-    /** האם כל המוקשים על לוח מסוים נחשפו */
+    /** האם כל המוקשים על לוח מסוים נחשפו (דגלים על מוקשים נספרים כחשופים) */
     private boolean areAllMinesRevealed(Board board) {
         int rows = board.getRows();
         int cols = board.getCols();
@@ -1490,7 +1493,7 @@ public class GameController {
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 Cell cell = board.getCell(r, c);
-                if (cell.isMine() && !cell.isRevealed()) {
+                if (cell.isMine() && !(cell.isRevealed() || cell.isFlagged())) {
                     return false;
                 }
             }
