@@ -219,7 +219,8 @@ public class HomeController {
     private void onQuestionManager(ActionEvent e) {
 
         // 1) מבקשים סיסמה
-        if (!requestAdminAccess()) {
+        AccessResult access = requestAdminAccess();
+        if (access == AccessResult.DENIED) {
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setTitle("Access denied");
             a.setHeaderText("The pride remains protected.");
@@ -230,6 +231,8 @@ public class HomeController {
 
             a.showAndWait();
             return;
+        } else if (access == AccessResult.CANCELED) {
+            return; // user bailed out; do nothing
         }
 
         // 2) אם נכון -> נכנסים למסך
@@ -250,7 +253,7 @@ public class HomeController {
     }
 
 
-    private boolean requestAdminAccess() {
+    private AccessResult requestAdminAccess() {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Pride Rock – Admin Access");
         dialog.setHeaderText("Only guardians of the pride may enter.");
@@ -278,9 +281,16 @@ public class HomeController {
         dialog.setResultConverter(bt -> bt == enterBtn ? pf.getText() : null);
 
         Optional<String> result = dialog.showAndWait();
-        if (result.isEmpty() || result.get() == null) return false; // X / Cancel
+        if (result.isEmpty() || result.get() == null) {
+            return AccessResult.CANCELED; // X / Cancel
+        }
 
-        return result.get().equals(ADMIN_PASSWORD);
+        return result.get().equals(ADMIN_PASSWORD)
+                ? AccessResult.GRANTED
+                : AccessResult.DENIED;
+    }
+
+    private enum AccessResult {
+        GRANTED, DENIED, CANCELED
     }
 }
-
