@@ -5,7 +5,6 @@
 
 2. Place MineSweeper-Lion.jar inside the Submission_jars directory,
    next to the lib_win folder that contains the JavaFX libraries.
-
    The folder structure should look like this:
    Submission_jars/
    ├── MineSweeper-Lion.jar
