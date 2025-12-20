@@ -3,6 +3,7 @@
 1. Download the JAR file:
    https://drive.google.com/file/d/1t4S6BI7-M7AtyZHTD5AjbYc6uefRfiYI/view?usp=sharing
 
+
 2. Place MineSweeper-Lion.jar inside the Submission_jars directory,
    next to the lib_win folder that contains the JavaFX libraries.
    The folder structure should look like this:
