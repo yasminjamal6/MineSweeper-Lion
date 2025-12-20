@@ -1,1 +1,1 @@
-java --module-path "lib" --add-modules javafx.controls,javafx.fxml,javafx.media -jar MineSweeper-Lion.jar
+java --module-path "lib_win" --add-modules javafx.controls,javafx.fxml,javafx.media -jar MineSweeper-Lion.jar
