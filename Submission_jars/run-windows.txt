@@ -16,5 +16,5 @@
        └── javafx-media-xx-win.jar
 
 3. Open a PowerShell terminal in the Submission_jars directory and run:
-   cd Submission_jars
+   cd "C:\Users\NS TECH\IdeaProjects\MineSweeper-Lion\Submission_jars"
    java --module-path lib_win --add-modules javafx.controls,javafx.fxml,javafx.media -jar MineSweeper-Lion.jar
