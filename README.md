@@ -190,3 +190,26 @@ One savanna.
 May your courage never falter,  
 may your hearts stay unbroken,  
 and may every move bring you closer to your rightful place — **on Pride Rock.**
+
+---
+
+## 🚀 Release 2.0.0 — Fat JAR
+Starting from **Release 2.0.0**, the game is distributed as a **Fat JAR**, making it easy to run without any additional setup.
+
+### ▶️ How to Run (Fat JAR)
+Make sure Java is installed, then simply run:
+
+
+java -jar Fat_Jar_MineSweeper-Lion.jar
+
+
+## ⬇️ Download & Run (Regular JAR)
+
+Download the jar:  
+https://drive.google.com/file/d/1i6st-t6dEcIkq4O8OcRqTQx10QG2ixh9/view?usp=sharing
+
+Place `MineSweeper-Lion.jar` inside `Submission_jars` alongside the `lib` folder, then run:
+
+```bash
+cd Submission_jars
+java --module-path lib --add-modules javafx.controls,javafx.fxml,javafx.media -jar MineSweeper-Lion.jar
