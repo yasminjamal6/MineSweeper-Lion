@@ -1,1 +1,6 @@
-java --module-path Submission_jars/lib --add-modules javafx.controls,javafx.fxml,javafx.media -jar Submission_jars/MineSweeper-Lion.jar
+Download the jar:
+https://drive.google.com/file/d/1i6st-t6dEcIkq4O8OcRqTQx10QG2ixh9/view?usp=sharing
+
+Place MineSweeper-Lion.jar inside Submission_jars alongside the lib folder, then run:
+cd Submission_jars
+java --module-path lib --add-modules javafx.controls,javafx.fxml,javafx.media -jar MineSweeper-Lion.jar
