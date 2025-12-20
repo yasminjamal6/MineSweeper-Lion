@@ -1,1 +1,20 @@
-java --module-path "Submission_jars/lib_win" --add-modules javafx.controls,javafx.fxml,javafx.media -jar "Submission_jars/MineSweeper-Lion-windows.jar"
+=== Running the MineSweeper-Lion Game (Windows) ===
+
+1. Download the JAR file:
+   https://drive.google.com/file/d/1t4S6BI7-M7AtyZHTD5AjbYc6uefRfiYI/view?usp=sharing
+
+
+2. Place MineSweeper-Lion.jar inside the Submission_jars directory,
+   next to the lib_win folder that contains the JavaFX libraries.
+   The folder structure should look like this:
+   Submission_jars/
+   ├── MineSweeper-Lion.jar
+   └── lib_win/
+       ├── javafx-controls-xx-win.jar
+       ├── javafx-fxml-xx-win.jar
+       ├── javafx-graphics-xx-win.jar
+       └── javafx-media-xx-win.jar
+
+3. Open a PowerShell terminal in the Submission_jars directory and run:
+   cd Submission_jars
+   java --module-path lib_win --add-modules javafx.controls,javafx.fxml,javafx.media -jar MineSweeper-Lion.jar
