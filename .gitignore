@@ -36,3 +36,8 @@ dist/
 
 # ===== JavaFX Cache =====
 .cache/
+<<<<<<< HEAD
+
+Submission_jars/*.jar
+=======
+>>>>>>> b8f7147f2f6db320e39de3c90958e99504f1e938
