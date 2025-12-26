@@ -786,9 +786,12 @@ public class GameController {
     @FXML
     private void onRestart() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Restart Game");
-        alert.setHeaderText("Restart the game?");
-        alert.setContentText("This will start a fresh game with the same settings.");
+        alert.setTitle("Circle of Life");
+        alert.setHeaderText("Restart the Journey?");
+        alert.setContentText(
+                "The savanna will reset and your current adventure will be lost.\n\n" +
+                        "Are you sure you want to begin a new journey?"
+        );
 
         ButtonType restartBtn = new ButtonType("Restart");
         ButtonType cancelBtn  = new ButtonType("Cancel");
@@ -796,14 +799,15 @@ public class GameController {
 
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add(
-                getClass().getResource("/css/alert.css").toExternalForm()
+                getClass().getResource("/css/restart-confirm.css").toExternalForm()
         );
-        dialogPane.getStyleClass().add("resume-alert");
+        dialogPane.getStyleClass().add("restart-confirm");
 
-        if (root != null && root.getScene() != null) {
-            alert.initOwner(root.getScene().getWindow());
-        }
-        alert.initModality(Modality.APPLICATION_MODAL);
+        Button restartButton = (Button) dialogPane.lookupButton(restartBtn);
+        Button cancelButton  = (Button) dialogPane.lookupButton(cancelBtn);
+
+        restartButton.getStyleClass().add("restart-confirm-btn");
+        cancelButton.getStyleClass().add("restart-cancel-btn");
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isEmpty() || result.get() != restartBtn) return;
