@@ -58,6 +58,19 @@
                        text="10 / 10"
                        styleClass="lives-counter"/>
 
+                <Button fx:id="restartBtn"
+                        onAction="#onRestart"
+                        styleClass="restart-btn">
+                    <tooltip>
+                        <Tooltip text="Restart (same settings)"/>
+                    </tooltip>
+
+                    <graphic>
+                        <Label text="🔄" styleClass="restart-icon"/>
+                    </graphic>
+                </Button>
+
+
                 <Button fx:id="backHomeBtn"
                         onAction="#onBackToHome"
                         styleClass="back-home-btn">

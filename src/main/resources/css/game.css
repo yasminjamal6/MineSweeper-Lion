@@ -435,3 +435,19 @@
             #ff3b3b 100%
     );
 }
+
+.restart-btn {
+    -fx-background-color: transparent;
+    -fx-padding: 6;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+}
+
+.restart-btn:hover {
+    -fx-background-color: rgba(255,255,255,0.12);
+}
+
+.restart-icon {
+    -fx-font-size: 20px;
+}
+
