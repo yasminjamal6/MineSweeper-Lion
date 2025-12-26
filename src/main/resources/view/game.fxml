@@ -60,15 +60,16 @@
 
                 <Button fx:id="restartBtn"
                         onAction="#onRestart"
-                        styleClass="restart-btn">
-                    <tooltip>
-                        <Tooltip text="Restart (same settings)"/>
-                    </tooltip>
-
+                        styleClass="back-home-btn">
                     <graphic>
-                        <Label text="🔄" styleClass="restart-icon"/>
+                        <ImageView fitWidth="26" fitHeight="26" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/reload.png"/>
+                            </image>
+                        </ImageView>
                     </graphic>
                 </Button>
+
 
 
                 <Button fx:id="backHomeBtn"
