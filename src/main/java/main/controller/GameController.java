@@ -95,6 +95,8 @@ public class GameController {
     // to prevent farming +1 by flagging/unflagging the same mine
     private boolean[][] mineFlagRewardedA;
     private boolean[][] mineFlagRewardedB;
+    private Timeline countdownTimeline;
+
 
 
     // Game State
@@ -256,6 +258,19 @@ public class GameController {
     }
 
     private void applyLayoutBindings() {
+
+        // Unbind first so Restart
+        if (boardAContainer.prefWidthProperty().isBound()) boardAContainer.prefWidthProperty().unbind();
+        if (boardBContainer.prefWidthProperty().isBound()) boardBContainer.prefWidthProperty().unbind();
+        if (boardAContainer.prefHeightProperty().isBound()) boardAContainer.prefHeightProperty().unbind();
+        if (boardBContainer.prefHeightProperty().isBound()) boardBContainer.prefHeightProperty().unbind();
+
+        if (boardAGrid.prefWidthProperty().isBound()) boardAGrid.prefWidthProperty().unbind();
+        if (boardAGrid.prefHeightProperty().isBound()) boardAGrid.prefHeightProperty().unbind();
+        if (boardBGrid.prefWidthProperty().isBound()) boardBGrid.prefWidthProperty().unbind();
+        if (boardBGrid.prefHeightProperty().isBound()) boardBGrid.prefHeightProperty().unbind();
+
+        // Bind again
         boardAContainer.prefWidthProperty().bind(root.widthProperty().multiply(0.48));
         boardBContainer.prefWidthProperty().bind(root.widthProperty().multiply(0.48));
 
@@ -707,47 +722,48 @@ public class GameController {
     // -------------------------------------------------------------------------
 
     private void updateBoardHighlight() {
+        boardAContainer.getStyleClass().removeIf(s -> s.equals("active-board") || s.equals("inactive-board"));
+        boardBContainer.getStyleClass().removeIf(s -> s.equals("active-board") || s.equals("inactive-board"));
+
         if (isPlayerATurn) {
             boardAContainer.getStyleClass().add("active-board");
-            boardAContainer.getStyleClass().remove("inactive-board");
-
             boardBContainer.getStyleClass().add("inactive-board");
-            boardBContainer.getStyleClass().remove("active-board");
 
             if (turnALabel != null && turnBLabel != null) {
                 turnALabel.setText("👑 " + playerANameLabel.getText() + " – your turn");
                 turnALabel.setVisible(true);
-
                 turnBLabel.setVisible(false);
             }
-
         } else {
             boardBContainer.getStyleClass().add("active-board");
-            boardBContainer.getStyleClass().remove("inactive-board");
-
             boardAContainer.getStyleClass().add("inactive-board");
-            boardAContainer.getStyleClass().remove("active-board");
 
             if (turnALabel != null && turnBLabel != null) {
                 turnBLabel.setText("🦁 " + playerBNameLabel.getText() + " – your turn");
                 turnBLabel.setVisible(true);
-
                 turnALabel.setVisible(false);
             }
         }
+
+        System.out.println("A classes: " + boardAContainer.getStyleClass());
+        System.out.println("B classes: " + boardBContainer.getStyleClass());
     }
 
 
 
+
     private void startCountdown() {
-        if (countdownOverlay == null || countdownLabel == null) {
-            return;
+        if (countdownOverlay == null || countdownLabel == null) return;
+
+        if (countdownTimeline != null) {
+            countdownTimeline.stop();
         }
+
         countdownOverlay.setVisible(true);
         countdownOverlay.setMouseTransparent(false);
         countdownOverlay.toFront();
 
-        Timeline timeline = new Timeline(
+        countdownTimeline = new Timeline(
                 new KeyFrame(Duration.ZERO, e -> countdownLabel.setText("3")),
                 new KeyFrame(Duration.seconds(1), e -> countdownLabel.setText("2")),
                 new KeyFrame(Duration.seconds(2), e -> countdownLabel.setText("1")),
@@ -758,8 +774,61 @@ public class GameController {
                     startTimer();
                 })
         );
-        timeline.play();
+        countdownTimeline.play();
     }
+    private void stopCountdown() {
+        if (countdownTimeline != null) {
+            countdownTimeline.stop();
+            countdownTimeline = null;
+        }
+    }
+
+    @FXML
+    private void onRestart() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Circle of Life");
+        alert.setHeaderText("Restart the Journey?");
+        alert.setContentText(
+                "The savanna will reset and your current adventure will be lost.\n\n" +
+                        "Are you sure you want to begin a new journey?"
+        );
+
+        ButtonType restartBtn = new ButtonType("Restart");
+        ButtonType cancelBtn  = new ButtonType("Cancel");
+        alert.getButtonTypes().setAll(restartBtn, cancelBtn);
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(
+                getClass().getResource("/css/restart-confirm.css").toExternalForm()
+        );
+        dialogPane.getStyleClass().add("restart-confirm");
+
+        Button restartButton = (Button) dialogPane.lookupButton(restartBtn);
+        Button cancelButton  = (Button) dialogPane.lookupButton(cancelBtn);
+
+        restartButton.getStyleClass().add("restart-confirm-btn");
+        cancelButton.getStyleClass().add("restart-cancel-btn");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isEmpty() || result.get() != restartBtn) return;
+
+        stopCountdown();
+        pauseTimer();
+        if (timerTimeline != null) {
+            timerTimeline.stop();
+            timerTimeline = null;
+        }
+        timerElapsedMillis = 0;
+        timerRunning = false;
+        clearSavedGame();
+        hideResumeOverlay();
+        clearCountdownOverlay();
+
+        startNewGameFlow();
+    }
+
+
+
 
     private void startTimer() {
         if (timerLabel == null) {

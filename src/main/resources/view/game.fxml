@@ -58,6 +58,20 @@
                        text="10 / 10"
                        styleClass="lives-counter"/>
 
+                <Button fx:id="restartBtn"
+                        onAction="#onRestart"
+                        styleClass="back-home-btn">
+                    <graphic>
+                        <ImageView fitWidth="26" fitHeight="26" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/reload.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+
+
                 <Button fx:id="backHomeBtn"
                         onAction="#onBackToHome"
                         styleClass="back-home-btn">
