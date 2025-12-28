@@ -240,6 +240,7 @@ public class GameController {
 
         buildBoardGrid(boardAGrid, size, cellSize, true);
         buildBoardGrid(boardBGrid, size, cellSize, false);
+        updateMinesUI();
 
         applyLayoutBindings();
         updateBoardHighlight();
@@ -375,6 +376,7 @@ public class GameController {
 
             applyBoardStateToUI(boardA, boardAGrid);
             applyBoardStateToUI(boardB, boardBGrid);
+            updateMinesUI();
             updateBoardHighlight();
 
             timerElapsedMillis = Math.max(0, savedState.timerElapsedMillis);
@@ -931,6 +933,7 @@ public class GameController {
         RevealResult result = board.revealCell(row, col);
         updateCellView(board, cellButton, row, col);
         refreshEntireBoard(board, isBoardA ? boardAGrid : boardBGrid);
+        updateMinesUI(isBoardA);
 
         int revealedAfter = countRevealed(board);
         int newlyRevealed = Math.max(0, revealedAfter - revealedBefore);
@@ -1186,6 +1189,42 @@ public class GameController {
         }
     }
 
+    private void updateMinesUI() {
+        updateMinesLabel(boardA, playerAMinesLabel);
+        updateMinesLabel(boardB, playerBMinesLabel);
+    }
+
+    private void updateMinesUI(boolean isBoardA) {
+        if (isBoardA) {
+            updateMinesLabel(boardA, playerAMinesLabel);
+        } else {
+            updateMinesLabel(boardB, playerBMinesLabel);
+        }
+    }
+
+    private void updateMinesLabel(Board board, Label label) {
+        if (board == null || label == null) {
+            return;
+        }
+        label.setText(String.valueOf(countRemainingMines(board)));
+    }
+
+    private int countRemainingMines(Board board) {
+        if (board == null) {
+            return 0;
+        }
+        int remaining = 0;
+        for (int r = 0; r < board.getRows(); r++) {
+            for (int c = 0; c < board.getCols(); c++) {
+                Cell cell = board.getCell(r, c);
+                if (cell.isMine() && !cell.isRevealed()) {
+                    remaining++;
+                }
+            }
+        }
+        return remaining;
+    }
+
     // -------------------------------------------------------------------------
     // FLAG TOGGLE
     // -------------------------------------------------------------------------
@@ -1300,21 +1339,6 @@ public class GameController {
         updateScoreLabel();
     }
 
-
-    /**
-     * Converts remaining lives into points once before saving history.
-     */
-    private void convertRemainingLivesToPoints() {
-        if (currentDifficulty == null) {
-            currentDifficulty = DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
-        }
-        int bonus = ScoreRules.livesToPoints(currentDifficulty, lives);
-        if (bonus != 0) {
-            addScore(bonus);
-        }
-        lives = 0;
-        updateLivesUI(currentDifficulty);
-    }
 
     /**
      * Updates the hearts bar and lives label according to current lives.
@@ -1614,7 +1638,6 @@ public class GameController {
     }
 
     private void openResultScreen(boolean win) {
-        persistHistoryIfNeeded(win);
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/view/result-view.fxml")
@@ -1625,13 +1648,22 @@ public class GameController {
             String playerA = playerANameLabel.getText();
             String playerB = playerBNameLabel.getText();
 
+            int heartsLeft = lives;
             int heartValue = getHeartToPointsValue(currentDifficulty);
             int baseScoreValue = score;
+            int heartsBonus = win ? heartsLeft * heartValue : 0;
+
+            if (win && heartsBonus != 0) {
+                addScore(heartsBonus);
+                lives = 0;
+                updateLivesUI(currentDifficulty);
+            }
+            persistHistoryIfNeeded(win, heartsLeft);
 
             if (win) {
-                controller.initAsWin(playerA, playerB, baseScoreValue, lives, heartValue);
+                controller.initAsWin(playerA, playerB, baseScoreValue, heartsLeft, heartValue);
             } else {
-                controller.initAsLose(playerA, playerB, baseScoreValue, lives, heartValue);
+                controller.initAsLose(playerA, playerB, baseScoreValue, heartsLeft, heartValue);
             }
 
             Stage dialog = new Stage();
@@ -1715,13 +1747,11 @@ public class GameController {
     /**
      * Ensures history is saved only once, converting remaining lives to points.
      */
-    private void persistHistoryIfNeeded(boolean success) {
+    private void persistHistoryIfNeeded(boolean success, int heartsLeft) {
         if (historySaved) {
             return;
         }
-        int livesAtEnd = lives;
-        convertRemainingLivesToPoints();
-        saveGameHistory(livesAtEnd, livesAtEnd, success);
+        saveGameHistory(heartsLeft, heartsLeft, success);
         historySaved = true;
     }
 
