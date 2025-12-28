@@ -10,6 +10,13 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Question;
+import javafx.animation.*;
+import javafx.geometry.Bounds;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import java.util.Random;
+
 /**
  * Controller for the single-question popup.
  * <p>
@@ -24,6 +31,8 @@ public class QuestionController {
     @FXML private Label categoryLabel;
     @FXML private Label timerLabel;
     @FXML private Label levelLabel;
+    @FXML private javafx.scene.layout.AnchorPane questionRoot;
+
 
 
     @FXML private Button ansBtn0, ansBtn1, ansBtn2, ansBtn3;
@@ -118,7 +127,6 @@ public class QuestionController {
     private void stopTimer() {
         if (timeline != null) timeline.stop();
     }
-
     @FXML
     private void onAnswerClick(ActionEvent event) {
         if (answered) return;
@@ -132,9 +140,11 @@ public class QuestionController {
         if (chosenIndex == correctIndex) {
             answeredCorrect = true;
             clicked.getStyleClass().add("answer-correct");
+            playCorrectEffect(clicked);   // ✅
         } else {
             clicked.getStyleClass().add("answer-wrong");
             answerButtons[correctIndex].getStyleClass().add("answer-correct");
+            playWrongEffect(clicked);     // ❌
         }
 
         for (Button b : answerButtons) b.setDisable(true);
@@ -144,6 +154,42 @@ public class QuestionController {
         pt.play();
     }
 
+    private void playCorrectEffect(Button clicked) {
+        // Pop animation (happy)
+        ScaleTransition pop = new ScaleTransition(Duration.millis(180), clicked);
+        pop.setFromX(1.0);
+        pop.setFromY(1.0);
+        pop.setToX(1.08);
+        pop.setToY(1.08);
+        pop.setAutoReverse(true);
+        pop.setCycleCount(2);
+        pop.play();
+
+        // Confetti burst
+        spawnConfetti(clicked, 18);
+    }
+
+    private void playWrongEffect(Button clicked) {
+        // Shake animation (sad)
+        TranslateTransition shake = new TranslateTransition(Duration.millis(45), clicked);
+        shake.setFromX(0);
+        shake.setByX(8);
+        shake.setAutoReverse(true);
+        shake.setCycleCount(6);
+
+        // Small shrink for extra feedback
+        ScaleTransition shrink = new ScaleTransition(Duration.millis(120), clicked);
+        shrink.setFromX(1.0);
+        shrink.setFromY(1.0);
+        shrink.setToX(0.97);
+        shrink.setToY(0.97);
+        shrink.setAutoReverse(true);
+        shrink.setCycleCount(2);
+
+        new ParallelTransition(shake, shrink).play();
+    }
+
+
     private void onTimeOut() {
         int correctIndex = question.getCorrectIndex();
         answerButtons[correctIndex].getStyleClass().add("answer-correct");
@@ -152,6 +198,46 @@ public class QuestionController {
         PauseTransition pt = new PauseTransition(Duration.seconds(1.0));
         pt.setOnFinished(e -> closeWindow());
         pt.play();
+    }
+
+    private final Random rnd = new Random();
+
+    private void spawnConfetti(Node source, int amount) {
+        if (questionRoot == null) return;
+
+        // Find the center of the clicked button in the AnchorPane coordinates
+        Bounds b = source.localToScene(source.getBoundsInLocal());
+        Bounds rootBounds = questionRoot.sceneToLocal(b);
+
+        double cx = (rootBounds.getMinX() + rootBounds.getMaxX()) / 2.0;
+        double cy = (rootBounds.getMinY() + rootBounds.getMaxY()) / 2.0;
+
+        for (int i = 0; i < amount; i++) {
+            Circle dot = new Circle(3 + rnd.nextDouble() * 3);
+
+            // random bright-ish colors
+            dot.setFill(Color.hsb(rnd.nextDouble() * 360, 0.85, 1.0));
+
+            dot.setLayoutX(cx);
+            dot.setLayoutY(cy);
+
+            questionRoot.getChildren().add(dot);
+
+            double dx = -120 + rnd.nextDouble() * 240;
+            double dy = -140 + rnd.nextDouble() * 180;
+
+            TranslateTransition fly = new TranslateTransition(Duration.millis(520 + rnd.nextInt(250)), dot);
+            fly.setByX(dx);
+            fly.setByY(dy);
+
+            FadeTransition fade = new FadeTransition(Duration.millis(650), dot);
+            fade.setFromValue(1.0);
+            fade.setToValue(0.0);
+
+            ParallelTransition pt = new ParallelTransition(fly, fade);
+            pt.setOnFinished(e -> questionRoot.getChildren().remove(dot));
+            pt.play();
+        }
     }
 
     @FXML

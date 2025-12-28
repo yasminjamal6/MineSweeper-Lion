@@ -205,3 +205,10 @@
     -fx-border-color: rgba(246, 210, 122, 0.95);
     -fx-text-fill: #fff3d6;
 }
+.answer-correct {
+    -fx-effect: dropshadow(gaussian, rgba(0,255,120,0.45), 18, 0.35, 0, 0);
+}
+
+.answer-wrong {
+    -fx-effect: dropshadow(gaussian, rgba(255,60,60,0.45), 18, 0.35, 0, 0);
+}
