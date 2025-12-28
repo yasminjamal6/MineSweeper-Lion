@@ -58,6 +58,18 @@
                        text="10 / 10"
                        styleClass="lives-counter"/>
 
+                <!-- PAUSE BUTTON -->
+                <Button fx:id="pauseBtn"
+                        onAction="#onPause"
+                        styleClass="back-home-btn">
+                    <graphic>
+                        <ImageView fitWidth="26" fitHeight="26" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/puse0.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
                 <Button fx:id="restartBtn"
                         onAction="#onRestart"
                         styleClass="back-home-btn">

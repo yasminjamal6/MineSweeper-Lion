@@ -89,6 +89,12 @@ public class GameController {
     @FXML private Label turnBLabel;
 
 
+
+    @FXML
+    private void onPause() { }
+
+
+
     private Board boardA;
     private Board boardB;
 
