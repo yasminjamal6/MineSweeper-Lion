@@ -240,6 +240,7 @@ public class GameController {
 
         buildBoardGrid(boardAGrid, size, cellSize, true);
         buildBoardGrid(boardBGrid, size, cellSize, false);
+        updateMinesUI();
 
         applyLayoutBindings();
         updateBoardHighlight();
@@ -375,6 +376,7 @@ public class GameController {
 
             applyBoardStateToUI(boardA, boardAGrid);
             applyBoardStateToUI(boardB, boardBGrid);
+            updateMinesUI();
             updateBoardHighlight();
 
             timerElapsedMillis = Math.max(0, savedState.timerElapsedMillis);
@@ -931,6 +933,7 @@ public class GameController {
         RevealResult result = board.revealCell(row, col);
         updateCellView(board, cellButton, row, col);
         refreshEntireBoard(board, isBoardA ? boardAGrid : boardBGrid);
+        updateMinesUI(isBoardA);
 
         int revealedAfter = countRevealed(board);
         int newlyRevealed = Math.max(0, revealedAfter - revealedBefore);
@@ -1184,6 +1187,42 @@ public class GameController {
                 }
             }
         }
+    }
+
+    private void updateMinesUI() {
+        updateMinesLabel(boardA, playerAMinesLabel);
+        updateMinesLabel(boardB, playerBMinesLabel);
+    }
+
+    private void updateMinesUI(boolean isBoardA) {
+        if (isBoardA) {
+            updateMinesLabel(boardA, playerAMinesLabel);
+        } else {
+            updateMinesLabel(boardB, playerBMinesLabel);
+        }
+    }
+
+    private void updateMinesLabel(Board board, Label label) {
+        if (board == null || label == null) {
+            return;
+        }
+        label.setText(String.valueOf(countRemainingMines(board)));
+    }
+
+    private int countRemainingMines(Board board) {
+        if (board == null) {
+            return 0;
+        }
+        int remaining = 0;
+        for (int r = 0; r < board.getRows(); r++) {
+            for (int c = 0; c < board.getCols(); c++) {
+                Cell cell = board.getCell(r, c);
+                if (cell.isMine() && !cell.isRevealed()) {
+                    remaining++;
+                }
+            }
+        }
+        return remaining;
     }
 
     // -------------------------------------------------------------------------
