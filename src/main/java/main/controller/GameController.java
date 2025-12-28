@@ -62,7 +62,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Optional;
 
-
 /**
  * Main controller for the game view.
  * Handles UI initialization, game flow logic, cell interactions, and transitions.
@@ -87,11 +86,75 @@ public class GameController {
     @FXML private Label timerLabel;
     @FXML private Label turnALabel;
     @FXML private Label turnBLabel;
+    @FXML private Button pauseBtn;
 
+    // --- PAUSE STATE ---
+    private boolean gamePaused = false;
 
 
     @FXML
-    private void onPause() { }
+    private void onPause() {
+
+        // If already paused -> RESUME
+        if (gamePaused) {
+            resumeGame();
+            return;
+        }
+
+        // Avoid pausing during countdown overlays
+        if (countdownOverlay != null && countdownOverlay.isVisible()) return;
+        if (resumeOverlay != null && resumeOverlay.isVisible()) return;
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Pause Game");
+        alert.setHeaderText("Are you sure you want to pause the game?");
+        alert.setContentText("Click on the screen (PAUSED) or press Pause again to resume.");
+
+        ButtonType yes = new ButtonType("Yes, Pause");
+        ButtonType no  = new ButtonType("No");
+        alert.getButtonTypes().setAll(yes, no);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == yes) {
+            pauseGame();
+        }
+    }
+
+
+    private void pauseGame() {
+        gamePaused = true;
+
+        pauseTimer();
+        stopCountdown();
+
+        if (boardAGrid != null) boardAGrid.setDisable(true);
+        if (boardBGrid != null) boardBGrid.setDisable(true);
+
+        if (countdownOverlay != null && countdownLabel != null) {
+            countdownLabel.setText("PAUSED\n\nClick anywhere to continue");
+            countdownOverlay.setVisible(true);
+            countdownOverlay.setMouseTransparent(false);
+            countdownOverlay.toFront();
+        }
+    }
+
+
+    private void resumeGame() {
+        gamePaused = false;
+
+        if (countdownOverlay != null) {
+            countdownOverlay.setVisible(false);
+            countdownOverlay.setMouseTransparent(true);
+        }
+
+        if (boardAGrid != null) boardAGrid.setDisable(false);
+        if (boardBGrid != null) boardBGrid.setDisable(false);
+
+        startTimer();
+        updateBoardHighlight();
+    }
+
+
 
 
 
@@ -723,6 +786,15 @@ public class GameController {
             }
             startNewGameFlow();
         });
+        // Allow clicking the PAUSED overlay to resume the game
+        if (countdownOverlay != null) {
+            countdownOverlay.setOnMouseClicked(e -> {
+                if (gamePaused) {
+                    resumeGame();
+                }
+            });
+        }
+
     }
 
     // -------------------------------------------------------------------------
@@ -889,6 +961,8 @@ public class GameController {
     // -------------------------------------------------------------------------
 
     private void handleCellClick(Button cellButton, boolean isBoardA, int row, int col) {
+        if (gamePaused) return;
+
         if (lives <= 0) {
             System.out.println("No hearts left – click ignored.");
             return;
@@ -1254,6 +1328,7 @@ public class GameController {
 
         if (isPlayerATurn && !isBoardA) return;
         if (!isPlayerATurn && isBoardA) return;
+        if (gamePaused) return;
 
         Board board = isBoardA ? boardA : boardB;
         Cell cell = board.getCell(row, col);
