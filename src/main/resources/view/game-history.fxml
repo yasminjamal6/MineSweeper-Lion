@@ -166,7 +166,7 @@
                                      text="Result"
                                      prefWidth="140"/>
                         <TableColumn fx:id="livesCol"
-                                     text="Hearts"
+                                     text="Hearts A/B"
                                      prefWidth="90"/>
                     </columns>
 
