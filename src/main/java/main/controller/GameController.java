@@ -106,6 +106,13 @@ public class GameController {
         if (resumeOverlay != null && resumeOverlay.isVisible()) return;
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(
+                getClass().getResource("/css/pause-style.css").toExternalForm()
+        );
+        dialogPane.getStyleClass().add("pause-dialog"); // ⭐ השורה הקריטית ⭐
+
         alert.setTitle("Pause Game");
         alert.setHeaderText("Are you sure you want to pause the game?");
         alert.setContentText("Click on the screen (PAUSED) or press Pause again to resume.");
@@ -794,6 +801,13 @@ public class GameController {
                 }
             });
         }
+        Platform.runLater(() -> {
+            Scene scene = boardAGrid.getScene(); // או כל Node אחר שיש לך בטוח בסצנה
+            scene.getStylesheets().add(
+                    getClass().getResource("/css/pause-style.css").toExternalForm()
+            );
+
+        });
 
     }
 

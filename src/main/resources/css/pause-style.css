@@ -1,0 +1,84 @@
+/* =========================
+   PAUSED OVERLAY (in-game)
+   ========================= */
+
+#countdownOverlay {
+    -fx-background-color: rgba(56, 33, 15, 0.78); /* dark warm brown */
+}
+
+#countdownLabel {
+    -fx-text-fill: #FFE6B3;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 64px;
+    -fx-font-weight: 800;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 18, 0.25, 0, 6);
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+
+/* If you want the second line smaller without changing FXML:
+   Use a slightly smaller overall font + better spacing through padding */
+#countdownLabel {
+    -fx-padding: 10 20 10 20;
+    -fx-line-spacing: 8px;
+}
+
+/* Optional: make it feel clickable */
+#countdownOverlay:hover {
+    -fx-cursor: hand;
+}
+
+
+/* Apply directly to the DialogPane that has style class "pause-dialog" */
+.pause-dialog {
+    -fx-background-color: #2A1B10;
+    -fx-border-color: #D7A65A;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
+/* Header area */
+.pause-dialog .header-panel {
+    -fx-background-color: transparent;
+    -fx-padding: 18 18 10 18;
+}
+
+.pause-dialog .header-panel .label {
+    -fx-text-fill: #FFE6B3;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/* Content text */
+.pause-dialog .content.label {
+    -fx-text-fill: #F2D8A7;
+    -fx-font-size: 14px;
+    -fx-padding: 6 18 18 18;
+}
+
+/* Buttons */
+.pause-dialog .button-bar {
+    -fx-padding: 10 18 16 18;
+}
+
+.pause-dialog .button {
+    -fx-background-radius: 10px;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 18 8 18;
+    -fx-cursor: hand;
+}
+
+.pause-dialog .button:default {
+    -fx-background-color: #D7A65A;
+    -fx-text-fill: #2A1B10;
+}
+
+.pause-dialog .button:cancel {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFE6B3;
+    -fx-border-color: #D7A65A;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+}
