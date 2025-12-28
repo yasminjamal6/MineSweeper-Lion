@@ -101,9 +101,9 @@
 
                         <HBox alignment="CENTER" spacing="6"
                               styleClass="mines-chip">
-                            <ImageView fitWidth="20" fitHeight="20">
+                            <ImageView fitWidth="20" fitHeight="20" preserveRatio="true" smooth="true">
                                 <image>
-                                    <Image url="@../images/scar.png"/>
+                                    <Image url="@../images/bomb2.png"/>
                                 </image>
                             </ImageView>
 
@@ -144,9 +144,9 @@
 
                         <HBox alignment="CENTER" spacing="6"
                               styleClass="mines-chip">
-                            <ImageView fitWidth="20" fitHeight="20">
+                            <ImageView fitWidth="20" fitHeight="20" preserveRatio="true" smooth="true">
                                 <image>
-                                    <Image url="@../images/scar.png"/>
+                                    <Image url="@../images/bomb2.png"/>
                                 </image>
                             </ImageView>
 
@@ -179,16 +179,6 @@
                   spacing="40"
                   styleClass="legend-row">
 
-                <!-- Scar (Mine) -->
-                <HBox alignment="CENTER" spacing="8">
-                    <ImageView fitWidth="28" fitHeight="28">
-                        <image>
-                            <Image url="@../images/scar.png"/>
-                        </image>
-                    </ImageView>
-                    <Label text="Scar (Mine)"
-                           styleClass="legend-text"/>
-                </HBox>
 
                 <!-- Simba's Mark (Flag) -->
                 <HBox alignment="CENTER" spacing="8">
