@@ -46,7 +46,7 @@ public class GameHistoryController {
     @FXML private TableColumn<GameHistory, String> playerBCol;
     @FXML private TableColumn<GameHistory, String> difficultyCol;
     @FXML private TableColumn<GameHistory, Number> scoreCol;
-    @FXML private TableColumn<GameHistory, Number> livesCol;
+    @FXML private TableColumn<GameHistory, String> livesCol;
     @FXML private TableColumn<GameHistory, String> resultCol;
     @FXML private TableColumn<GameHistory, Number> durationCol;  //not yet implemented in this iteration
     @FXML private TextField searchField;
@@ -129,19 +129,15 @@ public class GameHistoryController {
                 cellData -> new SimpleLongProperty(cellData.getValue().getScore())
         );
 
-        // Shared lives
+        // Hearts left
         livesCol.setCellValueFactory(
-                cellData -> new SimpleLongProperty(cellData.getValue().getSharedLives())
+                cellData -> new SimpleStringProperty(cellData.getValue().getHeartsDisplay())
         );
 
-        // Result: Win / Loss based on shared lives
+        // Result: Win / Loss based on success flag
         resultCol.setCellValueFactory(cellData -> {
             GameHistory g = cellData.getValue();
-            if (g.getSharedLives() > 0) {
-                return new SimpleStringProperty("Win");
-            } else {
-                return new SimpleStringProperty("Loss");
-            }
+            return new SimpleStringProperty(g.getResult());
         });
 
         // Custom cell factory for styled result display (emoji + color)
@@ -189,7 +185,7 @@ public class GameHistoryController {
                     String diff = g.getDifficultyString() == null ? "" : g.getDifficultyString().toLowerCase();
                     String result = g.getResult().toLowerCase();
                     String scoreStr = String.valueOf(g.getScore());
-                    String livesStr = String.valueOf(g.getSharedLives());
+                    String livesStr = g.getHeartsDisplay();
 
                     return a.contains(filter)
                             || b.contains(filter)

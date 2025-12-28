@@ -17,6 +17,8 @@ public class GameHistoryManager {
     private static final List<GameHistory> history = new ArrayList<>();
     private static final Path HISTORY_PATH = Paths.get("data", "game-history.csv");
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    private static final String HEADER =
+            "playerA,playerB,difficulty,score,sharedLives,success,startedAt,endedAt,playerAHeartsLeft,playerBHeartsLeft";
 
     static {
         loadFromFile();
@@ -67,6 +69,12 @@ public class GameHistoryManager {
                     boolean success = Boolean.parseBoolean(cols[5]);
                     LocalDateTime startedAt = parseDate(cols[6]);
                     LocalDateTime endedAt = parseDate(cols[7]);
+                    int playerAHeartsLeft = -1;
+                    int playerBHeartsLeft = -1;
+                    if (cols.length >= 10) {
+                        playerAHeartsLeft = parseIntOrDefault(cols[8], -1);
+                        playerBHeartsLeft = parseIntOrDefault(cols[9], -1);
+                    }
 
                     history.add(new GameHistory(
                             playerA,
@@ -76,7 +84,9 @@ public class GameHistoryManager {
                             sharedLives,
                             success,
                             startedAt,
-                            endedAt
+                            endedAt,
+                            playerAHeartsLeft,
+                            playerBHeartsLeft
                     ));
                 }
             }
@@ -89,7 +99,7 @@ public class GameHistoryManager {
         try {
             ensureFileExists();
             try (BufferedWriter writer = Files.newBufferedWriter(HISTORY_PATH, StandardCharsets.UTF_8)) {
-                writer.write("playerA,playerB,difficulty,score,sharedLives,success,startedAt,endedAt");
+                writer.write(HEADER);
                 writer.newLine();
                 for (GameHistory g : history) {
                     writer.write(toCsvLine(g));
@@ -108,7 +118,7 @@ public class GameHistoryManager {
         if (Files.notExists(HISTORY_PATH)) {
             Files.createFile(HISTORY_PATH);
             try (BufferedWriter writer = Files.newBufferedWriter(HISTORY_PATH, StandardCharsets.UTF_8)) {
-                writer.write("playerA,playerB,difficulty,score,sharedLives,success,startedAt,endedAt");
+                writer.write(HEADER);
                 writer.newLine();
             }
         }
@@ -123,7 +133,9 @@ public class GameHistoryManager {
                 String.valueOf(g.getSharedLives()),
                 String.valueOf(g.isSuccess()),
                 formatDate(g.getStartedAt()),
-                formatDate(g.getEndedAt())
+                formatDate(g.getEndedAt()),
+                formatHearts(g.getPlayerAHeartsLeft()),
+                formatHearts(g.getPlayerBHeartsLeft())
         );
     }
 
@@ -173,6 +185,17 @@ public class GameHistoryManager {
         }
         cols.add(current.toString());
         return cols.toArray(new String[0]);
+    }
+
+    private static String formatHearts(int hearts) {
+        return hearts >= 0 ? String.valueOf(hearts) : "";
+    }
+
+    private static int parseIntOrDefault(String text, int defaultValue) {
+        if (text == null || text.isBlank()) {
+            return defaultValue;
+        }
+        return Integer.parseInt(text);
     }
 
     private static LocalDateTime parseDate(String text) {

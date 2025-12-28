@@ -1614,7 +1614,7 @@ public class GameController {
     /**
      * Records the current game outcome into the history manager.
      */
-    private void saveGameHistory(int livesAtEnd, boolean success) {
+    private void saveGameHistory(int playerAHeartsLeft, int playerBHeartsLeft, boolean success) {
         try {
             String playerA = GameSetupController.selectedPlayerAName;
             String playerB = GameSetupController.selectedPlayerBName;
@@ -1623,16 +1623,19 @@ public class GameController {
                     : DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
 
             LocalDateTime endedAt = LocalDateTime.now();
+            int sharedLives = playerAHeartsLeft;
 
             GameHistory history = new GameHistory(
                     playerA,
                     playerB,
                     difficulty,
                     score,
-                    livesAtEnd,
+                    sharedLives,
                     success,
                     startedAt,
-                    endedAt
+                    endedAt,
+                    playerAHeartsLeft,
+                    playerBHeartsLeft
             );
             GameHistoryManager.addGame(history);
         } catch (Exception e) {
@@ -1649,7 +1652,7 @@ public class GameController {
         }
         int livesAtEnd = lives;
         convertRemainingLivesToPoints();
-        saveGameHistory(livesAtEnd, success);
+        saveGameHistory(livesAtEnd, livesAtEnd, success);
         historySaved = true;
     }
 
