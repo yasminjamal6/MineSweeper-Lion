@@ -1302,21 +1302,6 @@ public class GameController {
 
 
     /**
-     * Converts remaining lives into points once before saving history.
-     */
-    private void convertRemainingLivesToPoints() {
-        if (currentDifficulty == null) {
-            currentDifficulty = DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
-        }
-        int bonus = ScoreRules.livesToPoints(currentDifficulty, lives);
-        if (bonus != 0) {
-            addScore(bonus);
-        }
-        lives = 0;
-        updateLivesUI(currentDifficulty);
-    }
-
-    /**
      * Updates the hearts bar and lives label according to current lives.
      * Hearts before 'lives' = full, hearts after = broken/empty.
      */
@@ -1614,7 +1599,6 @@ public class GameController {
     }
 
     private void openResultScreen(boolean win) {
-        persistHistoryIfNeeded(win);
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/view/result-view.fxml")
@@ -1625,13 +1609,22 @@ public class GameController {
             String playerA = playerANameLabel.getText();
             String playerB = playerBNameLabel.getText();
 
+            int heartsLeft = lives;
             int heartValue = getHeartToPointsValue(currentDifficulty);
             int baseScoreValue = score;
+            int heartsBonus = win ? heartsLeft * heartValue : 0;
+
+            if (win && heartsBonus != 0) {
+                addScore(heartsBonus);
+                lives = 0;
+                updateLivesUI(currentDifficulty);
+            }
+            persistHistoryIfNeeded(win, heartsLeft);
 
             if (win) {
-                controller.initAsWin(playerA, playerB, baseScoreValue, lives, heartValue);
+                controller.initAsWin(playerA, playerB, baseScoreValue, heartsLeft, heartValue);
             } else {
-                controller.initAsLose(playerA, playerB, baseScoreValue, lives, heartValue);
+                controller.initAsLose(playerA, playerB, baseScoreValue, heartsLeft, heartValue);
             }
 
             Stage dialog = new Stage();
@@ -1715,13 +1708,11 @@ public class GameController {
     /**
      * Ensures history is saved only once, converting remaining lives to points.
      */
-    private void persistHistoryIfNeeded(boolean success) {
+    private void persistHistoryIfNeeded(boolean success, int heartsLeft) {
         if (historySaved) {
             return;
         }
-        int livesAtEnd = lives;
-        convertRemainingLivesToPoints();
-        saveGameHistory(livesAtEnd, livesAtEnd, success);
+        saveGameHistory(heartsLeft, heartsLeft, success);
         historySaved = true;
     }
 
