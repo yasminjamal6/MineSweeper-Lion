@@ -41,7 +41,7 @@ public class QuestionController {
     private Question question;
     private int secondsLeft;
     private Timeline timeline;
-
+    private ScaleTransition timerPulse;
     private boolean answeredCorrect = false;
     private boolean answered = false;
 
@@ -115,18 +115,52 @@ public class QuestionController {
             secondsLeft--;
             timerLabel.setText(String.valueOf(secondsLeft));
 
+            // ⚠️ Pressure mode: 10 seconds left
+            if (secondsLeft <= 10) {
+                activateTimerPressure();
+            }
+
             if (secondsLeft <= 0) {
                 stopTimer();
                 onTimeOut();
             }
         }));
+
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }
+    private void activateTimerPressure() {
+        // צבע אדום (רק פעם אחת)
+        if (!timerLabel.getStyleClass().contains("timer-danger")) {
+            timerLabel.getStyleClass().add("timer-danger");
+        }
+
+        // אם האנימציה כבר רצה – לא ליצור שוב
+        if (timerPulse != null) return;
+
+        timerPulse = new ScaleTransition(Duration.millis(300), timerLabel);
+        timerPulse.setFromX(1.0);
+        timerPulse.setFromY(1.0);
+        timerPulse.setToX(1.15);
+        timerPulse.setToY(1.15);
+        timerPulse.setAutoReverse(true);
+        timerPulse.setCycleCount(Animation.INDEFINITE);
+        timerPulse.play();
+    }
+
 
     private void stopTimer() {
         if (timeline != null) timeline.stop();
+
+        if (timerPulse != null) {
+            timerPulse.stop();
+            timerPulse = null;
+            timerLabel.setScaleX(1);
+            timerLabel.setScaleY(1);
+            timerLabel.getStyleClass().remove("timer-danger");
+        }
     }
+
     @FXML
     private void onAnswerClick(ActionEvent event) {
         if (answered) return;
