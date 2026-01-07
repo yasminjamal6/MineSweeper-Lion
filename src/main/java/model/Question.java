@@ -1,13 +1,13 @@
 package model;
 
-public class Question {
+public abstract class Question {
 
-    private String text;
-    private String[] options;
-    private int correctIndex;
-    private QuestionLevel level;
+    private final String text;
+    private final String[] options;
+    private final int correctIndex;
+    private final QuestionLevel level;
 
-    public Question(String text, String[] options, int correctIndex, QuestionLevel level) {
+    protected Question(String text, String[] options, int correctIndex, QuestionLevel level) {
         this.text = text;
         this.options = options;
         this.correctIndex = correctIndex;

@@ -10,6 +10,7 @@ import javafx.util.Callback;
 import model.Question;
 import model.QuestionLevel;
 import model.QuestionBank;
+import model.QuestionFactory;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Node;
@@ -53,6 +54,7 @@ public class QuestionManagerController {
 
 
     private final QuestionBank questionBank = new QuestionBank();
+    private final QuestionFactory questionFactory = new QuestionFactory();
 
     @FXML
     private void initialize() {
@@ -371,11 +373,11 @@ public class QuestionManagerController {
 
                 int correctIndex = cbCorrect.getValue() - 1; // 1–4 -> 0–3
 
-                return new Question(
+                return questionFactory.createQuestion(
+                        cbLevel.getValue(),
                         txtQuestion.getText().trim(),
                         opts,
-                        correctIndex,
-                        cbLevel.getValue()
+                        correctIndex
                 );
             }
             return null;
