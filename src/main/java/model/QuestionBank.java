@@ -31,6 +31,7 @@ public class QuestionBank {
     private final Map<QuestionLevel, List<Question>> questionsByLevel =
             new EnumMap<>(QuestionLevel.class);
     private final Random random = new Random();
+    private final QuestionFactory questionFactory = new QuestionFactory();
 
     private String headerLine = "id,Question,Difficulty,A,B,C,D,Correct";
     private final java.util.List<Question> allQuestions = new java.util.ArrayList<>();
@@ -231,7 +232,7 @@ public class QuestionBank {
                     default -> QuestionLevel.EASY;
                 };
 
-                Question q = new Question(text, options, correctIndex, level);
+                Question q = questionFactory.createQuestion(level, text, options, correctIndex);
                 questionsByLevel.get(level).add(q);
             }
 
