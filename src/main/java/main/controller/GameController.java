@@ -61,6 +61,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Optional;
+import model.BoardSetupTemplate;
+import model.EasyBoardSetup;
+import model.MediumBoardSetup;
+import model.HardBoardSetup;
+
 
 /**
  * Main controller for the game view.
@@ -304,15 +309,14 @@ public class GameController {
         boardA = new Board(size, size, playerATheme);
         boardB = new Board(size, size, playerBTheme);
 
-        boardA.generate(currentDifficulty);
-        boardB.generate(currentDifficulty);
-        int questionCells = getQuestionCountForDifficulty(selectedDifficulty);
-        boardA.placeQuestionCells(questionCells);
-        boardB.placeQuestionCells(questionCells);
+        BoardSetupTemplate setup = switch (selectedDifficulty) {
+            case EASY -> new EasyBoardSetup();
+            case MEDIUM -> new MediumBoardSetup();
+            case HARD -> new HardBoardSetup();
+        };
 
-        int surpriseCells = currentDifficulty.getSurpriseCells();
-        boardA.placeSurpriseCells(surpriseCells);
-        boardB.placeSurpriseCells(surpriseCells);
+        setup.setup(boardA, currentDifficulty);
+        setup.setup(boardB, currentDifficulty);
 
         buildBoardGrid(boardAGrid, size, cellSize, true);
         buildBoardGrid(boardBGrid, size, cellSize, false);
