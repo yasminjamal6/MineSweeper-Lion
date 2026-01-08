@@ -11,12 +11,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameHistoryManager {
 
     private static final List<GameHistory> history = new ArrayList<>();
     private static final Path HISTORY_PATH = Paths.get("data", "game-history.csv");
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    private static final CopyOnWriteArrayList<GameHistoryObserver> observers = new CopyOnWriteArrayList<>();
+
     private static final String HEADER =
             "playerA,playerB,difficulty,score,sharedLives,success,startedAt,endedAt,playerAHeartsLeft,playerBHeartsLeft";
 
@@ -28,6 +31,26 @@ public class GameHistoryManager {
         if (game != null) {
             history.add(game);
             saveToFile();
+            notifyObservers();
+        }
+    }
+
+    public static void addObserver(GameHistoryObserver o) {
+        if (o != null) observers.addIfAbsent(o);
+    }
+
+    public static void removeObserver(GameHistoryObserver o) {
+        observers.remove(o);
+    }
+
+    private static void notifyObservers() {
+        System.out.println(">>> [Observer] notifyObservers called. observers=" + observers.size());
+
+        for (GameHistoryObserver o : observers) {
+            try {
+                o.onHistoryChanged();
+            } catch (Exception ignored) {
+            }
         }
     }
 
@@ -38,6 +61,7 @@ public class GameHistoryManager {
     public static void clear() {
         history.clear();
         saveToFile();
+        notifyObservers();
     }
 
     private static void loadFromFile() {
@@ -204,4 +228,5 @@ public class GameHistoryManager {
         }
         return LocalDateTime.parse(text, FORMATTER);
     }
+
 }
