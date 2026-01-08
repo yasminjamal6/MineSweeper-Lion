@@ -33,12 +33,14 @@ import java.util.Optional;
 import javafx.util.Duration;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import model.GameHistoryObserver;
+
 
 /**
  * Controller for the Game History view. Manages loading, displaying, filtering,
  * and summarizing game history records from the GameHistoryManager.
  */
-public class GameHistoryController {
+public class GameHistoryController implements GameHistoryObserver {
 
     @FXML private TableView<GameHistory> historyTable;
     @FXML private TableColumn<GameHistory, String> startedAtCol;
@@ -81,6 +83,9 @@ public class GameHistoryController {
     @FXML
     private void initialize() {
         List<GameHistory> history = GameHistoryManager.getHistory();
+
+        GameHistoryManager.addObserver(this);
+        System.out.println(">>> [Observer] GameHistoryController registered!");
 
         // ---- Stats ----
         int total = history.size();
@@ -277,6 +282,25 @@ public class GameHistoryController {
 
         all.play();
     }
+
+    @Override
+    public void onHistoryChanged() {
+        System.out.println(">>> [Observer] GameHistoryController received update!");
+        List<GameHistory> history = GameHistoryManager.getHistory();
+        if (masterData != null) {
+            masterData.setAll(history);
+        }
+        int total = history.size();
+        long easy = history.stream().filter(g -> g.getDifficulty() == Difficulty.EASY).count();
+        long medium = history.stream().filter(g -> g.getDifficulty() == Difficulty.MEDIUM).count();
+        long hard = history.stream().filter(g -> g.getDifficulty() == Difficulty.HARD).count();
+
+        if (totalGamesLabel != null) totalGamesLabel.setText(String.valueOf(total));
+        if (easyGamesLabel != null) easyGamesLabel.setText(String.valueOf(easy));
+        if (mediumGamesLabel != null) mediumGamesLabel.setText(String.valueOf(medium));
+        if (hardGamesLabel != null) hardGamesLabel.setText(String.valueOf(hard));
+    }
+
 
 
     // --- Navigation Handlers ---
