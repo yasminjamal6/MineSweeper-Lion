@@ -16,6 +16,8 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import java.util.Random;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 /**
  * Controller for the single-question popup.
@@ -149,6 +151,18 @@ public class QuestionController {
     }
 
 
+    private void playSound(String soundFile) {
+        try {
+            Media media = new Media(
+                    getClass().getResource("/sound/" + soundFile).toExternalForm()
+            );
+            MediaPlayer player = new MediaPlayer(media);
+            player.play();
+        } catch (Exception e) {
+            System.err.println("Could not play sound: " + soundFile);
+        }
+    }
+
     private void stopTimer() {
         if (timeline != null) timeline.stop();
 
@@ -201,6 +215,9 @@ public class QuestionController {
 
         // Confetti burst
         spawnConfetti(clicked, 18);
+
+        playSound("WIN.wav");
+
     }
 
     private void playWrongEffect(Button clicked) {
@@ -221,6 +238,7 @@ public class QuestionController {
         shrink.setCycleCount(2);
 
         new ParallelTransition(shake, shrink).play();
+        playSound("lose.wav");
     }
 
 
