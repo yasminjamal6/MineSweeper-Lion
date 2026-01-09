@@ -1,22 +1,15 @@
-﻿ID,Question,Difficulty,A,B,C,D,Correct Answer
-1,Which animal is known as the king of the jungle?,1,Tiger,Lion,Elephant,Panther,B
-2,How many continents are there on Earth?,1,5,6,7,8,C
-3,What gas do plants mainly produce?,1,Oxygen,Carbon dioxide,Nitrogen,Hydrogen,A
-4,Which ocean is the largest?,1,Atlantic,Indian,Pacific,Arctic,C
-5,Which bird cannot fly?,1,Eagle,Parrot,Flamingo,Penguin,D
-6,What is the capital of Japan?,1,Beijing,Tokyo,Osaka,Kyoto,B
-7,Which organ pumps blood?,1,Liver,Heart,Brain,Kidney,B
-8,Ghazol,1,12,2,5,3,A
-9,Which country invented pizza?,2,France,Greece,Egypt,Italy,D
-10,What is the fastest land animal?,2,Lion,Leopard,Cheetah,Tiger,C
-11,Which planet has the most rings?,2,Earth,Saturn,Mars,Jupiter,B
-12,What is the hardest natural substance?,2,Gold,Diamond,Steel,Quartz,B
-13,Which animal can sleep standing up?,2,Cats,Dogs,Horses,Snakes,C
-14,How many bones are in the adult human body?,2,206,201,210,198,A
-15,What is the study of stars called?,2,Zoology,Geology,Astronomy,Chemistry,C
-16,Color,3,apple,pc,green,hat,C
-17,What is the largest desert in the world?,3,Sahara,Arabian,Antarctica,Gobi,C
-18,Which element has the chemical symbol Au?,3,Silver,Gold,Copper,Helium,B
-19,Which country has the most pyramids?,3,Egypt,Sudan,Peru,China,B
-20,Which planet rotates on its side?,3,Neptune,Venus,Uranus,Jupiter,C
-21,What is the longest river in the world?,3,Amazon,Nile,Yangtze,Mississippi,A
+ID,Question,Difficulty,A,B,C,D,Correct Answer
+1,What is the main purpose of software testing?,1,Find errors,Write code,Design UI,Deploy system,A
+2,Which annotation runs before each test?,1,@After,@Before,@Test,@Ignore,B
+3,What is a main characteristic of Agile development?,1,Development with fixed requirements,Iterative development with customer feedback,Development without documentation,Testing only at the end,B
+4,What is the main purpose of an SRS document?,1,Describe system architecture,Define system requirements clearly,Write test cases,Implement source code,B
+5,Which requirement type describes response time?,2,Functional,Business,Non-functional,User,C
+6,What is the main goal of a System Requirement Review (SRR)?,2,Verify clarity and feasibility of requirements,Deploy the system,Perform unit testing,Improve system performance,A
+7,In MVC architecture which component updates the View when data changes?,2,Controller,View,Model,Database,C
+8,Which pattern is NOT a GoF design pattern?,3,Factory,Observer,MVC,Template,C
+9,Why should JUnit tests not depend on each other?,3,To improve performance,To allow execution in any order,To reduce memory usage,To support UI testing,B
+10,What is the main advantage of Agile development?,2,Fixed requirements,Adapting to changes,No documentation,No testing,B
+11,Which of the following is a functional requirement?,2,Fast response time,User login with username and password,High system availability,Easy maintenance,B
+12,What is the main purpose of surveys in requirements gathering?,2,Testing system performance,Designing databases,Collecting user needs,Writing code,C
+13,Which architectural principle helps improve system maintainability?,3,Single large module,Hard coded values,Separation into layers,Avoiding interfaces,C
+14,What is the main goal of unit testing?,3,Testing the full system,Testing integration between components,Testing individual functions or classes,Testing user experience,C
