@@ -1,0 +1,6 @@
+﻿ID,Question,Difficulty,A,B,C,D,Correct Answer
+1,What is the main purpose of software testing?,1,Find errors,Write code,Design UI,Deploy system,A
+2,Which annotation runs before each test?,1,@After,@Before,@Test,@Ignore,B
+3,Which requirement type describes response time?,2,Functional,Business,Non-functional,User,C
+4,Which pattern is NOT a GoF design pattern?,3,Factory,Observer,MVC,Template,C
+5,In MVC, which pattern connects Model and View?,3,Factory,Observer,Adapter,Decorator,B
