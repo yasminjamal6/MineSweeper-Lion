@@ -1,4 +1,4 @@
-﻿ID,Question,Difficulty,A,B,C,D,Correct Answer
+ID,Question,Difficulty,A,B,C,D,Correct Answer
 1,What is the main purpose of software testing?,1,Find errors,Write code,Design UI,Deploy system,A
 2,Which annotation runs before each test?,1,@After,@Before,@Test,@Ignore,B
 3,What is a main characteristic of Agile development?,1,Development with fixed requirements,Iterative development with customer feedback,Development without documentation,Testing only at the end,B
@@ -8,3 +8,8 @@
 7,In MVC architecture which component updates the View when data changes?,2,Controller,View,Model,Database,C
 8,Which pattern is NOT a GoF design pattern?,3,Factory,Observer,MVC,Template,C
 9,Why should JUnit tests not depend on each other?,3,To improve performance,To allow execution in any order,To reduce memory usage,To support UI testing,B
+10,What is the main advantage of Agile development?,2,Fixed requirements,Adapting to changes,No documentation,No testing,B
+11,Which of the following is a functional requirement?,2,Fast response time,User login with username and password,High system availability,Easy maintenance,B
+12,What is the main purpose of surveys in requirements gathering?,2,Testing system performance,Designing databases,Collecting user needs,Writing code,C
+13,Which architectural principle helps improve system maintainability?,3,Single large module,Hard coded values,Separation into layers,Avoiding interfaces,C
+14,What is the main goal of unit testing?,3,Testing the full system,Testing integration between components,Testing individual functions or classes,Testing user experience,C

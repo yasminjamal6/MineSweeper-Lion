@@ -20,3 +20,9 @@
 19,Which country has the most pyramids?,3,Egypt,Sudan,Peru,China,B
 20,Which planet rotates on its side?,3,Neptune,Venus,Uranus,Jupiter,C
 21,What is the longest river in the world?,3,Amazon,Nile,Yangtze,Mississippi,A
+22,What is the main advantage of Agile development?,2,Fixed requirements,Adapting to changes,No documentation,No testing,B
+23,Which of the following is a functional requirement?,2,Fast response time,User login with username and password,High system availability,Easy maintenance,B
+24,What is the main purpose of surveys in requirements gathering?,2,Testing system performance,Designing databases,Collecting user needs,Writing code,C
+25,Which architectural principle helps improve system maintainability?,3,Single large module,Hard coded values,Separation into layers,Avoiding interfaces,C
+26,What is the main goal of unit testing?,3,Testing the full system,Testing integration between components,Testing individual functions or classes,Testing user experience,C
+
