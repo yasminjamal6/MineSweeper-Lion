@@ -194,11 +194,13 @@ public class QuestionBank {
                 }
                 if (line.isBlank()) continue;
 
-                String[] p = line.split(",", -1);
-                if (p.length < 8) {
+                List<String> fields = parseCsvLine(line);
+                if (fields.size() < 8) {
                     System.out.println("⚠ Bad CSV line (expected 8 cols): " + line);
                     continue;
                 }
+
+                String[] p = normalizeFields(fields);
 
                 String text = p[1].trim();
 
@@ -287,7 +289,7 @@ public class QuestionBank {
                         };
 
                         String col0 = String.valueOf(id);
-                        String col1 = q.getText().replace("\n", " ").trim();
+                        String col1 = q.getText().replace("\n", " ").replace("\r", " ").trim();
                         String col2 = String.valueOf(diff);
                         String col3 = opts.length > 0 ? opts[0] : "";
                         String col4 = opts.length > 1 ? opts[1] : "";
@@ -295,7 +297,16 @@ public class QuestionBank {
                         String col6 = opts.length > 3 ? opts[3] : "";
                         String col7 = correctLetter;
 
-                        String csvLine = String.join(",", col0, col1, col2, col3, col4, col5, col6, col7);
+                        String csvLine = String.join(",",
+                                escapeCsv(col0),
+                                escapeCsv(col1),
+                                escapeCsv(col2),
+                                escapeCsv(col3.replace("\n", " ").replace("\r", " ").trim()),
+                                escapeCsv(col4.replace("\n", " ").replace("\r", " ").trim()),
+                                escapeCsv(col5.replace("\n", " ").replace("\r", " ").trim()),
+                                escapeCsv(col6.replace("\n", " ").replace("\r", " ").trim()),
+                                escapeCsv(col7)
+                        );
                         bw.write(csvLine);
                         bw.newLine();
                         id++;
@@ -309,5 +320,57 @@ public class QuestionBank {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static String escapeCsv(String value) {
+        if (value == null) return "";
+        boolean needsQuoting = value.contains(",") || value.contains("\"")
+                || value.contains("\n") || value.contains("\r");
+        String escaped = value.replace("\"", "\"\"");
+        return needsQuoting ? "\"" + escaped + "\"" : escaped;
+    }
+
+    private static List<String> parseCsvLine(String line) {
+        List<String> fields = new ArrayList<>();
+        StringBuilder current = new StringBuilder();
+        boolean inQuotes = false;
+
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+            if (c == '"') {
+                if (inQuotes && i + 1 < line.length() && line.charAt(i + 1) == '"') {
+                    current.append('"');
+                    i++;
+                } else {
+                    inQuotes = !inQuotes;
+                }
+            } else if (c == ',' && !inQuotes) {
+                fields.add(current.toString());
+                current.setLength(0);
+            } else {
+                current.append(c);
+            }
+        }
+        fields.add(current.toString());
+        return fields;
+    }
+
+    private static String[] normalizeFields(List<String> fields) {
+        if (fields.size() == 8) {
+            return fields.toArray(new String[0]);
+        }
+        if (fields.size() > 8) {
+            int lastIndex = fields.size() - 1;
+            String id = fields.get(0);
+            String correct = fields.get(lastIndex);
+            String d = fields.get(lastIndex - 1);
+            String c = fields.get(lastIndex - 2);
+            String b = fields.get(lastIndex - 3);
+            String a = fields.get(lastIndex - 4);
+            String diff = fields.get(lastIndex - 5);
+            String question = String.join(",", fields.subList(1, lastIndex - 5));
+            return new String[]{id, question, diff, a, b, c, d, correct};
+        }
+        return fields.toArray(new String[0]);
     }
 }
