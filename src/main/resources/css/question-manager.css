@@ -338,6 +338,16 @@
     -fx-background-color: #facc15;
 }
 
+.qd-char-counter {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 10;
+}
+
+.qd-limit-warning {
+    -fx-text-fill: #fca5a5;
+    -fx-font-size: 11;
+}
+
 /* ChoiceBox popup (the opened menu) */
 .context-menu {
     -fx-background-color: rgba(15,23,42,0.97);

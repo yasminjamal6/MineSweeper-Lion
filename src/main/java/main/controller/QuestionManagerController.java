@@ -7,6 +7,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
+import main.util.TextLimitUtil;
 import model.Question;
 import model.QuestionLevel;
 import model.QuestionBank;
@@ -17,6 +18,7 @@ import javafx.scene.Node;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
+import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
@@ -26,6 +28,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TextInputControl;
+import javafx.scene.control.IndexRange;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import java.util.Optional;
 import javafx.geometry.Insets;
@@ -42,6 +48,9 @@ import javafx.scene.layout.VBox;
  */
 
 public class QuestionManagerController {
+
+    private static final int MAX_QUESTION_CHARS = 120;
+    private static final int MAX_ANSWER_CHARS = 60;
 
     @FXML private TableView<Question> questionTable;
     @FXML private TableColumn<Question, String> colQuestion;
@@ -276,6 +285,23 @@ public class QuestionManagerController {
         txtC.getStyleClass().add("qd-textfield");
         txtD.getStyleClass().add("qd-textfield");
 
+        Label questionCounter = new Label();
+        Label answerACounter = new Label();
+        Label answerBCounter = new Label();
+        Label answerCCounter = new Label();
+        Label answerDCounter = new Label();
+        questionCounter.getStyleClass().add("qd-char-counter");
+        answerACounter.getStyleClass().add("qd-char-counter");
+        answerBCounter.getStyleClass().add("qd-char-counter");
+        answerCCounter.getStyleClass().add("qd-char-counter");
+        answerDCounter.getStyleClass().add("qd-char-counter");
+
+        VBox questionBox = new VBox(4, txtQuestion, questionCounter);
+        VBox answerABox = new VBox(4, txtA, answerACounter);
+        VBox answerBBox = new VBox(4, txtB, answerBCounter);
+        VBox answerCBox = new VBox(4, txtC, answerCCounter);
+        VBox answerDBox = new VBox(4, txtD, answerDCounter);
+
         ChoiceBox<Integer> cbCorrect = new ChoiceBox<>();
         cbCorrect.getItems().addAll(1, 2, 3, 4);
         cbCorrect.getStyleClass().add("qd-choicebox");
@@ -302,19 +328,19 @@ public class QuestionManagerController {
 
         int row = 0;
         grid.add(lblQ, 0, row);
-        grid.add(txtQuestion, 1, row++, 2, 1);
+        grid.add(questionBox, 1, row++, 2, 1);
 
         grid.add(lblA, 0, row);
-        grid.add(txtA, 1, row++);
+        grid.add(answerABox, 1, row++);
 
         grid.add(lblB, 0, row);
-        grid.add(txtB, 1, row++);
+        grid.add(answerBBox, 1, row++);
 
         grid.add(lblC, 0, row);
-        grid.add(txtC, 1, row++);
+        grid.add(answerCBox, 1, row++);
 
         grid.add(lblD, 0, row);
-        grid.add(txtD, 1, row++);
+        grid.add(answerDBox, 1, row++);
 
         grid.add(lblCorrect, 0, row);
         grid.add(cbCorrect, 1, row++);
@@ -322,9 +348,26 @@ public class QuestionManagerController {
         grid.add(lblLevel, 0, row);
         grid.add(cbLevel, 1, row);
 
+        Label limitWarning = new Label("Max length reached");
+        limitWarning.getStyleClass().add("qd-limit-warning");
+        limitWarning.setVisible(false);
+        PauseTransition warningReset = new PauseTransition(Duration.seconds(1.2));
+        warningReset.setOnFinished(evt -> limitWarning.setVisible(false));
+        Runnable showLimitWarning = () -> {
+            limitWarning.setVisible(true);
+            warningReset.stop();
+            warningReset.playFromStart();
+        };
+
+        applyTextLimit(txtQuestion, MAX_QUESTION_CHARS, questionCounter, showLimitWarning);
+        applyTextLimit(txtA, MAX_ANSWER_CHARS, answerACounter, showLimitWarning);
+        applyTextLimit(txtB, MAX_ANSWER_CHARS, answerBCounter, showLimitWarning);
+        applyTextLimit(txtC, MAX_ANSWER_CHARS, answerCCounter, showLimitWarning);
+        applyTextLimit(txtD, MAX_ANSWER_CHARS, answerDCounter, showLimitWarning);
+
         VBox card = new VBox(14);
         card.getStyleClass().add("qd-card");
-        card.getChildren().addAll(grid);
+        card.getChildren().addAll(grid, limitWarning);
 
         VBox root = new VBox(16);
         root.getStyleClass().add("qd-root");
@@ -387,6 +430,84 @@ public class QuestionManagerController {
         return result.orElse(null);
     }
 
+    private static void applyTextLimit(TextInputControl control,
+                                       int maxChars,
+                                       Label counterLabel,
+                                       Runnable onLimitReached) {
+        TextFormatter<String> formatter = new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+            if (newText.length() <= maxChars) {
+                return change;
+            }
+            if (!change.isAdded()) {
+                return change;
+            }
+            String truncated = TextLimitUtil.truncateInsertedText(
+                    change.getControlText(),
+                    change.getRangeStart(),
+                    change.getRangeEnd(),
+                    change.getText(),
+                    maxChars
+            );
+            if (truncated.isEmpty()) {
+                if (onLimitReached != null) {
+                    onLimitReached.run();
+                }
+                return null;
+            }
+            if (truncated.length() < change.getText().length() && onLimitReached != null) {
+                onLimitReached.run();
+            }
+            change.setText(truncated);
+            return change;
+        });
+        control.setTextFormatter(formatter);
 
+        control.addEventFilter(KeyEvent.KEY_TYPED, event -> {
+            if (event.getCharacter() == null || event.getCharacter().isEmpty()) {
+                return;
+            }
+            if (event.isControlDown() || event.isMetaDown()) {
+                return;
+            }
+            String text = control.getText();
+            if (text == null) {
+                text = "";
+            }
+            IndexRange selection = control.getSelection();
+            int selectionLength = Math.max(0, selection.getEnd() - selection.getStart());
+            int lengthAfterSelectionRemoved = text.length() - selectionLength;
+            if (lengthAfterSelectionRemoved >= maxChars) {
+                event.consume();
+                if (onLimitReached != null) {
+                    onLimitReached.run();
+                }
+            }
+        });
+
+        counterLabel.setText("0/" + maxChars);
+        final boolean[] updating = {false};
+        control.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (updating[0]) {
+                return;
+            }
+            String safeNew = newVal == null ? "" : newVal;
+            String safeOld = oldVal == null ? "" : oldVal;
+            if (safeNew.length() > maxChars) {
+                String truncated = safeOld.length() >= maxChars
+                        ? safeOld
+                        : safeNew.substring(0, maxChars);
+                updating[0] = true;
+                control.setText(truncated);
+                updating[0] = false;
+                if (onLimitReached != null) {
+                    onLimitReached.run();
+                }
+            }
+            String current = control.getText();
+            int len = current == null ? 0 : current.length();
+            counterLabel.setText(len + "/" + maxChars);
+        });
+    }
 
 }
