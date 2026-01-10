@@ -82,6 +82,18 @@
                     </graphic>
                 </Button>
 
+                <Button fx:id="hintBtn"
+                        onAction="#onHint"
+                        styleClass="back-home-btn">
+                    <graphic>
+                        <ImageView fitWidth="26" fitHeight="26" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/hint.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
 
 
                 <Button fx:id="backHomeBtn"
