@@ -1328,6 +1328,9 @@ public class GameController {
                     updateCellView(board, target, r, c);
                     if (!target.getStyleClass().contains("bonus-revealed")) {
                         target.getStyleClass().add("bonus-revealed");
+
+                        // ⏱ הירוק ייעלם אחרי 2.5 שניות
+                        removeBonusHighlightAfterDelay(target, Duration.seconds(2.5));
                     }
                 }
             }
@@ -2327,6 +2330,20 @@ public class GameController {
             }
         }
     }
+    private void removeBonusHighlightAfterDelay(Button btn, Duration delay) {
+        if (btn == null) return;
+
+        Timeline t = new Timeline(
+                new KeyFrame(delay, e -> {
+                    btn.getStyleClass().remove("bonus-revealed");
+                    btn.getStyleClass().remove("bonus-mine");
+                })
+        );
+        t.setCycleCount(1);
+        t.play();
+    }
+
+
     // --- BOOM ANIMATION HELPERS ---
     private void playBoomSound() {
         if (boomSound != null) {
