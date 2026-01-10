@@ -357,8 +357,10 @@ public class GameController {
             case MEDIUM -> new MediumBoardSetup();
             case HARD -> new HardBoardSetup();
         };
-
+        System.out.println(">>> CALLER: setup for boardA hash=" + System.identityHashCode(boardA));
         setup.setup(boardA, currentDifficulty);
+
+        System.out.println(">>> CALLER: setup for boardB hash=" + System.identityHashCode(boardB));
         setup.setup(boardB, currentDifficulty);
 
         buildBoardGrid(boardAGrid, size, cellSize, true);
@@ -1093,6 +1095,8 @@ public class GameController {
 
 
         if (result == RevealResult.HIT_MINE) {
+            playBoomAnimation(cellButton, isBoardA);
+
             lives--;
             if (lives < 0) lives = 0;
             updateLivesUI(currentDifficulty);
@@ -2301,4 +2305,63 @@ public class GameController {
             }
         }
     }
+    // --- BOOM ANIMATION HELPERS ---
+
+    private void playBoomAnimation(Button cellButton, boolean isBoardA) {
+        if (cellButton == null) return;
+
+        // 1) "פיצוץ" על התא עצמו (scale + fade + rotate)
+        Node boomNode = (cellButton.getGraphic() != null) ? cellButton.getGraphic() : cellButton;
+
+        ScaleTransition st = new ScaleTransition(Duration.millis(180), boomNode);
+        st.setFromX(1.0);
+        st.setFromY(1.0);
+        st.setToX(1.55);
+        st.setToY(1.55);
+        st.setAutoReverse(true);
+        st.setCycleCount(2);
+
+        FadeTransition ft = new FadeTransition(Duration.millis(220), boomNode);
+        ft.setFromValue(1.0);
+        ft.setToValue(0.25);
+        ft.setAutoReverse(true);
+        ft.setCycleCount(2);
+
+        Timeline rotate = new Timeline(
+                new KeyFrame(Duration.ZERO,   e -> boomNode.setRotate(0)),
+                new KeyFrame(Duration.millis(60),  e -> boomNode.setRotate(-12)),
+                new KeyFrame(Duration.millis(120), e -> boomNode.setRotate(12)),
+                new KeyFrame(Duration.millis(180), e -> boomNode.setRotate(0))
+        );
+
+        // 2) "Shake" ללוח הרלוונטי
+        Node target = isBoardA ? boardAContainer : boardBContainer;
+        playShake(target);
+
+        st.play();
+        ft.play();
+        rotate.play();
+
+        // בסוף נחזיר שקיפות/רוטציה למצב תקין
+        ft.setOnFinished(e -> {
+            boomNode.setOpacity(1.0);
+            boomNode.setRotate(0);
+        });
+    }
+
+    private void playShake(Node node) {
+        if (node == null) return;
+
+        Timeline shake = new Timeline(
+                new KeyFrame(Duration.ZERO,         e -> node.setTranslateX(0)),
+                new KeyFrame(Duration.millis(30),   e -> node.setTranslateX(-6)),
+                new KeyFrame(Duration.millis(60),   e -> node.setTranslateX(6)),
+                new KeyFrame(Duration.millis(90),   e -> node.setTranslateX(-5)),
+                new KeyFrame(Duration.millis(120),  e -> node.setTranslateX(5)),
+                new KeyFrame(Duration.millis(150),  e -> node.setTranslateX(0))
+        );
+        shake.setCycleCount(1);
+        shake.play();
+    }
+
 }
