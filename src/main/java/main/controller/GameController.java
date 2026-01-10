@@ -102,6 +102,7 @@ public class GameController {
     @FXML private Label tutorialArrow;
     @FXML private Label tutorialText;
     @FXML private Button tutorialSkipBtn;
+    @FXML private AnchorPane tutorialSkipLayer;
     @FXML private Label countdownLabel;
     @FXML private Label timerLabel;
     @FXML private Label turnALabel;
@@ -906,6 +907,11 @@ public class GameController {
     private void setupTutorialOverlay() {
         if (tutorialOverlay == null || tutorialMask == null || tutorialContent == null) {
             return;
+        }
+        if (tutorialSkipLayer != null) {
+            tutorialSkipLayer.setVisible(false);
+            tutorialSkipLayer.setMouseTransparent(false);
+            tutorialSkipLayer.setPickOnBounds(false);
         }
         tutorialManager = new TutorialOverlayManager();
         tutorialManager.initialize();
@@ -2370,6 +2376,10 @@ public class GameController {
         private void showOverlay() {
             tutorialOverlay.setVisible(true);
             tutorialOverlay.toFront();
+            if (tutorialSkipLayer != null) {
+                tutorialSkipLayer.setVisible(true);
+                tutorialSkipLayer.toFront();
+            }
             if (arrowAnimation != null) {
                 arrowAnimation.playFromStart();
             }
@@ -2544,6 +2554,9 @@ public class GameController {
             restoreDisabledState();
             tutorialMask.getChildren().clear();
             tutorialOverlay.setVisible(false);
+            if (tutorialSkipLayer != null) {
+                tutorialSkipLayer.setVisible(false);
+            }
             if (arrowAnimation != null) {
                 arrowAnimation.stop();
             }
