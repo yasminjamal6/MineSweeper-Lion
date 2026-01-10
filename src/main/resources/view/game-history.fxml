@@ -168,6 +168,10 @@
                         <TableColumn fx:id="livesCol"
                                      text="Hearts A/B"
                                      prefWidth="90"/>
+                        <TableColumn fx:id="actionsCol"
+                                     text="Actions"
+                                     prefWidth="90"/>
+
                     </columns>
 
                 </TableView>

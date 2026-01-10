@@ -54,6 +54,7 @@ public class GameHistoryController implements GameHistoryObserver {
     @FXML private TextField searchField;
     @FXML private HBox resumeCard;
     @FXML private Button resumeBtn;
+    @FXML private TableColumn<GameHistory, Void> actionsCol;
 
     private ObservableList<GameHistory> masterData;
     private ResumeInfo availableResume;
@@ -166,6 +167,8 @@ public class GameHistoryController implements GameHistoryObserver {
                 }
             }
         });
+        setupActionsColumn();
+
 
         // ---- Table data with search functionality ----
         masterData = FXCollections.observableArrayList(history);
@@ -221,6 +224,42 @@ public class GameHistoryController implements GameHistoryObserver {
         if (resumeBtn != null) {
             resumeBtn.setDisable(!hasSaved);
         }
+    }
+    private void setupActionsColumn() {
+        if (actionsCol == null) return;
+
+        actionsCol.setCellFactory(col -> new TableCell<>() {
+
+            private final Button deleteBtn = new Button("🗑");
+
+            {
+                // עיצוב (העיגול מסביב)
+                deleteBtn.getStyleClass().add("gh-delete-btn");
+
+                deleteBtn.setOnAction(e -> {
+                    GameHistory g = getTableView().getItems().get(getIndex());
+
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Delete Game");
+                    alert.setHeaderText("Delete this history record?");
+                    alert.setContentText("This action cannot be undone.");
+
+                    Optional<ButtonType> res = alert.showAndWait();
+                    if (res.isPresent() && res.get() == ButtonType.OK) {
+                        GameHistoryManager.deleteGame(g);  // נוסיף את זה במנהל (סעיף 3)
+                        // אין צורך ידנית לעדכן masterData/סטטיסטיקות כי יש לך Observer
+                        // והוא יעשה masterData.setAll(...) + סטטיסטיקות.
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : deleteBtn);
+                setText(null);
+            }
+        });
     }
 
         // --- UI/Animation Logic ---
