@@ -1,0 +1,46 @@
+/* רקע של ה-DialogPane */
+.dialog-pane {
+    -fx-background-color: linear-gradient(#020617, #0f172a);
+    -fx-background-radius: 18;
+    -fx-padding: 18;
+}
+
+/* כותרת גדולה */
+.dialog-pane .header-panel {
+    -fx-background-color: transparent;
+}
+.dialog-pane .header-panel .label {
+    -fx-text-fill: #f9fafb;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* טקסט תוכן */
+.dialog-pane .content.label {
+    -fx-text-fill: #cbd5f5;
+    -fx-font-size: 13px;
+}
+
+/* כפתורים */
+.dialog-pane .button-bar .button {
+    -fx-background-radius: 16;
+    -fx-padding: 6 18;
+    -fx-font-weight: bold;
+}
+
+/* Cancel */
+.dialog-pane .button-bar .button:cancel {
+    -fx-background-color: transparent;
+    -fx-text-fill: #cbd5f5;
+    -fx-border-color: rgba(203,213,245,0.45);
+    -fx-border-radius: 16;
+}
+
+/* OK / Default */
+.dialog-pane .button-bar .button:default {
+    -fx-background-color: linear-gradient(#ef4444, #b91c1c);
+    -fx-text-fill: white;
+}
+.dialog-pane .button-bar .button:default:hover {
+    -fx-background-color: linear-gradient(#f87171, #dc2626);
+}

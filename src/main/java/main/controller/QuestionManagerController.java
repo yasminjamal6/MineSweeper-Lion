@@ -49,8 +49,9 @@ import javafx.scene.layout.VBox;
 
 public class QuestionManagerController {
 
-    private static final int MAX_QUESTION_CHARS = 120;
-    private static final int MAX_ANSWER_CHARS = 60;
+    private static final int MAX_QUESTION_CHARS = 90;
+    private static final int MAX_ANSWER_CHARS = 35;
+
 
     @FXML private TableView<Question> questionTable;
     @FXML private TableColumn<Question, String> colQuestion;
