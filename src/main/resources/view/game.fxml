@@ -265,5 +265,29 @@
             </VBox>
         </StackPane>
 
+        <!-- Tutorial overlay -->
+        <StackPane fx:id="tutorialOverlay"
+                   visible="false"
+                   pickOnBounds="false"
+                   AnchorPane.topAnchor="0.0"
+                   AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.leftAnchor="0.0"
+                   AnchorPane.rightAnchor="0.0"
+                   styleClass="tutorial-overlay">
+            <Pane fx:id="tutorialMask" pickOnBounds="false"/>
+            <Pane fx:id="tutorialContent" pickOnBounds="false">
+                <Label fx:id="tutorialArrow"
+                       text="⬇"
+                       styleClass="tutorial-arrow"/>
+                <Label fx:id="tutorialText"
+                       text="Click the glowing safe cell to reveal it."
+                       styleClass="tutorial-text"/>
+                <Button fx:id="tutorialSkipBtn"
+                        text="Skip Tutorial"
+                        onAction="#onSkipTutorial"
+                        styleClass="tutorial-skip"/>
+            </Pane>
+        </StackPane>
+
     </children>
 </AnchorPane>
