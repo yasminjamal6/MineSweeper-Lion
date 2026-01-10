@@ -129,6 +129,18 @@
                 <Insets top="18" right="18"/>
             </StackPane.margin>
         </Button>
+        <StackPane fx:id="tickerBar"
+                   styleClass="ticker-bar"
+                   minHeight="46" prefHeight="46" maxHeight="46"
+                   StackPane.alignment="BOTTOM_CENTER">
+
+            <Pane fx:id="tickerClip" styleClass="ticker-clip">
+                <Label fx:id="tickerLabel"
+                       text="🦁 Welcome • Tip: Use logic • Pride Rock awaits • ..."
+                       styleClass="ticker-text"/>
+            </Pane>
+
+        </StackPane>
 
     </children>
 
