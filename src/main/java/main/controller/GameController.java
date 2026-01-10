@@ -59,6 +59,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 import model.BoardSetupTemplate;
@@ -92,6 +93,7 @@ public class GameController {
     @FXML private Label turnALabel;
     @FXML private Label turnBLabel;
     @FXML private Button pauseBtn;
+    @FXML private Button hintBtn;
 
     // --- PAUSE STATE ---
     private boolean gamePaused = false;
@@ -129,6 +131,41 @@ public class GameController {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == yes) {
             pauseGame();
+        }
+    }
+
+    @FXML
+    private void onHint() {
+        if (lives <= 0 || hintBtn == null) {
+            return;
+        }
+
+        boolean isBoardA = isPlayerATurn;
+        int hintsLeft = isBoardA ? hintsLeftA : hintsLeftB;
+        if (hintsLeft <= 0) {
+            hintBtn.setDisable(true);
+            return;
+        }
+
+        Board board = isBoardA ? boardA : boardB;
+        GridPane grid = isBoardA ? boardAGrid : boardBGrid;
+        int[] pick = pickSafeCell(board);
+        if (pick == null) {
+            hintBtn.setDisable(true);
+            return;
+        }
+
+        addScore(-HINT_COST);
+        if (isBoardA) {
+            hintsLeftA--;
+        } else {
+            hintsLeftB--;
+        }
+        updateHintButtonState();
+
+        Button target = getButtonAt(grid, pick[0], pick[1]);
+        if (target != null) {
+            highlightHint(target);
         }
     }
 
@@ -186,6 +223,9 @@ public class GameController {
     private int score = 0;
     private boolean isPlayerATurn = true;
     private boolean historySaved = false;
+    private int hintsLeftA = 2;
+    private int hintsLeftB = 2;
+    private static final int HINT_COST = 15;
 
     private final QuestionBank questionBank = new QuestionBank();
     private Theme playerATheme;
@@ -309,6 +349,9 @@ public class GameController {
         boardA = new Board(size, size, playerATheme);
         boardB = new Board(size, size, playerBTheme);
 
+        hintsLeftA = 2;
+        hintsLeftB = 2;
+
         BoardSetupTemplate setup = switch (selectedDifficulty) {
             case EASY -> new EasyBoardSetup();
             case MEDIUM -> new MediumBoardSetup();
@@ -324,6 +367,7 @@ public class GameController {
 
         applyLayoutBindings();
         updateBoardHighlight();
+        updateHintButtonState();
 
         boardAGrid.setMinSize(0, 0);
         boardBGrid.setMinSize(0, 0);
@@ -428,6 +472,8 @@ public class GameController {
             isPlayerATurn = savedState.isPlayerATurn;
             historySaved = false;
             startedAt = parseDate(savedState.startedAtIso).orElse(LocalDateTime.now());
+            hintsLeftA = savedState.hintsLeftA > 0 ? savedState.hintsLeftA : 2;
+            hintsLeftB = savedState.hintsLeftB > 0 ? savedState.hintsLeftB : 2;
 
             buildHearts(currentDifficulty);
             updateLivesUI(currentDifficulty);
@@ -458,6 +504,7 @@ public class GameController {
             applyBoardStateToUI(boardB, boardBGrid);
             updateMinesUI();
             updateBoardHighlight();
+            updateHintButtonState();
 
             timerElapsedMillis = Math.max(0, savedState.timerElapsedMillis);
             clearCountdownOverlay();
@@ -644,6 +691,8 @@ public class GameController {
         data.isPlayerATurn = isPlayerATurn;
         data.lives = lives;
         data.score = score;
+        data.hintsLeftA = hintsLeftA;
+        data.hintsLeftB = hintsLeftB;
         data.timerElapsedMillis = timerElapsedMillis;
         data.startedAtIso = startedAt != null ? SAVE_TIME_FORMAT.format(startedAt) : null;
         data.lastUpdatedEpochMillis = System.currentTimeMillis();
@@ -807,9 +856,14 @@ public class GameController {
         }
         Platform.runLater(() -> {
             Scene scene = boardAGrid.getScene(); // או כל Node אחר שיש לך בטוח בסצנה
-            scene.getStylesheets().add(
-                    getClass().getResource("/css/pause-style.css").toExternalForm()
-            );
+            String pauseCss = getClass().getResource("/css/pause-style.css").toExternalForm();
+            if (!scene.getStylesheets().contains(pauseCss)) {
+                scene.getStylesheets().add(pauseCss);
+            }
+            String hintCss = getClass().getResource("/css/hints.css").toExternalForm();
+            if (!scene.getStylesheets().contains(hintCss)) {
+                scene.getStylesheets().add(hintCss);
+            }
 
         });
 
@@ -845,6 +899,7 @@ public class GameController {
 
         System.out.println("A classes: " + boardAContainer.getStyleClass());
         System.out.println("B classes: " + boardBContainer.getStyleClass());
+        updateHintButtonState();
     }
 
 
@@ -1342,6 +1397,71 @@ public class GameController {
             this.hasMine = hasMine;
             this.hasFlag = hasFlag;
         }
+    }
+
+    private int[] pickSafeCell(Board board) {
+        if (board == null) {
+            return null;
+        }
+        ArrayList<int[]> candidates = new ArrayList<>();
+        for (int r = 0; r < board.getRows(); r++) {
+            for (int c = 0; c < board.getCols(); c++) {
+                Cell cell = board.getCell(r, c);
+                if (!cell.isMine() && !cell.isRevealed() && !cell.isFlagged()) {
+                    candidates.add(new int[]{r, c});
+                }
+            }
+        }
+        if (candidates.isEmpty()) {
+            return null;
+        }
+        int idx = java.util.concurrent.ThreadLocalRandom.current().nextInt(candidates.size());
+        return candidates.get(idx);
+    }
+
+    private Button getButtonAt(GridPane grid, int row, int col) {
+        return getCellButton(grid, row, col);
+    }
+
+    private void highlightHint(Button btn) {
+        if (btn == null) {
+            return;
+        }
+        String oldStyle = btn.getStyle();
+        String hintInline = "-fx-effect: dropshadow(gaussian, rgba(255, 220, 60, 0.95), 26, 0.7, 0, 0);"
+                + "-fx-border-color: rgba(255, 220, 60, 0.95);"
+                + "-fx-border-width: 2;"
+                + "-fx-border-radius: 10;";
+        String baseStyle = oldStyle == null ? "" : oldStyle.trim();
+        if (!baseStyle.isEmpty() && !baseStyle.endsWith(";")) {
+            baseStyle += ";";
+        }
+        btn.setStyle(baseStyle + hintInline);
+        if (!btn.getStyleClass().contains("hint-cell")) {
+            btn.getStyleClass().add("hint-cell");
+        }
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1200), e -> {
+            btn.setStyle(oldStyle);
+            btn.getStyleClass().remove("hint-cell");
+        }));
+        timeline.setCycleCount(1);
+        timeline.play();
+    }
+
+    private void updateHintButtonState() {
+        if (hintBtn == null) {
+            return;
+        }
+        int left = isPlayerATurn ? hintsLeftA : hintsLeftB;
+        String text = "Hint (" + left + " left) - cost: -15 \uD83C\uDFC6";
+        Tooltip tooltip = hintBtn.getTooltip();
+        if (tooltip == null) {
+            hintBtn.setTooltip(new Tooltip(text));
+        } else {
+            tooltip.setText(text);
+        }
+        hintBtn.setDisable(lives <= 0 || left <= 0);
     }
 
     private Button getCellButton(GridPane grid, int row, int col) {
@@ -2120,6 +2240,8 @@ public class GameController {
         boolean isPlayerATurn;
         int lives;
         int score;
+        int hintsLeftA;
+        int hintsLeftB;
         long timerElapsedMillis;
         String startedAtIso;
         long lastUpdatedEpochMillis;
