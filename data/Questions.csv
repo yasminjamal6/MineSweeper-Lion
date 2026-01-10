@@ -3,7 +3,7 @@ ID,Question,Difficulty,A,B,C,D,Correct Answer
 2,Which annotation runs before each test?,1,@After,@Before,@Test,@Ignore,B
 3,What is a main characteristic of Agile development?,1,Development with fixed requirements,Iterative development with customer feedback,Development without documentation,Testing only at the end,B
 4,What is the main purpose of an SRS document?,1,Describe system architecture,Define system requirements clearly,Write test cases,Implement source code,B
-5,test,1,test,test,test,test,A
+5,Which JUnit annotation is used to temporarily disable a test?,1,@Test,@Before,@Ignore,@After,C
 6,Which requirement type describes response time?,2,Functional,Business,Non-functional,User,C
 7,What is the main goal of a System Requirement Review (SRR)?,2,Verify clarity and feasibility of requirements,Deploy the system,Perform unit testing,Improve system performance,A
 8,In MVC architecture which component updates the View when data changes?,2,Controller,View,Model,Database,C
