@@ -26,6 +26,33 @@ public class GameHistoryManager {
     static {
         loadFromFile();
     }
+    public static void deleteGame(GameHistory game) {
+        if (game == null) return;
+
+        history.removeIf(g ->
+                safeEquals(g.getPlayerAName(), game.getPlayerAName()) &&
+                        safeEquals(g.getPlayerBName(), game.getPlayerBName()) &&
+                        g.getDifficulty() == game.getDifficulty() &&
+                        g.getScore() == game.getScore() &&
+                        g.getSharedLives() == game.getSharedLives() &&
+                        g.isSuccess() == game.isSuccess() &&
+                        safeEqualsDate(g.getStartedAt(), game.getStartedAt()) &&
+                        safeEqualsDate(g.getEndedAt(), game.getEndedAt()) &&
+                        g.getPlayerAHeartsLeft() == game.getPlayerAHeartsLeft() &&
+                        g.getPlayerBHeartsLeft() == game.getPlayerBHeartsLeft()
+        );
+
+        saveToFile();
+        notifyObservers();
+    }
+
+    private static boolean safeEquals(String a, String b) {
+        return a == null ? b == null : a.equals(b);
+    }
+
+    private static boolean safeEqualsDate(java.time.LocalDateTime a, java.time.LocalDateTime b) {
+        return a == null ? b == null : a.equals(b);
+    }
 
     public static void addGame(GameHistory game) {
         if (game != null) {
