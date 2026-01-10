@@ -244,12 +244,20 @@ public class GameHistoryController implements GameHistoryObserver {
                     alert.setHeaderText("Delete this history record?");
                     alert.setContentText("This action cannot be undone.");
 
+
+                    alert.getDialogPane().getStylesheets().add(
+                            getClass().getResource("/css/alert-dialog.css").toExternalForm()
+                    );
+
+
+                    Button ok = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+                    ok.setText("Delete");
+
                     Optional<ButtonType> res = alert.showAndWait();
                     if (res.isPresent() && res.get() == ButtonType.OK) {
-                        GameHistoryManager.deleteGame(g);  // נוסיף את זה במנהל (סעיף 3)
-                        // אין צורך ידנית לעדכן masterData/סטטיסטיקות כי יש לך Observer
-                        // והוא יעשה masterData.setAll(...) + סטטיסטיקות.
+                        GameHistoryManager.deleteGame(g);
                     }
+
                 });
             }
 
