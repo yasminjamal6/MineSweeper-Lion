@@ -148,7 +148,7 @@ public final class ScoreRules {
                 if (correct) {
                     return ScoreChange.of(20, 2);
                 }
-                return ScoreChange.of(-20, -2);
+                return randomOr(ScoreChange.of(-20, -1), ScoreChange.of(-20, -2));
             default:
                 return ScoreChange.of(0, 0);
         }
