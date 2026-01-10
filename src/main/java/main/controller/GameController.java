@@ -96,6 +96,8 @@ public class GameController {
     @FXML private Label turnBLabel;
     @FXML private Button pauseBtn;
     @FXML private Button hintBtn;
+    @FXML private StackPane tutorialOverlay;
+
 
 
     // --- PAUSE STATE ---
@@ -189,7 +191,6 @@ public class GameController {
         }
     }
 
-
     private void resumeGame() {
         gamePaused = false;
 
@@ -201,7 +202,9 @@ public class GameController {
         if (boardAGrid != null) boardAGrid.setDisable(false);
         if (boardBGrid != null) boardBGrid.setDisable(false);
 
-        startTimer();
+        if (!timerRunning) {
+            startTimer();
+        }
         updateBoardHighlight();
     }
 
@@ -1054,6 +1057,22 @@ public class GameController {
     // -------------------------------------------------------------------------
     // CELL CLICK / GAME FLOW
     // -------------------------------------------------------------------------
+    @FXML
+    private void onSkipTutorial() {
+        if (tutorialOverlay != null) {
+            tutorialOverlay.setVisible(false);
+            tutorialOverlay.setMouseTransparent(true);
+        }
+
+        if (boardAGrid != null) boardAGrid.setDisable(false);
+        if (boardBGrid != null) boardBGrid.setDisable(false);
+
+        if (!timerRunning) {
+            startTimer();
+        }
+        updateBoardHighlight();
+    }
+
 
     private void handleCellClick(Button cellButton, boolean isBoardA, int row, int col) {
         if (gamePaused) return;
@@ -1226,6 +1245,19 @@ public class GameController {
             }
         }
     }
+    private void removeBonusHighlightAfterDelay(Button btn, Duration delay) {
+        if (btn == null) return;
+
+        Timeline t = new Timeline(
+                new KeyFrame(delay, e -> {
+                    btn.getStyleClass().remove("bonus-revealed");
+                    btn.getStyleClass().remove("bonus-mine");
+                })
+        );
+        t.setCycleCount(1);
+        t.play();
+    }
+
 
     private void revealQuestionBonusBlock(Board board, boolean isBoardA) {
         if (board == null) {
@@ -1342,6 +1374,7 @@ public class GameController {
         updateMinesUI(isBoardA);
         System.out.println(">>> Bonus reveal: UI refresh complete");
     }
+
 
     private void applyBonusMineIndicator(Button target) {
         target.setGraphic(null);
@@ -2331,20 +2364,6 @@ public class GameController {
             }
         }
     }
-    private void removeBonusHighlightAfterDelay(Button btn, Duration delay) {
-        if (btn == null) return;
-
-        Timeline t = new Timeline(
-                new KeyFrame(delay, e -> {
-                    btn.getStyleClass().remove("bonus-revealed");
-                    btn.getStyleClass().remove("bonus-mine");
-                })
-        );
-        t.setCycleCount(1);
-        t.play();
-    }
-
-
     // --- BOOM ANIMATION HELPERS ---
     private void playBoomSound() {
         if (boomSound != null) {
