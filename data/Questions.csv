@@ -14,3 +14,8 @@ ID,Question,Difficulty,A,B,C,D,Correct Answer
 13,Why should JUnit tests not depend on each other?,3,To improve performance,To allow execution in any order,To reduce memory usage,To support UI testing,B
 14,Which architectural principle helps improve system maintainability?,3,Single large module,Hard coded values,Separation into layers,Avoiding interfaces,C
 15,What is the main goal of unit testing?,3,Testing the full system,Testing integration between components,Testing individual functions or classes,Testing user experience,C
+16,Why did Mufasa insist on a clear SRS before ruling the Pride Lands?,1,To define system requirements clearly,To design the UI,To write test cases,To deploy the system,A
+17,During the SRR of the Pride Lands system, what is the main goal Rafiki checks?,2,Verify clarity and feasibility of requirements,Add new features,Improve performance,Write code,A
+18,In the Pride Lands MVC system, who updates the View when Simba changes state?,2,Controller,View,Model,Database,C
+19,Which design pattern best describes Zazu reporting changes in the Pride Lands?,3,Factory Method,Observer,Template,Singleton,B
+20,Simba uses a factory to create different animal roles at runtime. Which pattern is this?,3,Observer,Decorator,Factory Method,Adapter,C
