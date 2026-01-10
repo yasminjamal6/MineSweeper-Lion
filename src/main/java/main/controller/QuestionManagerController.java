@@ -193,14 +193,36 @@ public class QuestionManagerController {
             questionTable.refresh();
 
             System.out.println("✅ Added new question: " + newQ.getText());
-            Alert done = new Alert(Alert.AlertType.INFORMATION,
-                    "Question added successfully ✔",
-                    ButtonType.OK);
-            done.setHeaderText(null);
-            done.showAndWait();
 
+            showSuccessDialog("Question added successfully ✔");
         }
     }
+
+    private void showSuccessDialog(String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText(null);
+
+        DialogPane pane = alert.getDialogPane();
+        pane.getStylesheets().add(getClass().getResource("/css/toast-dialog.css").toExternalForm());
+        pane.getStyleClass().add("toast-dialog");
+
+        Label icon = new Label("✅");
+        icon.getStyleClass().add("toast-icon");
+
+        Label title = new Label("Success!");
+        title.getStyleClass().add("toast-title");
+
+        Label subtitle = new Label(msg);
+        subtitle.getStyleClass().add("toast-subtitle");
+
+        VBox content = new VBox(8, new HBox(10, icon, title), subtitle);
+        pane.setContent(content);
+
+        alert.showAndWait();
+    }
+
 
     /**
      * Smooth entrance animations for the header and the table card.
