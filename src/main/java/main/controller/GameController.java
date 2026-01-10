@@ -1019,7 +1019,7 @@ public class GameController {
                 && cell.getType() == CellType.QUESTION) {
 
             if (!cell.isQuestionUsed()) {
-                handleQuestionCell(board, row, col, cellButton);
+                handleQuestionCell(board, row, col, cellButton, isBoardA);
             }
 
             isPlayerATurn = !isPlayerATurn;
@@ -1068,7 +1068,7 @@ public class GameController {
     // QUESTION CELLS
     // -------------------------------------------------------------------------
 
-    private void handleQuestionCell(Board board, int row, int col, Button cellButton) {
+    private void handleQuestionCell(Board board, int row, int col, Button cellButton, boolean isBoardA) {
         System.out.println(">>> [handleQuestionCell] QUESTION cell at (" + row + "," + col + ")");
 
         Cell cell = board.getCell(row, col);
@@ -1097,7 +1097,41 @@ public class GameController {
             boolean answered = controller.wasAnswered();
             System.out.println(">>> Question result: answered=" + answered + ", correct=" + correct);
 
+            Difficulty diff = currentDifficulty != null
+                    ? currentDifficulty
+                    : DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
+            QuestionLevel level = question != null ? question.getLevel() : null;
+
+            if (diff == Difficulty.EASY && level == QuestionLevel.MEDIUM) {
+                answered = true;
+                correct = true;
+                System.out.println(">>> Focused Thinking: auto-correct for EASY game + MEDIUM question");
+            }
+
             if (answered) {
+                ScoreRules.ScoreChange change = ScoreRules.ScoreChange.of(0, 0);
+                if (diff != null && level != null) {
+                    change = ScoreRules.questionAnswered(diff, level, correct);
+                }
+
+                addScore(change.getPointsDelta());
+                lives += change.getLivesDelta();
+                if (lives < 0) lives = 0;
+                updateLivesUI(diff);
+
+                if (correct && diff == Difficulty.EASY && level == QuestionLevel.HARD) {
+                    System.out.println(">>> Bonus trigger: EASY game + HARD question + correct");
+                    revealQuestionBonusBlock(board, isBoardA);
+                } else if (correct && diff == Difficulty.MEDIUM && level == QuestionLevel.MEDIUM) {
+                    System.out.println(">>> Bonus trigger: MEDIUM game + MEDIUM question (single mine)");
+                    revealSingleBonusMine(board, isBoardA);
+                } else if (correct && diff == Difficulty.EASY && level == QuestionLevel.MEDIUM) {
+                    System.out.println(">>> Bonus trigger: EASY game + MEDIUM question (single mine)");
+                    revealSingleBonusMine(board, isBoardA);
+                } else if (diff == Difficulty.EASY && level == QuestionLevel.HARD) {
+                    System.out.println(">>> Bonus skipped: EASY game + HARD question but incorrect");
+                }
+
                 cell.setQuestionUsed(true);
 
                 cellButton.setText("?");
@@ -1106,8 +1140,224 @@ public class GameController {
                     cellButton.getStyleClass().add("question-used-cell");
                 }
                 cellButton.setDisable(true);
+
+                checkGameOver();
             }
         }
+    }
+
+    private void revealQuestionBonusBlock(Board board, boolean isBoardA) {
+        if (board == null) {
+            System.out.println(">>> Bonus reveal: board is null");
+            return;
+        }
+        int rows = board.getRows();
+        int cols = board.getCols();
+        if (rows < 3 || cols < 3) {
+            System.out.println(">>> Bonus reveal: board too small (" + rows + "x" + cols + ")");
+            return;
+        }
+
+        java.util.List<int[]> candidatesAllHiddenNoMines = new java.util.ArrayList<>();
+        java.util.List<int[]> candidatesAllHidden = new java.util.ArrayList<>();
+        java.util.List<int[]> candidatesPartialNoMines = new java.util.ArrayList<>();
+        java.util.List<int[]> candidatesPartial = new java.util.ArrayList<>();
+        int bestPartialHidden = 0;
+        for (int r = 1; r < rows - 1; r++) {
+            for (int c = 1; c < cols - 1; c++) {
+                BlockInfo info = getBlockInfo(board, r, c);
+                if (info.hasFlag) {
+                    continue;
+                }
+                if (info.hiddenCount == 0) {
+                    continue;
+                }
+                if (info.hiddenCount == 9) {
+                    candidatesAllHidden.add(new int[]{r, c});
+                    if (!info.hasMine) {
+                        candidatesAllHiddenNoMines.add(new int[]{r, c});
+                    }
+                } else {
+                    if (!info.hasMine) {
+                        if (info.hiddenCount > bestPartialHidden) {
+                            candidatesPartialNoMines.clear();
+                            bestPartialHidden = info.hiddenCount;
+                        }
+                        if (info.hiddenCount == bestPartialHidden) {
+                            candidatesPartialNoMines.add(new int[]{r, c});
+                        }
+                    }
+                    candidatesPartial.add(new int[]{r, c});
+                }
+            }
+        }
+
+        int[] center;
+        if (!candidatesAllHiddenNoMines.isEmpty()) {
+            center = candidatesAllHiddenNoMines.get(
+                    java.util.concurrent.ThreadLocalRandom.current().nextInt(candidatesAllHiddenNoMines.size())
+            );
+            System.out.println(">>> Bonus reveal: selected all-hidden no-mine block (count=" + candidatesAllHiddenNoMines.size() + ")");
+        } else if (!candidatesAllHidden.isEmpty()) {
+            center = candidatesAllHidden.get(
+                    java.util.concurrent.ThreadLocalRandom.current().nextInt(candidatesAllHidden.size())
+            );
+            System.out.println(">>> Bonus reveal: selected all-hidden block (count=" + candidatesAllHidden.size() + ")");
+        } else if (!candidatesPartialNoMines.isEmpty()) {
+            center = candidatesPartialNoMines.get(
+                    java.util.concurrent.ThreadLocalRandom.current().nextInt(candidatesPartialNoMines.size())
+            );
+            System.out.println(">>> Bonus reveal: selected partial no-mine block (count=" + candidatesPartialNoMines.size() + ")");
+        } else if (!candidatesPartial.isEmpty()) {
+            center = candidatesPartial.get(
+                    java.util.concurrent.ThreadLocalRandom.current().nextInt(candidatesPartial.size())
+            );
+            System.out.println(">>> Bonus reveal: selected partial block (count=" + candidatesPartial.size() + ")");
+        } else {
+            System.out.println(">>> Bonus reveal: no valid 3x3 block found");
+            return;
+        }
+        int centerRow = center[0];
+        int centerCol = center[1];
+        System.out.println(">>> Bonus reveal: center=(" + centerRow + "," + centerCol + ")");
+
+        GridPane grid = isBoardA ? boardAGrid : boardBGrid;
+        int revealedCount = 0;
+        for (int r = centerRow - 1; r <= centerRow + 1; r++) {
+            for (int c = centerCol - 1; c <= centerCol + 1; c++) {
+                Cell cell = board.getCell(r, c);
+                Button target = getCellButton(grid, r, c);
+                if (cell.isMine()) {
+                    cell.setFlagged(true);
+                    if (target != null) {
+                        applyBonusMineIndicator(target);
+                    }
+                    continue;
+                }
+
+                boolean wasRevealed = cell.isRevealed();
+                if (!cell.isFlagged()) {
+                    cell.setRevealed(true);
+                }
+                if (!wasRevealed) {
+                    revealedCount++;
+                }
+
+                if (target != null) {
+                    updateCellView(board, target, r, c);
+                    if (!target.getStyleClass().contains("bonus-revealed")) {
+                        target.getStyleClass().add("bonus-revealed");
+                    }
+                }
+            }
+        }
+        System.out.println(">>> Bonus reveal: newly revealed cells=" + revealedCount);
+
+        refreshEntireBoard(board, grid);
+        updateMinesUI(isBoardA);
+        System.out.println(">>> Bonus reveal: UI refresh complete");
+    }
+
+    private void applyBonusMineIndicator(Button target) {
+        target.setGraphic(null);
+        target.setText("🐾");
+        if (!target.getStyleClass().contains("paw-flag")) {
+            target.getStyleClass().add("paw-flag");
+        }
+        if (!target.getStyleClass().contains("bonus-revealed")) {
+            target.getStyleClass().add("bonus-revealed");
+        }
+        if (!target.getStyleClass().contains("bonus-mine")) {
+            target.getStyleClass().add("bonus-mine");
+        }
+        target.setDisable(true);
+    }
+
+    private void revealSingleBonusMine(Board board, boolean isBoardA) {
+        if (board == null) {
+            System.out.println(">>> Bonus mine reveal: board is null");
+            return;
+        }
+        java.util.List<int[]> mines = new java.util.ArrayList<>();
+        for (int r = 0; r < board.getRows(); r++) {
+            for (int c = 0; c < board.getCols(); c++) {
+                Cell cell = board.getCell(r, c);
+                if (cell.isMine() && !cell.isFlagged() && !cell.isRevealed()) {
+                    mines.add(new int[]{r, c});
+                }
+            }
+        }
+        if (mines.isEmpty()) {
+            System.out.println(">>> Bonus mine reveal: no hidden mines available");
+            return;
+        }
+        int[] pick = mines.get(java.util.concurrent.ThreadLocalRandom.current().nextInt(mines.size()));
+        int row = pick[0];
+        int col = pick[1];
+
+        Cell cell = board.getCell(row, col);
+        cell.setFlagged(true);
+
+        GridPane grid = isBoardA ? boardAGrid : boardBGrid;
+        Button target = getCellButton(grid, row, col);
+        if (target != null) {
+            applyBonusMineIndicator(target);
+        }
+        updateMinesUI(isBoardA);
+        System.out.println(">>> Bonus mine reveal: flagged (" + row + "," + col + ")");
+    }
+
+
+    private BlockInfo getBlockInfo(Board board, int centerRow, int centerCol) {
+        int hidden = 0;
+        boolean hasMine = false;
+        boolean hasFlag = false;
+        for (int r = centerRow - 1; r <= centerRow + 1; r++) {
+            for (int c = centerCol - 1; c <= centerCol + 1; c++) {
+                Cell cell = board.getCell(r, c);
+                if (cell == null) {
+                    continue;
+                }
+                if (cell.isMine()) {
+                    hasMine = true;
+                }
+                if (cell.isFlagged()) {
+                    hasFlag = true;
+                }
+                if (!cell.isRevealed()) {
+                    hidden++;
+                }
+            }
+        }
+        return new BlockInfo(hidden, hasMine, hasFlag);
+    }
+
+    private static final class BlockInfo {
+        private final int hiddenCount;
+        private final boolean hasMine;
+        private final boolean hasFlag;
+
+        private BlockInfo(int hiddenCount, boolean hasMine, boolean hasFlag) {
+            this.hiddenCount = hiddenCount;
+            this.hasMine = hasMine;
+            this.hasFlag = hasFlag;
+        }
+    }
+
+    private Button getCellButton(GridPane grid, int row, int col) {
+        if (grid == null) {
+            return null;
+        }
+        for (Node node : grid.getChildren()) {
+            if (node instanceof Button btn) {
+                Integer r = GridPane.getRowIndex(btn);
+                Integer c = GridPane.getColumnIndex(btn);
+                if (r != null && c != null && r == row && c == col) {
+                    return btn;
+                }
+            }
+        }
+        return null;
     }
 
     private QuestionController showQuestionPopup(Question question) {
@@ -1315,7 +1565,7 @@ public class GameController {
         for (int r = 0; r < board.getRows(); r++) {
             for (int c = 0; c < board.getCols(); c++) {
                 Cell cell = board.getCell(r, c);
-                if (cell.isMine() && !cell.isRevealed()) {
+                if (cell.isMine() && !cell.isFlagged()) {
                     remaining++;
                 }
             }
