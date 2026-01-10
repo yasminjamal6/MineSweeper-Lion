@@ -231,6 +231,7 @@ public class QuestionBank {
                     case 1 -> QuestionLevel.EASY;
                     case 2 -> QuestionLevel.MEDIUM;
                     case 3 -> QuestionLevel.HARD;
+                    case 4 -> QuestionLevel.EXPERT;
                     default -> QuestionLevel.EASY;
                 };
 
@@ -277,6 +278,7 @@ public class QuestionBank {
                             case EASY -> 1;
                             case MEDIUM -> 2;
                             case HARD -> 3;
+                            case EXPERT -> 4;
                             default -> 1;
                         };
 

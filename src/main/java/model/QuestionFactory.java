@@ -11,6 +11,8 @@ public class QuestionFactory {
                 return new MediumQuestion(text, options, correctIndex);
             case HARD:
                 return new HardQuestion(text, options, correctIndex);
+            case EXPERT:
+                return new ExpertQuestion(text, options, correctIndex);
             default:
                 return new EasyQuestion(text, options, correctIndex);
         }
