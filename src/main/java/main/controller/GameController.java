@@ -74,6 +74,8 @@ import model.BoardSetupTemplate;
 import model.EasyBoardSetup;
 import model.MediumBoardSetup;
 import model.HardBoardSetup;
+import javafx.scene.media.AudioClip;
+
 
 
 /**
@@ -109,14 +111,9 @@ public class GameController {
     @FXML private Button pauseBtn;
     @FXML private Button hintBtn;
 
+
     // --- PAUSE STATE ---
     private boolean gamePaused = false;
-
-    // --- TUTORIAL ---
-    private static final int TUTORIAL_TURNS = 3;
-    private static boolean tutorialUsed = false;
-    private TutorialOverlayManager tutorialManager;
-
 
     @FXML
     private void onPause() {
@@ -260,6 +257,8 @@ public class GameController {
     // Resources
     private Image mineImage;
     private double mineImageSize;
+    private AudioClip boomSound;
+
 
     // Heart images (full + broken)
     private Image fullHeartImage;
@@ -865,8 +864,22 @@ public class GameController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // Load BOOM sound
+        try {
+            var url = getClass().getResource("/sound/boom.wav");
+            System.out.println("BOOM URL = " + url);
 
-        setupTutorialOverlay();
+            if (url == null) {
+                System.err.println("boom.wav not found in resources!");
+            } else {
+                boomSound = new AudioClip(url.toExternalForm());
+                boomSound.setVolume(1.0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         Platform.runLater(() -> {
             attachWindowHandlers();
             GameSaveData savedState = loadGameState();
@@ -1151,7 +1164,9 @@ public class GameController {
 
 
         if (result == RevealResult.HIT_MINE) {
-            playBoomAnimation(cellButton, isBoardA);
+            playBoomSound();                // 🔊 סאונד
+            playBoomAnimation(cellButton, isBoardA); // 💥 אנימציה
+
 
             lives--;
             if (lives < 0) lives = 0;
@@ -2649,6 +2664,11 @@ public class GameController {
         }
     }
     // --- BOOM ANIMATION HELPERS ---
+    private void playBoomSound() {
+        if (boomSound != null) {
+            boomSound.play();
+        }
+    }
 
     private void playBoomAnimation(Button cellButton, boolean isBoardA) {
         if (cellButton == null) return;
