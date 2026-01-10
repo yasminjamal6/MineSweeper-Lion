@@ -358,6 +358,53 @@
     -fx-font-weight: bold;
 }
 
+/* --- Tutorial overlay --- */
+.tutorial-overlay {
+    -fx-background-color: transparent;
+}
+
+.tutorial-arrow {
+    -fx-font-size: 28px;
+    -fx-text-fill: #ffe08a;
+    -fx-font-weight: 800;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.65), 10, 0.4, 0, 2);
+}
+
+.tutorial-text {
+    -fx-text-fill: #fef3c7;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+    -fx-padding: 6 10;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: rgba(255, 214, 98, 0.6);
+    -fx-border-width: 1;
+}
+
+.tutorial-skip {
+    -fx-background-color: rgba(0, 0, 0, 0.7);
+    -fx-text-fill: #ffe8b0;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-padding: 6 10;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: rgba(255, 214, 98, 0.7);
+    -fx-border-width: 1.2;
+}
+
+.tutorial-skip:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.85);
+}
+
+.tutorial-highlight {
+    -fx-effect: dropshadow(gaussian, rgba(255, 220, 120, 0.95), 22, 0.6, 0, 0);
+    -fx-border-color: rgba(255, 220, 120, 0.95);
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+}
+
 .surprise-cell {
     -fx-background-color: rgba(250, 204, 21, 0.4);
 }
