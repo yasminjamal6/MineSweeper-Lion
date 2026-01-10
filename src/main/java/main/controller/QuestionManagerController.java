@@ -193,6 +193,12 @@ public class QuestionManagerController {
             questionTable.refresh();
 
             System.out.println("✅ Added new question: " + newQ.getText());
+            Alert done = new Alert(Alert.AlertType.INFORMATION,
+                    "Question added successfully ✔",
+                    ButtonType.OK);
+            done.setHeaderText(null);
+            done.showAndWait();
+
         }
     }
 
@@ -251,6 +257,8 @@ public class QuestionManagerController {
         dialogPane.getStyleClass().add("qd-dialog-pane");
         ButtonType okButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
         dialogPane.getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+        Button saveButton = (Button) dialogPane.lookupButton(okButtonType);
+        saveButton.setDefaultButton(true);
         HBox header = new HBox(10);
         header.getStyleClass().add("qd-header");
 
