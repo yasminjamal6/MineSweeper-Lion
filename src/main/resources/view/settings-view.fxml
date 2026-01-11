@@ -9,7 +9,7 @@
             fx:controller="main.controller.SettingsController"
             fx:id="settingsRoot"
             prefWidth="460" prefHeight="430"
-            stylesheets="@../css/home.css"
+            stylesheets="@/css/home.css"
             styleClass="settings-root">
 
     <center>

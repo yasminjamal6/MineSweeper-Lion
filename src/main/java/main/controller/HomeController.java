@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import main.util.ResourceUtils;
 import javafx.scene.control.*;
 
 
@@ -153,9 +154,11 @@ public class HomeController {
     private void onStartAdventure(ActionEvent event) {
         System.out.println(">> onStartAdventure clicked");
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/game-setup-view.fxml")
-            );
+            var url = ResourceUtils.url(getClass(), "/view/game-setup-view.fxml");
+            if (url == null) {
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(url);
             Parent newRoot = loader.load();
 
             Scene scene = ((Node) event.getSource()).getScene();
@@ -178,9 +181,11 @@ public class HomeController {
     @FXML
     private void onHowToPlay(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/how-to-play.fxml")
-            );
+            var url = ResourceUtils.url(getClass(), "/view/how-to-play.fxml");
+            if (url == null) {
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(url);
             Parent newRoot = loader.load();
 
             SettingsController.applyThemeToRoot(newRoot);
@@ -203,9 +208,11 @@ public class HomeController {
     @FXML
     private void openSettings(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/settings-view.fxml")
-            );
+            var url = ResourceUtils.url(getClass(), "/view/settings-view.fxml");
+            if (url == null) {
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(url);
             Parent popup = loader.load();
 
             SettingsController.applyThemeToRoot(popup);
@@ -232,8 +239,11 @@ public class HomeController {
     @FXML
     private void onHistory(ActionEvent event) {
         try {
-            FXMLLoader loader =
-                    new FXMLLoader(getClass().getResource("/view/game-history.fxml"));
+            var url = ResourceUtils.url(getClass(), "/view/game-history.fxml");
+            if (url == null) {
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(url);
             Parent root = loader.load();
 
             SettingsController.applyThemeToRoot(root);
@@ -258,7 +268,10 @@ public class HomeController {
             a.setHeaderText("The pride remains protected.");
             a.setContentText("Incorrect password :( ");
             DialogPane dp = a.getDialogPane();
-            dp.getStylesheets().add(getClass().getResource("/css/alert.css").toExternalForm());
+            String alertCss = ResourceUtils.externalForm(getClass(), "/css/alert.css");
+            if (alertCss != null) {
+                dp.getStylesheets().add(alertCss);
+            }
             dp.getStyleClass().add("lion-alert");
 
             a.showAndWait();
@@ -269,9 +282,11 @@ public class HomeController {
 
         // 2) אם נכון -> נכנסים למסך
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/question-manager-view.fxml")
-            );
+            var url = ResourceUtils.url(getClass(), "/view/question-manager-view.fxml");
+            if (url == null) {
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(url);
             Parent root = loader.load();
 
             SettingsController.applyThemeToRoot(root);
@@ -293,7 +308,10 @@ public class HomeController {
         DialogPane dp = dialog.getDialogPane();
 
         // משתמשים באותו CSS כמו ה-Confirmation שיש לך
-        dp.getStylesheets().add(getClass().getResource("/css/alert.css").toExternalForm());
+        String alertCss = ResourceUtils.externalForm(getClass(), "/css/alert.css");
+        if (alertCss != null) {
+            dp.getStylesheets().add(alertCss);
+        }
         dp.getStyleClass().add("admin-dialog"); // נוסיף את העיצוב בצעד 4
 
         ButtonType enterBtn  = new ButtonType("Enter", ButtonBar.ButtonData.OK_DONE);

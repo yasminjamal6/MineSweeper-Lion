@@ -9,7 +9,7 @@
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="main.controller.HomeController"
            fx:id="rootPane"
-           stylesheets="@../css/home.css"
+           stylesheets="@/css/home.css"
            styleClass="root-pane"
            prefWidth="1200.0" prefHeight="800.0">
 
@@ -17,7 +17,7 @@
 
         <ImageView fitWidth="1200.0" fitHeight="800.0" preserveRatio="false">
             <image>
-                <Image url="@../images/lion.jpg"/>
+                <Image url="@/images/lion.jpg"/>
             </image>
         </ImageView>
 

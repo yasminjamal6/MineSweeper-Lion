@@ -14,7 +14,7 @@ import javafx.stage.Window;
 
 import javax.sound.sampled.*;
 import java.net.URL;
-import java.util.Objects;
+import main.util.ResourceUtils;
 import javafx.geometry.NodeOrientation;
 
 
@@ -243,10 +243,10 @@ public class SettingsController {
         if (bgClip != null) return;
 
         try {
-            URL url = Objects.requireNonNull(
-                    getClass().getResource("/sound/CircleoflifeLK.wav"),
-                    "Background music file not found"
-            );
+            URL url = ResourceUtils.url(getClass(), "/sound/CircleoflifeLK.wav");
+            if (url == null) {
+                return;
+            }
 
             AudioInputStream ais = AudioSystem.getAudioInputStream(url);
             bgClip = AudioSystem.getClip();

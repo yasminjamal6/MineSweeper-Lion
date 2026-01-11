@@ -22,6 +22,7 @@ import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
+import main.util.ResourceUtils;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -126,7 +127,10 @@ public class QuestionManagerController {
                             confirm.setContentText(q.getText());
 
                             DialogPane dp = confirm.getDialogPane();
-                            dp.getStylesheets().add(getClass().getResource("/css/alert.css").toExternalForm());
+                            String alertCss = ResourceUtils.externalForm(getClass(), "/css/alert.css");
+                            if (alertCss != null) {
+                                dp.getStylesheets().add(alertCss);
+                            }
                             dp.getStyleClass().add("del-dialog");   // זה ה-class שנעצב ב-CSS
 
 // כפתורים עם טקסט ברור
@@ -173,7 +177,11 @@ public class QuestionManagerController {
     @FXML
     private void onBack(ActionEvent e) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/home-view.fxml"));
+            var url = ResourceUtils.url(getClass(), "/view/home-view.fxml");
+            if (url == null) {
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(url);
             Parent root = loader.load();
             ((Node)e.getSource()).getScene().setRoot(root);
         } catch (Exception ex) {
@@ -205,7 +213,10 @@ public class QuestionManagerController {
         alert.setContentText(null);
 
         DialogPane pane = alert.getDialogPane();
-        pane.getStylesheets().add(getClass().getResource("/css/toast-dialog.css").toExternalForm());
+        String toastCss = ResourceUtils.externalForm(getClass(), "/css/toast-dialog.css");
+        if (toastCss != null) {
+            pane.getStylesheets().add(toastCss);
+        }
         pane.getStyleClass().add("toast-dialog");
 
         Label icon = new Label("✅");
@@ -273,9 +284,10 @@ public class QuestionManagerController {
         dialog.setTitle(original == null ? "Add Question" : "Edit Question");
         dialog.setHeaderText(null);
         DialogPane dialogPane = dialog.getDialogPane();
-        dialogPane.getStylesheets().add(
-                getClass().getResource("/css/question-manager.css").toExternalForm()
-        );
+        String qmCss = ResourceUtils.externalForm(getClass(), "/css/question-manager.css");
+        if (qmCss != null) {
+            dialogPane.getStylesheets().add(qmCss);
+        }
         dialogPane.getStyleClass().add("qd-dialog-pane");
         ButtonType okButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
         dialogPane.getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);

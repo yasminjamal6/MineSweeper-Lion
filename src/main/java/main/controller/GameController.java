@@ -34,6 +34,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import main.util.ResourceUtils;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
@@ -139,9 +140,10 @@ public class GameController {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(
-                getClass().getResource("/css/pause-style.css").toExternalForm()
-        );
+        String pauseCss = ResourceUtils.externalForm(getClass(), "/css/pause-style.css");
+        if (pauseCss != null) {
+            dialogPane.getStylesheets().add(pauseCss);
+        }
         dialogPane.getStyleClass().add("pause-dialog"); // ⭐ השורה הקריטית ⭐
 
         alert.setTitle("Pause Game");
@@ -678,9 +680,10 @@ public class GameController {
         alert.getButtonTypes().setAll(continueBtn, newGameBtn);
 
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(
-                getClass().getResource("/css/alert.css").toExternalForm()
-        );
+        String alertCss = ResourceUtils.externalForm(getClass(), "/css/alert.css");
+        if (alertCss != null) {
+            dialogPane.getStylesheets().add(alertCss);
+        }
         dialogPane.getStyleClass().add("resume-alert");
 
         if (root != null && root.getScene() != null) {
@@ -826,7 +829,7 @@ public class GameController {
     private void initialize() {
         // Load mine image
         try {
-            InputStream is = getClass().getResourceAsStream("/images/bomb2.png");
+            InputStream is = ResourceUtils.stream(getClass(), "/images/bomb2.png");
             if (is != null) {
                 mineImage = new Image(is);
             } else {
@@ -838,14 +841,14 @@ public class GameController {
 
         // Load heart images (full + broken)
         try {
-            InputStream full = getClass().getResourceAsStream("/images/life.png");
+            InputStream full = ResourceUtils.stream(getClass(), "/images/life.png");
             if (full != null) {
                 fullHeartImage = new Image(full);
             } else {
                 System.err.println("Could not load /images/life.png");
             }
 
-            InputStream empty = getClass().getResourceAsStream("/images/no_life.png");
+            InputStream empty = ResourceUtils.stream(getClass(), "/images/no_life.png");
             if (empty != null) {
                 emptyHeartImage = new Image(empty);
             } else {
@@ -857,7 +860,7 @@ public class GameController {
 
         // Load open gift image
         try {
-            InputStream openGift = getClass().getResourceAsStream("/images/openGift.png");
+            InputStream openGift = ResourceUtils.stream(getClass(), "/images/openGift.png");
             if (openGift != null) {
                 openGiftImage = new Image(openGift);
             } else {
@@ -868,7 +871,7 @@ public class GameController {
         }
         // Load BOOM sound
         try {
-            var url = getClass().getResource("/sound/boom.wav");
+            var url = ResourceUtils.url(getClass(), "/sound/boom.wav");
             System.out.println("BOOM URL = " + url);
 
             if (url == null) {
@@ -907,12 +910,12 @@ public class GameController {
         }
         Platform.runLater(() -> {
             Scene scene = boardAGrid.getScene(); // או כל Node אחר שיש לך בטוח בסצנה
-            String pauseCss = getClass().getResource("/css/pause-style.css").toExternalForm();
-            if (!scene.getStylesheets().contains(pauseCss)) {
+            String pauseCss = ResourceUtils.externalForm(getClass(), "/css/pause-style.css");
+            if (pauseCss != null && !scene.getStylesheets().contains(pauseCss)) {
                 scene.getStylesheets().add(pauseCss);
             }
-            String hintCss = getClass().getResource("/css/hints.css").toExternalForm();
-            if (!scene.getStylesheets().contains(hintCss)) {
+            String hintCss = ResourceUtils.externalForm(getClass(), "/css/game.css");
+            if (hintCss != null && !scene.getStylesheets().contains(hintCss)) {
                 scene.getStylesheets().add(hintCss);
             }
 
@@ -1025,9 +1028,10 @@ public class GameController {
         alert.getButtonTypes().setAll(restartBtn, cancelBtn);
 
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(
-                getClass().getResource("/css/restart-confirm.css").toExternalForm()
-        );
+        String restartCss = ResourceUtils.externalForm(getClass(), "/css/restart-confirm.css");
+        if (restartCss != null) {
+            dialogPane.getStylesheets().add(restartCss);
+        }
         dialogPane.getStyleClass().add("restart-confirm");
 
         Button restartButton = (Button) dialogPane.lookupButton(restartBtn);
@@ -1605,9 +1609,11 @@ public class GameController {
 
     private QuestionController showQuestionPopup(Question question) {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/question-view.fxml")
-            );
+            var url = ResourceUtils.url(getClass(), "/view/question-view.fxml");
+            if (url == null) {
+                return null;
+            }
+            FXMLLoader loader = new FXMLLoader(url);
             Parent root = loader.load();
 
             QuestionController controller = loader.getController();
@@ -2078,9 +2084,11 @@ public class GameController {
 
     private void showSurprisePopup(ScoreRules.ScoreChange change) {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/surprise-view.fxml")
-            );
+            var url = ResourceUtils.url(getClass(), "/view/surprise-view.fxml");
+            if (url == null) {
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(url);
             Parent root = loader.load();
 
             SurpriseController controller = loader.getController();
@@ -2234,9 +2242,11 @@ public class GameController {
 
     private void openResultScreen(boolean win) {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/result-view.fxml")
-            );
+            var url = ResourceUtils.url(getClass(), "/view/result-view.fxml");
+            if (url == null) {
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(url);
             Parent resultRoot = loader.load();
             ResultController controller = loader.getController();
 
@@ -2289,9 +2299,11 @@ public class GameController {
     private void onBackToHome(javafx.event.ActionEvent event) {
         saveGameState(SaveStatus.IN_PROGRESS);
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/home-view.fxml")
-            );
+            var url = ResourceUtils.url(getClass(), "/view/home-view.fxml");
+            if (url == null) {
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(url);
             Parent newRoot = loader.load();
 
             Scene scene = ((Node) event.getSource()).getScene();
