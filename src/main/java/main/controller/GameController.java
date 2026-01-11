@@ -1108,6 +1108,9 @@ public class GameController {
     // -------------------------------------------------------------------------
     @FXML
     private void onSkipTutorial() {
+        if (tutorialManager != null && tutorialManager.isActive()) {
+            tutorialManager.skipTutorial();
+        }
         if (tutorialOverlay != null) {
             tutorialOverlay.setVisible(false);
             tutorialOverlay.setMouseTransparent(true);
@@ -2606,6 +2609,14 @@ public class GameController {
             active = false;
             clearTargetHighlight();
             restoreDisabledState();
+            if (boardAGrid != null) {
+                boardAGrid.setDisable(false);
+                boardAGrid.setMouseTransparent(false);
+            }
+            if (boardBGrid != null) {
+                boardBGrid.setDisable(false);
+                boardBGrid.setMouseTransparent(false);
+            }
             tutorialMask.getChildren().clear();
             tutorialOverlay.setVisible(false);
             if (tutorialSkipLayer != null) {
