@@ -34,6 +34,7 @@ import javafx.util.Duration;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import model.GameHistoryObserver;
+import main.util.ResourceUtils;
 
 
 /**
@@ -245,9 +246,10 @@ public class GameHistoryController implements GameHistoryObserver {
                     alert.setContentText("This action cannot be undone.");
 
 
-                    alert.getDialogPane().getStylesheets().add(
-                            getClass().getResource("/css/alert-dialog.css").toExternalForm()
-                    );
+                    String alertCss = ResourceUtils.externalForm(getClass(), "/css/alert-dialog.css");
+                    if (alertCss != null) {
+                        alert.getDialogPane().getStylesheets().add(alertCss);
+                    }
 
 
                     Button ok = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
@@ -357,9 +359,11 @@ public class GameHistoryController implements GameHistoryObserver {
      */
     @FXML
     private void onBackToHome(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(
-                getClass().getResource("/view/home-view.fxml")
-        );
+        var url = ResourceUtils.url(getClass(), "/view/home-view.fxml");
+        if (url == null) {
+            return;
+        }
+        Parent root = FXMLLoader.load(url);
         Scene scene = ((Node) event.getSource()).getScene();
         scene.setRoot(root);
     }
@@ -369,9 +373,11 @@ public class GameHistoryController implements GameHistoryObserver {
      */
     @FXML
     private void onNewGame(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(
-                getClass().getResource("/view/game-setup-view.fxml")
-        );
+        var url = ResourceUtils.url(getClass(), "/view/game-setup-view.fxml");
+        if (url == null) {
+            return;
+        }
+        Parent root = FXMLLoader.load(url);
         Scene scene = ((Node) event.getSource()).getScene();
         scene.setRoot(root);
     }
@@ -389,9 +395,11 @@ public class GameHistoryController implements GameHistoryObserver {
         GameSetupController.selectedThemeB = findThemeById(availableResume.playerBThemeId, GameSetupController.selectedThemeB);
         GameSetupController.skipResumePrompt = true;
 
-        Parent root = FXMLLoader.load(
-                getClass().getResource("/view/game.fxml")
-        );
+        var url = ResourceUtils.url(getClass(), "/view/game.fxml");
+        if (url == null) {
+            return;
+        }
+        Parent root = FXMLLoader.load(url);
         Scene scene = ((Node) event.getSource()).getScene();
         scene.setRoot(root);
     }

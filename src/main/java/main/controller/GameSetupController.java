@@ -24,6 +24,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import main.util.ResourceUtils;
 import model.Theme;
 import model.ThemeColors;
 
@@ -92,9 +93,11 @@ public class GameSetupController {
         System.out.println(">> Back clicked");
 
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/home-view.fxml")
-            );
+            var url = ResourceUtils.url(getClass(), "/view/home-view.fxml");
+            if (url == null) {
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(url);
             Parent newRoot = loader.load();
 
 
@@ -227,7 +230,11 @@ public class GameSetupController {
 
     private void switchSceneWithFade(ActionEvent event, String fxmlPath) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            var url = ResourceUtils.url(getClass(), fxmlPath);
+            if (url == null) {
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(url);
             Parent newRoot = loader.load();
 
             // Get current scene + stage
@@ -258,9 +265,10 @@ public class GameSetupController {
         alert.setHeaderText(null);
         alert.setContentText(msg);
         var dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(
-                getClass().getResource("/css/alert.css").toExternalForm()
-        );
+        String alertCss = ResourceUtils.externalForm(getClass(), "/css/alert.css");
+        if (alertCss != null) {
+            dialogPane.getStylesheets().add(alertCss);
+        }
         dialogPane.getStyleClass().add("lion-alert");
 
         alert.showAndWait();

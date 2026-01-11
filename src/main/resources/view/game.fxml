@@ -11,7 +11,7 @@
             fx:controller="main.controller.GameController"
             fx:id="root"
             prefWidth="1200.0" prefHeight="700.0"
-            stylesheets="@../css/game.css"
+            stylesheets="@/css/game.css"
             styleClass="game-root">
 
     <children>
@@ -82,7 +82,7 @@
                     <graphic>
                         <ImageView fitWidth="26" fitHeight="26" preserveRatio="true">
                             <image>
-                                <Image url="@../images/reload.png"/>
+                                <Image url="@/images/reload.png"/>
                             </image>
                         </ImageView>
                     </graphic>
@@ -109,7 +109,7 @@
                     <graphic>
                         <ImageView fitWidth="26" fitHeight="26" preserveRatio="true">
                             <image>
-                                <Image url="@../images/home.png"/>                            </image>
+                                <Image url="@/images/home.png"/>                            </image>
                         </ImageView>
                     </graphic>
                 </Button>
@@ -133,7 +133,7 @@
                               styleClass="mines-chip">
                             <ImageView fitWidth="20" fitHeight="20" preserveRatio="true" smooth="true">
                                 <image>
-                                    <Image url="@../images/bomb2.png"/>
+                                    <Image url="@/images/bomb2.png"/>
                                 </image>
                             </ImageView>
 
@@ -176,7 +176,7 @@
                               styleClass="mines-chip">
                             <ImageView fitWidth="20" fitHeight="20" preserveRatio="true" smooth="true">
                                 <image>
-                                    <Image url="@../images/bomb2.png"/>
+                                    <Image url="@/images/bomb2.png"/>
                                 </image>
                             </ImageView>
 

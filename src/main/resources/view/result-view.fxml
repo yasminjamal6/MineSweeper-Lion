@@ -13,7 +13,7 @@
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="main.controller.ResultController"
            fx:id="root"
-           stylesheets="@../css/result.css"
+           stylesheets="@/css/result.css"
            styleClass="result-root">
 
     <children>

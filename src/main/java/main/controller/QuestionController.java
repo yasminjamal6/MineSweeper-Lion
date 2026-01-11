@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import main.util.ResourceUtils;
 import model.Question;
 import javafx.animation.*;
 import javafx.geometry.Bounds;
@@ -153,9 +154,12 @@ public class QuestionController {
 
     private void playSound(String soundFile) {
         try {
-            Media media = new Media(
-                    getClass().getResource("/sound/" + soundFile).toExternalForm()
-            );
+            String soundUrl = ResourceUtils.externalForm(getClass(), "/sound/" + soundFile);
+            if (soundUrl == null) {
+                System.err.println("Could not play sound: " + soundFile);
+                return;
+            }
+            Media media = new Media(soundUrl);
             MediaPlayer player = new MediaPlayer(media);
             player.play();
         } catch (Exception e) {

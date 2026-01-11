@@ -17,6 +17,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
+import main.util.ResourceUtils;
 /**
  * Controller for the "How to Play" screen.
  * <p>
@@ -199,7 +200,11 @@ public class HowToPlayController {
 
     private void switchScene(ActionEvent event, String fxmlPath) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            var url = ResourceUtils.url(getClass(), fxmlPath);
+            if (url == null) {
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(url);
             Parent newRoot = loader.load();
 
             Scene scene = ((Node) event.getSource()).getScene();

@@ -10,7 +10,7 @@
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="main.controller.SurpriseController"
            prefWidth="420.0" prefHeight="320.0"
-           stylesheets="@../css/surprice.css"
+           stylesheets="@/css/surprice.css"
            styleClass="surprise-root">
 
     <children>

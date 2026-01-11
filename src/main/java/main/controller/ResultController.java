@@ -14,6 +14,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Duration;
+import main.util.ResourceUtils;
 
 import java.io.InputStream;
 
@@ -53,7 +54,7 @@ public class ResultController {
 
     private void playSound(String resourcePath) {
         try {
-            var url = getClass().getResource(resourcePath);
+            var url = ResourceUtils.url(getClass(), resourcePath);
             if (url == null) {
                 System.err.println("Sound not found: " + resourcePath);
                 return;
@@ -133,7 +134,7 @@ public class ResultController {
     private void loadGif(String path) {
         if (gifLabel == null) return;
 
-        try (InputStream is = getClass().getResourceAsStream(path)) {
+        try (InputStream is = ResourceUtils.stream(getClass(), path)) {
             if (is != null) {
                 Image image = new Image(is);
                 ImageView iv = new ImageView(image);
@@ -172,7 +173,11 @@ public class ResultController {
             Stage dialogStage = (Stage) root.getScene().getWindow();
             Window owner = dialogStage.getOwner();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            var url = ResourceUtils.url(getClass(), fxmlPath);
+            if (url == null) {
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(url);
             Parent newRoot = loader.load();
 
             if (owner instanceof Stage mainStage) {
