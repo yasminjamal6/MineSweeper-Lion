@@ -11,8 +11,11 @@ import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.ScaleTransition;
+
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -28,6 +31,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import javafx.scene.control.Alert;
@@ -49,6 +53,10 @@ import model.Board;
 import model.Cell;
 import model.RevealResult;
 import javafx.stage.StageStyle;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -90,18 +98,30 @@ public class GameController {
     @FXML private AnchorPane root;
     @FXML private StackPane countdownOverlay;
     @FXML private StackPane resumeOverlay;
+    @FXML private StackPane tutorialOverlay;
+    @FXML private Pane tutorialMask;
+    @FXML private Pane tutorialContent;
+    @FXML private Label tutorialArrow;
+    @FXML private Label tutorialText;
+    @FXML private Button tutorialSkipBtn;
+    @FXML private AnchorPane tutorialSkipLayer;
     @FXML private Label countdownLabel;
     @FXML private Label timerLabel;
     @FXML private Label turnALabel;
     @FXML private Label turnBLabel;
     @FXML private Button pauseBtn;
     @FXML private Button hintBtn;
-    @FXML private StackPane tutorialOverlay;
 
 
 
     // --- PAUSE STATE ---
     private boolean gamePaused = false;
+
+    // --- TUTORIAL ---
+    private static final int TUTORIAL_TURNS = 3;
+    private static boolean tutorialUsed = false;
+    private TutorialOverlayManager tutorialManager;
+
 
     @FXML
     private void onPause() {
@@ -377,6 +397,10 @@ public class GameController {
         applyLayoutBindings();
         updateBoardHighlight();
         updateHintButtonState();
+        if (tutorialManager != null) {
+            tutorialManager.onBoardLayoutChanged();
+            Platform.runLater(tutorialManager::onBoardLayoutChanged);
+        }
 
         boardAGrid.setMinSize(0, 0);
         boardBGrid.setMinSize(0, 0);
@@ -455,6 +479,7 @@ public class GameController {
 
     private void resumeSavedGame(GameSaveData savedState) {
         try {
+            tutorialUsed = true;
             GameSetupController.Difficulty savedDifficulty =
                     GameSetupController.Difficulty.valueOf(savedState.difficulty);
 
@@ -856,11 +881,12 @@ public class GameController {
             e.printStackTrace();
         }
 
-
+        setupTutorialOverlay();
         Platform.runLater(() -> {
             attachWindowHandlers();
             GameSaveData savedState = loadGameState();
             if (savedState != null && savedState.status == SaveStatus.IN_PROGRESS) {
+                tutorialUsed = true;
                 if (GameSetupController.skipResumePrompt) {
                     GameSetupController.skipResumePrompt = false;
                     resumeSavedGame(savedState);
@@ -892,6 +918,19 @@ public class GameController {
 
         });
 
+    }
+
+    private void setupTutorialOverlay() {
+        if (tutorialOverlay == null || tutorialMask == null || tutorialContent == null) {
+            return;
+        }
+        if (tutorialSkipLayer != null) {
+            tutorialSkipLayer.setVisible(false);
+            tutorialSkipLayer.setMouseTransparent(false);
+            tutorialSkipLayer.setPickOnBounds(false);
+        }
+        tutorialManager = new TutorialOverlayManager();
+        tutorialManager.initialize();
     }
 
     // -------------------------------------------------------------------------
@@ -947,12 +986,22 @@ public class GameController {
                 new KeyFrame(Duration.seconds(2), e -> countdownLabel.setText("1")),
                 new KeyFrame(Duration.seconds(3), e -> countdownLabel.setText("Let's start!")),
                 new KeyFrame(Duration.seconds(3.7), e -> {
-                    countdownOverlay.setVisible(false);
-                    countdownOverlay.setMouseTransparent(true);
-                    startTimer();
+                    onCountdownFinished();
                 })
         );
         countdownTimeline.play();
+    }
+
+    private void onCountdownFinished() {
+        if (countdownOverlay != null) {
+            countdownOverlay.setVisible(false);
+            countdownOverlay.setMouseTransparent(true);
+        }
+        if (tutorialManager != null && tutorialManager.shouldStartTutorial()) {
+            tutorialManager.startTutorial();
+            return;
+        }
+        startTimer();
     }
     private void stopCountdown() {
         if (countdownTimeline != null) {
@@ -1059,6 +1108,9 @@ public class GameController {
     // -------------------------------------------------------------------------
     @FXML
     private void onSkipTutorial() {
+        if (tutorialManager != null && tutorialManager.isActive()) {
+            tutorialManager.skipTutorial();
+        }
         if (tutorialOverlay != null) {
             tutorialOverlay.setVisible(false);
             tutorialOverlay.setMouseTransparent(true);
@@ -1076,6 +1128,10 @@ public class GameController {
 
     private void handleCellClick(Button cellButton, boolean isBoardA, int row, int col) {
         if (gamePaused) return;
+        if (tutorialManager != null && tutorialManager.isActive()
+                && !tutorialManager.isAllowedCell(isBoardA, row, col)) {
+            return;
+        }
 
         if (lives <= 0) {
             System.out.println("No hearts left – click ignored.");
@@ -1150,6 +1206,10 @@ public class GameController {
         updateBoardHighlight();
 
         checkGameOver();
+
+        if (tutorialManager != null) {
+            tutorialManager.onCellAction(isBoardA, row, col);
+        }
     }
 
     private void handleSurpriseActivation(Cell cell, Button cellButton) {
@@ -1776,6 +1836,9 @@ public class GameController {
     }
 
     private void toggleFlag(Button cellButton, boolean isBoardA, int row, int col) {
+        if (tutorialManager != null && tutorialManager.isActive()) {
+            return;
+        }
 
         if (isPlayerATurn && !isBoardA) return;
         if (!isPlayerATurn && isBoardA) return;
@@ -2285,6 +2348,301 @@ public class GameController {
         }
         saveGameHistory(heartsLeft, heartsLeft, success);
         historySaved = true;
+    }
+
+    private final class TutorialOverlayManager {
+        private boolean active;
+        private int stepsCompleted;
+        private boolean targetBoardA;
+        private int targetRow;
+        private int targetCol;
+        private Button targetButton;
+        private TranslateTransition arrowAnimation;
+        private java.util.Map<Button, Boolean> disabledSnapshot;
+        private java.util.Map<Button, Boolean> mouseTransparentSnapshot;
+
+        void initialize() {
+            tutorialOverlay.setVisible(false);
+            tutorialOverlay.setMouseTransparent(true);
+            tutorialOverlay.setPickOnBounds(false);
+            tutorialContent.setPickOnBounds(false);
+            tutorialMask.setPickOnBounds(false);
+            setOverlayMouseTransparent(tutorialOverlay, true);
+
+            arrowAnimation = new TranslateTransition(Duration.millis(600), tutorialArrow);
+            arrowAnimation.setFromY(-6);
+            arrowAnimation.setToY(6);
+            arrowAnimation.setAutoReverse(true);
+            arrowAnimation.setCycleCount(Animation.INDEFINITE);
+
+            tutorialOverlay.widthProperty().addListener((obs, oldVal, newVal) -> refreshOverlay());
+            tutorialOverlay.heightProperty().addListener((obs, oldVal, newVal) -> refreshOverlay());
+            tutorialOverlay.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> refreshOverlay());
+            root.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> refreshOverlay());
+            if (boardAGrid != null) {
+                boardAGrid.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> refreshOverlay());
+            }
+            if (boardBGrid != null) {
+                boardBGrid.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> refreshOverlay());
+            }
+            Platform.runLater(this::attachSceneListeners);
+        }
+
+        boolean shouldStartTutorial() {
+            return !tutorialUsed && tutorialOverlay != null && boardAGrid != null && boardBGrid != null;
+        }
+
+        void startTutorial() {
+            if (active) {
+                return;
+            }
+            tutorialUsed = true;
+            active = true;
+            stepsCompleted = 0;
+            disabledSnapshot = new java.util.HashMap<>();
+            mouseTransparentSnapshot = new java.util.HashMap<>();
+            pauseTimer();
+            showOverlay();
+            selectNextTarget();
+        }
+
+        void skipTutorial() {
+            endTutorial();
+        }
+
+        boolean isActive() {
+            return active;
+        }
+
+        boolean isAllowedCell(boolean isBoardA, int row, int col) {
+            return active && isBoardA == targetBoardA && row == targetRow && col == targetCol;
+        }
+
+        void onCellAction(boolean isBoardA, int row, int col) {
+            if (!active || !isAllowedCell(isBoardA, row, col)) {
+                return;
+            }
+            stepsCompleted++;
+            if (stepsCompleted >= TUTORIAL_TURNS) {
+                endTutorial();
+            } else {
+                Platform.runLater(this::selectNextTarget);
+            }
+        }
+
+        private void showOverlay() {
+            tutorialOverlay.setVisible(true);
+            tutorialOverlay.toFront();
+            if (tutorialSkipLayer != null) {
+                tutorialSkipLayer.setVisible(true);
+                tutorialSkipLayer.toFront();
+            }
+            if (arrowAnimation != null) {
+                arrowAnimation.playFromStart();
+            }
+        }
+
+        private void selectNextTarget() {
+            clearTargetHighlight();
+            Board board = isPlayerATurn ? boardA : boardB;
+            GridPane grid = isPlayerATurn ? boardAGrid : boardBGrid;
+            int[] pick = pickSafeCell(board);
+            if (pick == null) {
+                endTutorial();
+                return;
+            }
+
+            targetBoardA = isPlayerATurn;
+            targetRow = pick[0];
+            targetCol = pick[1];
+            targetButton = getButtonAt(grid, targetRow, targetCol);
+
+            if (targetButton == null) {
+                endTutorial();
+                return;
+            }
+
+            if (!targetButton.getStyleClass().contains("tutorial-highlight")) {
+                targetButton.getStyleClass().add("tutorial-highlight");
+            }
+
+            applyInteractionMask();
+            updateOverlayForTarget(targetButton);
+        }
+
+        private void applyInteractionMask() {
+            if (!active) {
+                return;
+            }
+            snapshotAndDisable(boardAGrid, !targetBoardA);
+            snapshotAndDisable(boardBGrid, targetBoardA);
+        }
+
+        private void snapshotAndDisable(GridPane grid, boolean blockAll) {
+            if (grid == null) {
+                return;
+            }
+            java.util.List<Node> nodes = new java.util.ArrayList<>(grid.getChildren());
+            Button allowed = null;
+            for (Node node : nodes) {
+                if (node instanceof Button btn) {
+                    if (!disabledSnapshot.containsKey(btn)) {
+                        disabledSnapshot.put(btn, btn.isDisable());
+                    }
+                    if (!mouseTransparentSnapshot.containsKey(btn)) {
+                        mouseTransparentSnapshot.put(btn, btn.isMouseTransparent());
+                    }
+                    btn.setDisable(true);
+                    btn.setMouseTransparent(true);
+                    if (!blockAll && btn == targetButton) {
+                        allowed = btn;
+                    }
+                }
+            }
+            if (allowed != null) {
+                allowed.setDisable(false);
+                allowed.setMouseTransparent(false);
+            }
+        }
+
+        void updateOverlayForTarget(Node targetCell) {
+            if (!active || targetCell == null) {
+                return;
+            }
+            if (targetCell instanceof Button btn) {
+                targetButton = btn;
+            }
+            refreshOverlay();
+            Platform.runLater(this::refreshOverlay);
+        }
+
+        void onBoardLayoutChanged() {
+            if (active && targetButton != null) {
+                updateOverlayForTarget(targetButton);
+            }
+        }
+
+        private void refreshOverlay() {
+            if (!active || targetButton == null || tutorialOverlay.getWidth() <= 0 || tutorialOverlay.getHeight() <= 0) {
+                return;
+            }
+
+            Bounds cellBoundsScene = targetButton.localToScene(targetButton.getBoundsInLocal());
+            javafx.geometry.Point2D centerScene = new javafx.geometry.Point2D(
+                    cellBoundsScene.getMinX() + cellBoundsScene.getWidth() / 2.0,
+                    cellBoundsScene.getMinY() + cellBoundsScene.getHeight() / 2.0
+            );
+            javafx.geometry.Point2D center = tutorialOverlay.sceneToLocal(centerScene);
+            double centerX = center.getX();
+            double centerY = center.getY();
+            double cellWidth = cellBoundsScene.getWidth();
+            double cellHeight = cellBoundsScene.getHeight();
+            double radius = Math.max(cellWidth, cellHeight) / 2.0 + 8;
+
+            Rectangle backdrop = new Rectangle(tutorialOverlay.getWidth(), tutorialOverlay.getHeight());
+            Circle hole = new Circle(centerX, centerY, radius);
+            Shape mask = Shape.subtract(backdrop, hole);
+            mask.setFill(Color.rgb(0, 0, 0, 0.72));
+            mask.setStroke(null);
+            tutorialMask.getChildren().setAll(mask);
+
+            tutorialArrow.applyCss();
+            tutorialArrow.autosize();
+            tutorialText.applyCss();
+            tutorialText.autosize();
+            tutorialSkipBtn.applyCss();
+            tutorialSkipBtn.autosize();
+
+            double arrowY = centerY - (cellHeight / 2.0) - 32;
+            boolean placeBelow = arrowY < 18;
+            if (placeBelow) {
+                tutorialArrow.setText("⬆");
+                arrowY = centerY + (cellHeight / 2.0) + 12;
+            } else {
+                tutorialArrow.setText("⬇");
+            }
+            double arrowX = centerX - tutorialArrow.getWidth() / 2.0;
+            tutorialArrow.relocate(arrowX, arrowY);
+
+            double textY = placeBelow
+                    ? arrowY + tutorialArrow.getHeight() + 6
+                    : arrowY - tutorialText.getHeight() - 6;
+            double textX = centerX - tutorialText.getWidth() / 2.0;
+            tutorialText.relocate(textX, textY);
+
+            double skipX = Math.max(12, tutorialOverlay.getWidth() - tutorialSkipBtn.getWidth() - 16);
+            tutorialSkipBtn.relocate(skipX, 16);
+        }
+
+        private void attachSceneListeners() {
+            Scene scene = tutorialOverlay.getScene();
+            if (scene == null) {
+                return;
+            }
+            scene.widthProperty().addListener((obs, oldVal, newVal) -> refreshOverlay());
+            scene.heightProperty().addListener((obs, oldVal, newVal) -> refreshOverlay());
+            if (scene.getWindow() instanceof Stage stage) {
+                stage.widthProperty().addListener((obs, oldVal, newVal) -> refreshOverlay());
+                stage.heightProperty().addListener((obs, oldVal, newVal) -> refreshOverlay());
+            }
+        }
+
+        private void setOverlayMouseTransparent(Node node, boolean transparent) {
+            node.setMouseTransparent(transparent);
+            if (node instanceof javafx.scene.Parent parent) {
+                for (Node child : parent.getChildrenUnmodifiable()) {
+                    setOverlayMouseTransparent(child, transparent);
+                }
+            }
+        }
+
+        private void clearTargetHighlight() {
+            if (targetButton != null) {
+                targetButton.getStyleClass().remove("tutorial-highlight");
+            }
+        }
+
+        private void endTutorial() {
+            if (!active) {
+                return;
+            }
+            active = false;
+            clearTargetHighlight();
+            restoreDisabledState();
+            if (boardAGrid != null) {
+                boardAGrid.setDisable(false);
+                boardAGrid.setMouseTransparent(false);
+            }
+            if (boardBGrid != null) {
+                boardBGrid.setDisable(false);
+                boardBGrid.setMouseTransparent(false);
+            }
+            tutorialMask.getChildren().clear();
+            tutorialOverlay.setVisible(false);
+            if (tutorialSkipLayer != null) {
+                tutorialSkipLayer.setVisible(false);
+            }
+            if (arrowAnimation != null) {
+                arrowAnimation.stop();
+            }
+            startTimer();
+        }
+
+        private void restoreDisabledState() {
+            if (disabledSnapshot == null) {
+                return;
+            }
+            for (var entry : disabledSnapshot.entrySet()) {
+                entry.getKey().setDisable(entry.getValue());
+            }
+            disabledSnapshot.clear();
+            if (mouseTransparentSnapshot != null) {
+                for (var entry : mouseTransparentSnapshot.entrySet()) {
+                    entry.getKey().setMouseTransparent(entry.getValue());
+                }
+                mouseTransparentSnapshot.clear();
+            }
+        }
     }
 
     private enum SaveStatus {
