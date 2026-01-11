@@ -13,6 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -35,6 +36,8 @@ public class HomeController {
     @FXML private VBox buttonsSection;
     @FXML private HBox featuresRow;
     @FXML private VBox footerBox;
+    @FXML private Pane tickerClip;
+    @FXML private Label tickerLabel;
 
     @FXML private StackPane rootPane;   // root הראשי
 
@@ -44,7 +47,36 @@ public class HomeController {
         SettingsController.applyThemeToRoot(rootPane);
         SettingsController.refreshLanguageOnAllWindows();
         playEntranceAnimations();
+        javafx.application.Platform.runLater(this::startTicker);
     }
+    private void startTicker() {
+        String tickerText =
+                "🦁 Every move shapes your destiny.   •   " +
+                        "✨ Tip: Use logic, not luck.   •   " +
+                        "🔥 Pride Rock trivia awaits!   •   " +
+                        "🐾 Choose wisely before the sun sets.   •   " +
+                        "🏆 Build your legend in the savanna!   •   ";
+
+        // כדי שיהיה “רציף”, נשכפל פעמיים
+        tickerLabel.setText(tickerText + tickerText);
+
+        double clipW = tickerClip.getWidth();
+        double textW = tickerLabel.prefWidth(-1);
+
+        tickerLabel.setTranslateX(clipW);
+
+        javafx.animation.TranslateTransition tt =
+                new javafx.animation.TranslateTransition(javafx.util.Duration.seconds(18), tickerLabel);
+
+        tt.setFromX(clipW);
+        tt.setToX(-textW);
+        tt.setInterpolator(javafx.animation.Interpolator.LINEAR);
+
+        // לופ אינסופי
+        tt.setCycleCount(javafx.animation.Animation.INDEFINITE);
+        tt.play();
+    }
+
     /**
      * Plays entrance animations for the hero section, main buttons,
      * feature row, and footer to create a smooth landing effect.
