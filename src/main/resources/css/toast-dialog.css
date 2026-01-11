@@ -1,0 +1,91 @@
+/* root */
+.toast-dialog {
+    -fx-background-color: transparent;
+}
+
+.toast-dialog .dialog-pane {
+    -fx-background-color: rgba(2, 6, 23, 0.95);
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #a855f7;
+    -fx-border-width: 2.5;
+    -fx-padding: 18 22 18 22;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.65), 22, 0.35, 0, 6);
+}
+
+/* content */
+.toast-title {
+    -fx-text-fill: #facc15;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+}
+
+.toast-subtitle {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 13;
+}
+
+/* icon */
+.toast-icon {
+    -fx-font-size: 22;
+}
+
+/* button */
+.toast-dialog .button {
+    -fx-background-color: linear-gradient(#facc15, #f97316);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-padding: 8 18;
+}
+.toast-dialog .button:hover {
+    -fx-background-color: linear-gradient(#fde047, #fb923c);
+}
+/* ===== Hide default JavaFX alert header & icon ===== */
+.dialog-pane > .graphic-container {
+    -fx-opacity: 0;
+    -fx-padding: 0;
+}
+
+.dialog-pane > .header-panel {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* ===== Main dialog card ===== */
+.dialog-pane {
+    -fx-background-color: rgba(10, 14, 30, 0.95);
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-border-width: 2;
+    -fx-border-color: rgba(250, 204, 21, 0.7);
+    -fx-padding: 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 24, 0.35, 0, 10);
+}
+
+/* ===== Text styling ===== */
+.dialog-pane .content {
+    -fx-text-fill: #f9fafb;
+    -fx-font-size: 14px;
+}
+
+.dialog-pane .content-label {
+    -fx-text-fill: #facc15;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* ===== OK button ===== */
+.dialog-pane .button {
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-background-color: linear-gradient(#f59e0b, #f97316);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 26;
+}
+
+.dialog-pane .button:hover {
+    -fx-effect: dropshadow(gaussian, rgba(249,115,22,0.6), 16, 0.25, 0, 0);
+}

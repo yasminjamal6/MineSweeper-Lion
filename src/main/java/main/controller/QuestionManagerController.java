@@ -49,8 +49,9 @@ import javafx.scene.layout.VBox;
 
 public class QuestionManagerController {
 
-    private static final int MAX_QUESTION_CHARS = 120;
-    private static final int MAX_ANSWER_CHARS = 60;
+    private static final int MAX_QUESTION_CHARS = 90;
+    private static final int MAX_ANSWER_CHARS = 35;
+
 
     @FXML private TableView<Question> questionTable;
     @FXML private TableColumn<Question, String> colQuestion;
@@ -192,8 +193,36 @@ public class QuestionManagerController {
             questionTable.refresh();
 
             System.out.println("✅ Added new question: " + newQ.getText());
+
+            showSuccessDialog("Question added successfully ✔");
         }
     }
+
+    private void showSuccessDialog(String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText(null);
+
+        DialogPane pane = alert.getDialogPane();
+        pane.getStylesheets().add(getClass().getResource("/css/toast-dialog.css").toExternalForm());
+        pane.getStyleClass().add("toast-dialog");
+
+        Label icon = new Label("✅");
+        icon.getStyleClass().add("toast-icon");
+
+        Label title = new Label("Success!");
+        title.getStyleClass().add("toast-title");
+
+        Label subtitle = new Label(msg);
+        subtitle.getStyleClass().add("toast-subtitle");
+
+        VBox content = new VBox(8, new HBox(10, icon, title), subtitle);
+        pane.setContent(content);
+
+        alert.showAndWait();
+    }
+
 
     /**
      * Smooth entrance animations for the header and the table card.
@@ -250,6 +279,8 @@ public class QuestionManagerController {
         dialogPane.getStyleClass().add("qd-dialog-pane");
         ButtonType okButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
         dialogPane.getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+        Button saveButton = (Button) dialogPane.lookupButton(okButtonType);
+        saveButton.setDefaultButton(true);
         HBox header = new HBox(10);
         header.getStyleClass().add("qd-header");
 

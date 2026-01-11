@@ -74,6 +74,8 @@ import model.BoardSetupTemplate;
 import model.EasyBoardSetup;
 import model.MediumBoardSetup;
 import model.HardBoardSetup;
+import javafx.scene.media.AudioClip;
+
 
 
 /**
@@ -109,6 +111,8 @@ public class GameController {
     @FXML private Label turnBLabel;
     @FXML private Button pauseBtn;
     @FXML private Button hintBtn;
+
+
 
     // --- PAUSE STATE ---
     private boolean gamePaused = false;
@@ -189,13 +193,6 @@ public class GameController {
         }
     }
 
-    @FXML
-    private void onSkipTutorial() {
-        if (tutorialManager != null) {
-            tutorialManager.skipTutorial();
-        }
-    }
-
 
     private void pauseGame() {
         gamePaused = true;
@@ -214,7 +211,6 @@ public class GameController {
         }
     }
 
-
     private void resumeGame() {
         gamePaused = false;
 
@@ -226,7 +222,9 @@ public class GameController {
         if (boardAGrid != null) boardAGrid.setDisable(false);
         if (boardBGrid != null) boardBGrid.setDisable(false);
 
-        startTimer();
+        if (!timerRunning) {
+            startTimer();
+        }
         updateBoardHighlight();
     }
 
@@ -261,6 +259,8 @@ public class GameController {
     // Resources
     private Image mineImage;
     private double mineImageSize;
+    private AudioClip boomSound;
+
 
     // Heart images (full + broken)
     private Image fullHeartImage;
@@ -384,8 +384,10 @@ public class GameController {
             case MEDIUM -> new MediumBoardSetup();
             case HARD -> new HardBoardSetup();
         };
-
+        System.out.println(">>> CALLER: setup for boardA hash=" + System.identityHashCode(boardA));
         setup.setup(boardA, currentDifficulty);
+
+        System.out.println(">>> CALLER: setup for boardB hash=" + System.identityHashCode(boardB));
         setup.setup(boardB, currentDifficulty);
 
         buildBoardGrid(boardAGrid, size, cellSize, true);
@@ -864,6 +866,20 @@ public class GameController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // Load BOOM sound
+        try {
+            var url = getClass().getResource("/sound/boom.wav");
+            System.out.println("BOOM URL = " + url);
+
+            if (url == null) {
+                System.err.println("boom.wav not found in resources!");
+            } else {
+                boomSound = new AudioClip(url.toExternalForm());
+                boomSound.setVolume(1.0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         setupTutorialOverlay();
         Platform.runLater(() -> {
@@ -1090,6 +1106,22 @@ public class GameController {
     // -------------------------------------------------------------------------
     // CELL CLICK / GAME FLOW
     // -------------------------------------------------------------------------
+    @FXML
+    private void onSkipTutorial() {
+        if (tutorialOverlay != null) {
+            tutorialOverlay.setVisible(false);
+            tutorialOverlay.setMouseTransparent(true);
+        }
+
+        if (boardAGrid != null) boardAGrid.setDisable(false);
+        if (boardBGrid != null) boardBGrid.setDisable(false);
+
+        if (!timerRunning) {
+            startTimer();
+        }
+        updateBoardHighlight();
+    }
+
 
     private void handleCellClick(Button cellButton, boolean isBoardA, int row, int col) {
         if (gamePaused) return;
@@ -1155,6 +1187,10 @@ public class GameController {
 
 
         if (result == RevealResult.HIT_MINE) {
+            playBoomSound();                // 🔊 סאונד
+            playBoomAnimation(cellButton, isBoardA); // 💥 אנימציה
+
+
             lives--;
             if (lives < 0) lives = 0;
             updateLivesUI(currentDifficulty);
@@ -1266,6 +1302,19 @@ public class GameController {
             }
         }
     }
+    private void removeBonusHighlightAfterDelay(Button btn, Duration delay) {
+        if (btn == null) return;
+
+        Timeline t = new Timeline(
+                new KeyFrame(delay, e -> {
+                    btn.getStyleClass().remove("bonus-revealed");
+                    btn.getStyleClass().remove("bonus-mine");
+                })
+        );
+        t.setCycleCount(1);
+        t.play();
+    }
+
 
     private void revealQuestionBonusBlock(Board board, boolean isBoardA) {
         if (board == null) {
@@ -1368,9 +1417,13 @@ public class GameController {
                     updateCellView(board, target, r, c);
                     if (!target.getStyleClass().contains("bonus-revealed")) {
                         target.getStyleClass().add("bonus-revealed");
+
+                        // ⏱ הירוק ייעלם אחרי 2.5 שניות
+                        removeBonusHighlightAfterDelay(target, Duration.seconds(2.5));
                     }
                 }
             }
+
         }
         System.out.println(">>> Bonus reveal: newly revealed cells=" + revealedCount);
 
@@ -1378,6 +1431,7 @@ public class GameController {
         updateMinesUI(isBoardA);
         System.out.println(">>> Bonus reveal: UI refresh complete");
     }
+
 
     private void applyBonusMineIndicator(Button target) {
         target.setGraphic(null);
@@ -2657,4 +2711,68 @@ public class GameController {
             }
         }
     }
+    // --- BOOM ANIMATION HELPERS ---
+    private void playBoomSound() {
+        if (boomSound != null) {
+            boomSound.play();
+        }
+    }
+
+    private void playBoomAnimation(Button cellButton, boolean isBoardA) {
+        if (cellButton == null) return;
+
+        // 1) "פיצוץ" על התא עצמו (scale + fade + rotate)
+        Node boomNode = (cellButton.getGraphic() != null) ? cellButton.getGraphic() : cellButton;
+
+        ScaleTransition st = new ScaleTransition(Duration.millis(180), boomNode);
+        st.setFromX(1.0);
+        st.setFromY(1.0);
+        st.setToX(1.55);
+        st.setToY(1.55);
+        st.setAutoReverse(true);
+        st.setCycleCount(2);
+
+        FadeTransition ft = new FadeTransition(Duration.millis(220), boomNode);
+        ft.setFromValue(1.0);
+        ft.setToValue(0.25);
+        ft.setAutoReverse(true);
+        ft.setCycleCount(2);
+
+        Timeline rotate = new Timeline(
+                new KeyFrame(Duration.ZERO,   e -> boomNode.setRotate(0)),
+                new KeyFrame(Duration.millis(60),  e -> boomNode.setRotate(-12)),
+                new KeyFrame(Duration.millis(120), e -> boomNode.setRotate(12)),
+                new KeyFrame(Duration.millis(180), e -> boomNode.setRotate(0))
+        );
+
+        // 2) "Shake" ללוח הרלוונטי
+        Node target = isBoardA ? boardAContainer : boardBContainer;
+        playShake(target);
+
+        st.play();
+        ft.play();
+        rotate.play();
+
+        // בסוף נחזיר שקיפות/רוטציה למצב תקין
+        ft.setOnFinished(e -> {
+            boomNode.setOpacity(1.0);
+            boomNode.setRotate(0);
+        });
+    }
+
+    private void playShake(Node node) {
+        if (node == null) return;
+
+        Timeline shake = new Timeline(
+                new KeyFrame(Duration.ZERO,         e -> node.setTranslateX(0)),
+                new KeyFrame(Duration.millis(30),   e -> node.setTranslateX(-6)),
+                new KeyFrame(Duration.millis(60),   e -> node.setTranslateX(6)),
+                new KeyFrame(Duration.millis(90),   e -> node.setTranslateX(-5)),
+                new KeyFrame(Duration.millis(120),  e -> node.setTranslateX(5)),
+                new KeyFrame(Duration.millis(150),  e -> node.setTranslateX(0))
+        );
+        shake.setCycleCount(1);
+        shake.play();
+    }
+
 }

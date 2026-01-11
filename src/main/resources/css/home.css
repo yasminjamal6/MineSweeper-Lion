@@ -831,3 +831,30 @@
             #fb923c 100%
     );
 }
+/* Bottom ticker bar - fixed height */
+.ticker-bar {
+    -fx-padding: 8 18;
+    -fx-background-color: rgba(0,0,0,0.35);
+    -fx-border-color: rgba(255, 225, 140, 0.65);
+    -fx-border-width: 1.6;
+
+    /* עגול רק למטה כמו פס */
+    -fx-background-radius: 0 0 24 24;
+    -fx-border-radius: 0 0 24 24;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 16, 0.2, 0, 4);
+}
+
+/* “חלון” שחותך את הטקסט שלא יזלוג */
+.ticker-clip {
+    -fx-pref-height: 30;
+    -fx-min-height: 30;
+    -fx-max-height: 30;
+}
+
+/* text */
+.ticker-text {
+    -fx-text-fill: #ffe9c6;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
