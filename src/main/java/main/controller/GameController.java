@@ -1266,16 +1266,16 @@ public class GameController {
                     : DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
             QuestionLevel level = question != null ? question.getLevel() : null;
 
-            if (diff == Difficulty.EASY && level == QuestionLevel.MEDIUM) {
-                answered = true;
-                correct = true;
-                System.out.println(">>> Focused Thinking: auto-correct for EASY game + MEDIUM question");
-            }
-
             if (answered) {
                 ScoreRules.ScoreChange change = ScoreRules.ScoreChange.of(0, 0);
                 if (diff != null && level != null) {
-                    change = ScoreRules.questionAnswered(diff, level, correct);
+                    if (diff == Difficulty.EASY && level == QuestionLevel.MEDIUM && !correct) {
+                        change = java.util.concurrent.ThreadLocalRandom.current().nextBoolean()
+                                ? ScoreRules.ScoreChange.of(-6, 0)
+                                : ScoreRules.ScoreChange.of(0, 0);
+                    } else {
+                        change = ScoreRules.questionAnswered(diff, level, correct);
+                    }
                 }
 
                 addScore(change.getPointsDelta());
