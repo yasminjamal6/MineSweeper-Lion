@@ -1814,7 +1814,7 @@ public class GameController {
         for (int r = 0; r < board.getRows(); r++) {
             for (int c = 0; c < board.getCols(); c++) {
                 Cell cell = board.getCell(r, c);
-                if (cell.isMine() && !cell.isFlagged()) {
+                if (cell.isMine() && !cell.isFlagged() && !cell.isRevealed()) {
                     remaining++;
                 }
             }
@@ -1881,6 +1881,7 @@ public class GameController {
             }
         }
 
+        updateMinesUI(isBoardA);
         checkGameOver();
     }
 
