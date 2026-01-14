@@ -1266,16 +1266,16 @@ public class GameController {
                     : DifficultyMapper.toModel(GameSetupController.selectedDifficulty);
             QuestionLevel level = question != null ? question.getLevel() : null;
 
-            if (diff == Difficulty.EASY && level == QuestionLevel.MEDIUM) {
-                answered = true;
-                correct = true;
-                System.out.println(">>> Focused Thinking: auto-correct for EASY game + MEDIUM question");
-            }
-
             if (answered) {
                 ScoreRules.ScoreChange change = ScoreRules.ScoreChange.of(0, 0);
                 if (diff != null && level != null) {
-                    change = ScoreRules.questionAnswered(diff, level, correct);
+                    if (diff == Difficulty.EASY && level == QuestionLevel.MEDIUM && !correct) {
+                        change = java.util.concurrent.ThreadLocalRandom.current().nextBoolean()
+                                ? ScoreRules.ScoreChange.of(-6, 0)
+                                : ScoreRules.ScoreChange.of(0, 0);
+                    } else {
+                        change = ScoreRules.questionAnswered(diff, level, correct);
+                    }
                 }
 
                 addScore(change.getPointsDelta());
@@ -1814,7 +1814,7 @@ public class GameController {
         for (int r = 0; r < board.getRows(); r++) {
             for (int c = 0; c < board.getCols(); c++) {
                 Cell cell = board.getCell(r, c);
-                if (cell.isMine() && !cell.isFlagged()) {
+                if (cell.isMine() && !cell.isFlagged() && !cell.isRevealed()) {
                     remaining++;
                 }
             }
@@ -1881,6 +1881,7 @@ public class GameController {
             }
         }
 
+        updateMinesUI(isBoardA);
         checkGameOver();
     }
 
