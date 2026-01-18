@@ -136,6 +136,10 @@
     -fx-font-size: 20px;
 }
 
+.player-avatar {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 6, 0.4, 0, 1);
+}
+
 .player-name {
     -fx-text-fill: #fef3c7;
     -fx-font-size: 18px;

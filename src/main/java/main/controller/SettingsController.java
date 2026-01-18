@@ -141,9 +141,11 @@ public class SettingsController {
             Label playerATitleLabel    = (Label) root.lookup("#playerATitleLabel");
             Label playerANameLabel     = (Label) root.lookup("#playerANameLabel");
             Label playerABoardLabel    = (Label) root.lookup("#playerABoardLabel");
+            Label playerAAvatarLabel   = (Label) root.lookup("#playerAAvatarLabel");
             Label playerBTitleLabel    = (Label) root.lookup("#playerBTitleLabel");
             Label playerBNameLabel     = (Label) root.lookup("#playerBNameLabel");
             Label playerBBoardLabel    = (Label) root.lookup("#playerBBoardLabel");
+            Label playerBAvatarLabel   = (Label) root.lookup("#playerBAvatarLabel");
             Label challengeTitleLabel  = (Label) root.lookup("#challengeTitleLabel");
 
             ToggleButton easyBtnNode   = (ToggleButton) root.lookup("#easyBtn");
@@ -180,10 +182,12 @@ public class SettingsController {
                 if (playerATitleLabel != null)   playerATitleLabel.setText("שחקן א' 🦁");
                 if (playerANameLabel != null)    playerANameLabel.setText("שם שחקן");
                 if (playerABoardLabel != null)   playerABoardLabel.setText("סגנון לוח");
+                if (playerAAvatarLabel != null)  playerAAvatarLabel.setText("דמות");
 
                 if (playerBTitleLabel != null)   playerBTitleLabel.setText("שחקן ב' 🦁");
                 if (playerBNameLabel != null)    playerBNameLabel.setText("שם שחקן");
                 if (playerBBoardLabel != null)   playerBBoardLabel.setText("סגנון לוח");
+                if (playerBAvatarLabel != null)  playerBAvatarLabel.setText("דמות");
 
                 if (challengeTitleLabel != null) challengeTitleLabel.setText("בחרו את רמת האתגר");
 
@@ -220,10 +224,12 @@ public class SettingsController {
                 if (playerATitleLabel != null)   playerATitleLabel.setText("Player A 🦁");
                 if (playerANameLabel != null)    playerANameLabel.setText("Player name");
                 if (playerABoardLabel != null)   playerABoardLabel.setText("Board style");
+                if (playerAAvatarLabel != null)  playerAAvatarLabel.setText("Avatar");
 
                 if (playerBTitleLabel != null)   playerBTitleLabel.setText("Player B 🦁");
                 if (playerBNameLabel != null)    playerBNameLabel.setText("Player name");
                 if (playerBBoardLabel != null)   playerBBoardLabel.setText("Board style");
+                if (playerBAvatarLabel != null)  playerBAvatarLabel.setText("Avatar");
 
                 if (challengeTitleLabel != null) challengeTitleLabel.setText("Choose the challenge level");
 

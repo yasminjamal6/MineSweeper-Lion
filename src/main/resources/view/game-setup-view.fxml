@@ -76,6 +76,11 @@
                                            promptText="Enter name..."
                                            styleClass="name-field" />
 
+                                <Label id="playerAAvatarLabel"
+                                       styleClass="field-label" text="Avatar" />
+                                <HBox fx:id="avatarPickerA"
+                                      alignment="CENTER" spacing="10"/>
+
                                 <Label id="playerABoardLabel"
                                        styleClass="field-label" text="Board style" />
                                 <HBox fx:id="themePickerA"
@@ -91,6 +96,11 @@
                                 <TextField fx:id="playerBName"
                                            promptText="Enter name..."
                                            styleClass="name-field" />
+
+                                <Label id="playerBAvatarLabel"
+                                       styleClass="field-label" text="Avatar" />
+                                <HBox fx:id="avatarPickerB"
+                                      alignment="CENTER" spacing="10"/>
 
                                 <Label id="playerBBoardLabel"
                                        styleClass="field-label" text="Board style" />

@@ -18,6 +18,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -25,6 +28,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.util.ResourceUtils;
+import model.Avatar;
 import model.Theme;
 import model.ThemeColors;
 
@@ -35,6 +39,8 @@ public class GameSetupController {
     public static Difficulty selectedDifficulty = Difficulty.EASY;
     public static String selectedPlayerAName;
     public static String selectedPlayerBName;
+    public static Avatar selectedAvatarA = Avatar.SIMBA;
+    public static Avatar selectedAvatarB = Avatar.NALA;
 
     @FXML private ToggleButton easyBtn, mediumBtn, hardBtn;
     @FXML private ToggleGroup difficultyGroup;
@@ -42,6 +48,8 @@ public class GameSetupController {
 
     @FXML private HBox themePickerA;
     @FXML private HBox themePickerB;
+    @FXML private HBox avatarPickerA;
+    @FXML private HBox avatarPickerB;
     @FXML private VBox mainCard;
     @FXML private HBox playersRow;
     @FXML private VBox difficultyBox;
@@ -70,8 +78,11 @@ public class GameSetupController {
         System.out.println("CSS exists? -> " + getClass().getResource("/css/game-setup.css"));
         System.out.println("Image exists? -> " + getClass().getResource("/images/King.png"));
 
+        ensureAvatarDefaults();
         rebuildPicker(themePickerA, selectedThemeA, true);
         rebuildPicker(themePickerB, selectedThemeB, false);
+        rebuildAvatarPicker(avatarPickerA, selectedAvatarA, true);
+        rebuildAvatarPicker(avatarPickerB, selectedAvatarB, false);
 
         root.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
@@ -319,6 +330,88 @@ public class GameSetupController {
             }
 
             box.getChildren().add(btn);
+        }
+    }
+
+    private void rebuildAvatarPicker(HBox box, Avatar selected, boolean isPlayerA) {
+        if (box == null) {
+            return;
+        }
+        box.getChildren().clear();
+
+        ToggleGroup group = new ToggleGroup();
+        for (Avatar avatar : Avatar.values()) {
+            boolean isSelected = selected != null && avatar == selected;
+            ToggleButton btn = createAvatarButton(avatar, isSelected, isPlayerA, group);
+
+            boolean usedByOther = isPlayerA
+                    ? (selectedAvatarB != null && avatar == selectedAvatarB)
+                    : (selectedAvatarA != null && avatar == selectedAvatarA);
+
+            if (usedByOther && !isSelected) {
+                btn.setDisable(true);
+                btn.setOpacity(0.45);
+            }
+
+            box.getChildren().add(btn);
+        }
+    }
+
+    private ToggleButton createAvatarButton(Avatar avatar, boolean isSelected, boolean isPlayerA, ToggleGroup group) {
+        ToggleButton btn = new ToggleButton();
+        btn.setPrefSize(56, 56);
+        btn.setMinSize(56, 56);
+        btn.setMaxSize(56, 56);
+        btn.getStyleClass().add("avatar-btn");
+        btn.setToggleGroup(group);
+        btn.setSelected(isSelected);
+
+        ImageView view = loadAvatarView(avatar);
+        if (view != null) {
+            btn.setGraphic(view);
+        } else {
+            btn.setText(avatar.displayName);
+        }
+        btn.setTooltip(new Tooltip(avatar.displayName));
+
+        btn.setOnAction(e -> {
+            if (isPlayerA) {
+                selectedAvatarA = avatar;
+            } else {
+                selectedAvatarB = avatar;
+            }
+            rebuildAvatarPicker(avatarPickerA, selectedAvatarA, true);
+            rebuildAvatarPicker(avatarPickerB, selectedAvatarB, false);
+        });
+        return btn;
+    }
+
+    private ImageView loadAvatarView(Avatar avatar) {
+        if (avatar == null) {
+            return null;
+        }
+        try (var is = ResourceUtils.stream(getClass(), avatar.resourcePath)) {
+            if (is == null) {
+                return null;
+            }
+            Image image = new Image(is);
+            ImageView view = new ImageView(image);
+            view.setFitWidth(42);
+            view.setFitHeight(42);
+            view.setPreserveRatio(true);
+            view.setSmooth(true);
+            return view;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private void ensureAvatarDefaults() {
+        if (selectedAvatarA == null) {
+            selectedAvatarA = Avatar.SIMBA;
+        }
+        if (selectedAvatarB == null || selectedAvatarB == selectedAvatarA) {
+            selectedAvatarB = selectedAvatarA == Avatar.NALA ? Avatar.MUFASA : Avatar.NALA;
         }
     }
 

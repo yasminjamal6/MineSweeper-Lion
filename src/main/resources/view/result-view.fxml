@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
@@ -74,7 +75,11 @@
 
                         <VBox alignment="CENTER" spacing="4" styleClass="player-pill">
                             <children>
-                                <Label text="🦁" styleClass="player-emoji"/>
+                                <ImageView fx:id="playerAAvatarView"
+                                           fitWidth="24" fitHeight="24"
+                                           preserveRatio="true"
+                                           smooth="true"
+                                           styleClass="player-avatar"/>
                                 <Label fx:id="playerALabel"
                                        text="Player A"
                                        styleClass="player-name"/>
@@ -83,7 +88,11 @@
 
                         <VBox alignment="CENTER" spacing="4" styleClass="player-pill">
                             <children>
-                                <Label text="🦁" styleClass="player-emoji"/>
+                                <ImageView fx:id="playerBAvatarView"
+                                           fitWidth="24" fitHeight="24"
+                                           preserveRatio="true"
+                                           smooth="true"
+                                           styleClass="player-avatar"/>
                                 <Label fx:id="playerBLabel"
                                        text="Player B"
                                        styleClass="player-name"/>
