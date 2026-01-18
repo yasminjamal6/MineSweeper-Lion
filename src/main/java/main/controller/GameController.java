@@ -53,6 +53,7 @@ import model.ThemeColors;
 import model.Board;
 import model.Cell;
 import model.RevealResult;
+import model.Avatar;
 import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -91,6 +92,8 @@ public class GameController {
     @FXML private Label playerBNameLabel;
     @FXML private Label playerAMinesLabel;
     @FXML private Label playerBMinesLabel;
+    @FXML private ImageView playerAAvatarView;
+    @FXML private ImageView playerBAvatarView;
     @FXML private GridPane boardAGrid;
     @FXML private GridPane boardBGrid;
     @FXML private HBox heartsBox;
@@ -257,6 +260,8 @@ public class GameController {
     private final QuestionBank questionBank = new QuestionBank();
     private Theme playerATheme;
     private Theme playerBTheme;
+    private Avatar playerAAvatar;
+    private Avatar playerBAvatar;
 
     // Resources
     private Image mineImage;
@@ -350,6 +355,9 @@ public class GameController {
 
         playerATheme = GameSetupController.selectedThemeA;
         playerBTheme = GameSetupController.selectedThemeB;
+        playerAAvatar = GameSetupController.selectedAvatarA;
+        playerBAvatar = GameSetupController.selectedAvatarB;
+        applyPlayerAvatars(playerAAvatar, playerBAvatar);
 
         GameSetupController.Difficulty selectedDifficulty = GameSetupController.selectedDifficulty;
 
@@ -415,6 +423,39 @@ public class GameController {
                 "Hearts left. When they reach 0 – the hyenas take over!"
         );
         Tooltip.install(heartsBox, heartsTip);
+    }
+
+    private void applyPlayerAvatars(Avatar avatarA, Avatar avatarB) {
+        setAvatarImage(playerAAvatarView, avatarA);
+        setAvatarImage(playerBAvatarView, avatarB);
+    }
+
+    private void setAvatarImage(ImageView view, Avatar avatar) {
+        if (view == null) {
+            return;
+        }
+        Image image = loadAvatarImage(avatar);
+        if (image != null) {
+            view.setImage(image);
+            view.setVisible(true);
+        } else {
+            view.setImage(null);
+            view.setVisible(false);
+        }
+    }
+
+    private Image loadAvatarImage(Avatar avatar) {
+        if (avatar == null) {
+            return null;
+        }
+        try (InputStream is = ResourceUtils.stream(getClass(), avatar.resourcePath)) {
+            if (is == null) {
+                return null;
+            }
+            return new Image(is);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private void applyLayoutBindings() {
@@ -493,6 +534,12 @@ public class GameController {
             playerBTheme = findThemeById(savedState.playerBThemeId, GameSetupController.selectedThemeB);
             GameSetupController.selectedThemeA = playerATheme;
             GameSetupController.selectedThemeB = playerBTheme;
+
+            playerAAvatar = Avatar.fromId(savedState.playerAAvatarId, GameSetupController.selectedAvatarA);
+            playerBAvatar = Avatar.fromId(savedState.playerBAvatarId, GameSetupController.selectedAvatarB);
+            GameSetupController.selectedAvatarA = playerAAvatar;
+            GameSetupController.selectedAvatarB = playerBAvatar;
+            applyPlayerAvatars(playerAAvatar, playerBAvatar);
 
             playerANameLabel.setText(savedState.playerAName);
             playerBNameLabel.setText(savedState.playerBName);
@@ -725,6 +772,8 @@ public class GameController {
         data.playerBName = playerBNameLabel.getText();
         data.playerAThemeId = playerATheme != null ? playerATheme.id : null;
         data.playerBThemeId = playerBTheme != null ? playerBTheme.id : null;
+        data.playerAAvatarId = playerAAvatar != null ? playerAAvatar.id : null;
+        data.playerBAvatarId = playerBAvatar != null ? playerBAvatar.id : null;
         data.isPlayerATurn = isPlayerATurn;
         data.lives = lives;
         data.score = score;
@@ -2271,6 +2320,7 @@ public class GameController {
             } else {
                 controller.initAsLose(playerA, playerB, baseScoreValue, heartsLeft, heartValue);
             }
+            controller.setPlayerAvatars(playerAAvatar, playerBAvatar);
 
             Stage dialog = new Stage();
             dialog.setTitle("Game Result");
@@ -2671,6 +2721,8 @@ public class GameController {
         String playerBName;
         String playerAThemeId;
         String playerBThemeId;
+        String playerAAvatarId;
+        String playerBAvatarId;
         boolean isPlayerATurn;
         int lives;
         int score;

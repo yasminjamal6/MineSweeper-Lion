@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import main.util.ResourceUtils;
+import model.Avatar;
 
 import java.io.InputStream;
 
@@ -33,6 +34,8 @@ public class ResultController {
 
     @FXML private Label playerALabel;
     @FXML private Label playerBLabel;
+    @FXML private ImageView playerAAvatarView;
+    @FXML private ImageView playerBAvatarView;
 
     @FXML private Label heartsLabel;
     @FXML private Label quoteLabel;
@@ -71,6 +74,39 @@ public class ResultController {
         } catch (Exception e) {
             System.err.println("Error playing sound: " + resourcePath);
             e.printStackTrace();
+        }
+    }
+
+    public void setPlayerAvatars(Avatar avatarA, Avatar avatarB) {
+        setAvatarImage(playerAAvatarView, avatarA);
+        setAvatarImage(playerBAvatarView, avatarB);
+    }
+
+    private void setAvatarImage(ImageView view, Avatar avatar) {
+        if (view == null) {
+            return;
+        }
+        Image image = loadAvatarImage(avatar);
+        if (image != null) {
+            view.setImage(image);
+            view.setVisible(true);
+        } else {
+            view.setImage(null);
+            view.setVisible(false);
+        }
+    }
+
+    private Image loadAvatarImage(Avatar avatar) {
+        if (avatar == null) {
+            return null;
+        }
+        try (InputStream is = ResourceUtils.stream(getClass(), avatar.resourcePath)) {
+            if (is == null) {
+                return null;
+            }
+            return new Image(is);
+        } catch (Exception e) {
+            return null;
         }
     }
 

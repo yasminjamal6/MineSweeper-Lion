@@ -123,7 +123,11 @@
                     <VBox alignment="CENTER" spacing="6">
                         <HBox alignment="CENTER" spacing="8"
                               styleClass="player-header player-header-a">
-                            <Label text="👑" styleClass="player-icon"/>
+                            <ImageView fx:id="playerAAvatarView"
+                                       fitWidth="26" fitHeight="26"
+                                       preserveRatio="true"
+                                       smooth="true"
+                                       styleClass="player-avatar"/>
                             <Label fx:id="playerANameLabel"
                                    text="Player A"
                                    styleClass="player-name"/>
@@ -166,7 +170,11 @@
                     <VBox alignment="CENTER" spacing="6">
                         <HBox alignment="CENTER" spacing="8"
                               styleClass="player-header player-header-b">
-                            <Label text="🦁" styleClass="player-icon"/>
+                            <ImageView fx:id="playerBAvatarView"
+                                       fitWidth="26" fitHeight="26"
+                                       preserveRatio="true"
+                                       smooth="true"
+                                       styleClass="player-avatar"/>
                             <Label fx:id="playerBNameLabel"
                                    text="Player B"
                                    styleClass="player-name"/>

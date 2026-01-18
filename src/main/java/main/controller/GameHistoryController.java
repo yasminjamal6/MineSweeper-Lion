@@ -18,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import model.Avatar;
 import model.GameHistory;
 import model.GameHistoryManager;
 import model.Difficulty;
@@ -393,6 +394,8 @@ public class GameHistoryController implements GameHistoryObserver {
         GameSetupController.selectedDifficulty = availableResume.difficultyEnum;
         GameSetupController.selectedThemeA = findThemeById(availableResume.playerAThemeId, GameSetupController.selectedThemeA);
         GameSetupController.selectedThemeB = findThemeById(availableResume.playerBThemeId, GameSetupController.selectedThemeB);
+        GameSetupController.selectedAvatarA = Avatar.fromId(availableResume.playerAAvatarId, GameSetupController.selectedAvatarA);
+        GameSetupController.selectedAvatarB = Avatar.fromId(availableResume.playerBAvatarId, GameSetupController.selectedAvatarB);
         GameSetupController.skipResumePrompt = true;
 
         var url = ResourceUtils.url(getClass(), "/view/game.fxml");
@@ -460,6 +463,8 @@ public class GameHistoryController implements GameHistoryObserver {
         String difficulty;
         String playerAThemeId;
         String playerBThemeId;
+        String playerAAvatarId;
+        String playerBAvatarId;
 
         transient GameSetupController.Difficulty difficultyEnum;
         transient long lastUpdatedMillis;

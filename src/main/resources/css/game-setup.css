@@ -153,6 +153,27 @@ GLOBAL FONT
     -fx-border-color: rgb(182, 136, 45);
 }
 
+/* AVATAR PICKER */
+.avatar-btn {
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-border-color: rgba(210, 160, 50, 0.8);
+    -fx-border-width: 1.4;
+    -fx-padding: 4;
+    -fx-cursor: hand;
+}
+
+.avatar-btn:hover {
+    -fx-background-color: rgba(255, 247, 222, 0.95);
+}
+
+.avatar-btn:selected {
+    -fx-background-color: linear-gradient(#ffe58f, #f9a826);
+    -fx-border-color: rgba(180, 116, 16, 0.95);
+    -fx-effect: dropshadow(gaussian, rgba(248,181,0,0.65), 12, 0.6, 0, 2);
+}
+
 /* BOARD STYLE – טבליות לבנות עם זהב */
 .board-style-pill {
     -fx-background-radius: 999;
@@ -362,6 +383,20 @@ GLOBAL FONT
     -fx-prompt-text-fill: #cfc8b5;
     -fx-padding: 7 12;
     -fx-border-color: transparent;
+}
+
+.dark-mode .avatar-btn {
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+    -fx-border-color: rgba(250, 204, 21, 0.45);
+}
+
+.dark-mode .avatar-btn:hover {
+    -fx-background-color: rgba(18, 10, 6, 0.7);
+}
+
+.dark-mode .avatar-btn:selected {
+    -fx-background-color: linear-gradient(#facc15, #f97316);
+    -fx-border-color: rgba(161, 98, 7, 0.9);
 }
 
 .dark-mode .board-style-pill {
