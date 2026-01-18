@@ -238,6 +238,29 @@ public class HomeController {
 
     @FXML
     private void onHistory(ActionEvent event) {
+
+        // 1) מבקשים סיסמה (אותו דיאלוג בדיוק)
+        AccessResult access = requestAdminAccess();
+
+        if (access == AccessResult.DENIED) {
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+            a.setTitle("Access denied");
+            a.setHeaderText("The pride remains protected.");
+            a.setContentText("Incorrect password :( ");
+            DialogPane dp = a.getDialogPane();
+            String alertCss = ResourceUtils.externalForm(getClass(), "/css/alert.css");
+            if (alertCss != null) {
+                dp.getStylesheets().add(alertCss);
+            }
+            dp.getStyleClass().add("lion-alert");
+
+            a.showAndWait();
+            return;
+
+        } else if (access == AccessResult.CANCELED) {
+            return;
+        }
+
         try {
             var url = ResourceUtils.url(getClass(), "/view/game-history.fxml");
             if (url == null) {
@@ -256,6 +279,7 @@ public class HomeController {
             e.printStackTrace();
         }
     }
+
 
     @FXML
     private void onQuestionManager(ActionEvent e) {
