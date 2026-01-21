@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/17.0.12"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="main.controller.ShopController"
+           stylesheets="@/css/shop.css"
+           prefWidth="1200" prefHeight="800">
+
+    <children>
+
+        <!-- FULL BACKGROUND -->
+        <AnchorPane styleClass="shop-background"
+                    AnchorPane.topAnchor="0"
+                    AnchorPane.bottomAnchor="0"
+                    AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0" />
+
+        <!-- MAIN CONTENT -->
+        <VBox spacing="18"
+              styleClass="shop-root"
+              maxWidth="1100"
+              StackPane.alignment="TOP_CENTER">
+
+            <!-- HEADER ROW -->
+            <HBox spacing="16"
+                  alignment="CENTER_LEFT"
+                  styleClass="shop-header">
+
+                <!-- LEFT: TITLE + ICON -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <StackPane styleClass="shop-header-icon">
+                        <Label text="🦁" styleClass="shop-header-icon-emoji"/>
+                    </StackPane>
+
+                    <VBox spacing="4" alignment="CENTER_LEFT">
+                        <Label text="Lion Shop" styleClass="shop-header-title"/>
+                        <Label text="Unlock cosmetics • No gameplay advantage"
+                               styleClass="shop-header-subtitle"/>
+                    </VBox>
+                </HBox>
+
+                <!-- SPACER -->
+                <Pane HBox.hgrow="ALWAYS"/>
+
+                <!-- RIGHT: COINS + BUTTONS -->
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+
+                    <HBox spacing="8" alignment="CENTER" styleClass="shop-coins-pill">
+                        <Label text="💰" styleClass="shop-coins-emoji"/>
+                        <Label fx:id="lblCoins" text="0" styleClass="shop-coins-value"/>
+                    </HBox>
+
+                    <Button text="Back"
+                            fx:id="btnBack"
+                            onAction="#onBack"
+                            styleClass="shop-btn-secondary"/>
+
+                </HBox>
+            </HBox>
+
+            <!-- INFO / QUICK CARD -->
+            <HBox spacing="14"
+                  alignment="CENTER_LEFT"
+                  styleClass="shop-info-card">
+
+                <VBox spacing="3" alignment="CENTER_LEFT">
+                    <Label fx:id="lblPlayerName"
+                           text="Player"
+                           styleClass="shop-info-title"/>
+                    <Label text="Tip: Win matches to earn coins and upgrade your look!"
+                           styleClass="shop-info-subtitle"/>
+                </VBox>
+
+                <Pane HBox.hgrow="ALWAYS"/>
+
+                <TextField fx:id="searchField"
+                           promptText="Search items..."
+                           prefWidth="260"
+                           styleClass="shop-search-field"/>
+
+            </HBox>
+
+            <!-- MAIN GRID: LEFT ITEMS + RIGHT PREVIEW -->
+            <HBox spacing="16" VBox.vgrow="ALWAYS">
+
+                <!-- LEFT: ITEMS CARD -->
+                <VBox spacing="10"
+                      styleClass="shop-card shop-items-card"
+                      HBox.hgrow="ALWAYS"
+                      VBox.vgrow="ALWAYS">
+
+                    <!-- ROW: CATEGORY + FILTER -->
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label text="Avatars" styleClass="shop-card-title"/>
+                        <Label text="🧩" styleClass="shop-card-title-icon"/>
+
+                        <Pane HBox.hgrow="ALWAYS"/>
+
+                        <ChoiceBox fx:id="sortChoice"
+                                   styleClass="shop-sort-choice"/>
+                    </HBox>
+
+                    <!-- SCROLL + TILE GRID -->
+                    <ScrollPane fx:id="itemsScroll"
+                                fitToWidth="true"
+                                styleClass="shop-scroll">
+
+                        <content>
+                            <TilePane fx:id="tileItems"
+                                      hgap="12" vgap="12"
+                                      prefColumns="3"
+                                      styleClass="shop-tile"/>
+                        </content>
+                    </ScrollPane>
+
+                </VBox>
+
+                <!-- RIGHT: PREVIEW CARD -->
+                <VBox spacing="12"
+                      prefWidth="320"
+                      styleClass="shop-card shop-preview-card">
+
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label text="Preview" styleClass="shop-card-title"/>
+                        <Label text="✨" styleClass="shop-card-title-icon"/>
+                    </HBox>
+
+                    <!-- SELECTED ITEM -->
+                    <VBox spacing="6" styleClass="shop-preview-box">
+                        <Label fx:id="lblSelectedName"
+                               text="Select an item"
+                               wrapText="true"
+                               styleClass="shop-preview-name"/>
+
+                        <Label fx:id="lblSelectedPrice"
+                               text=""
+                               styleClass="shop-preview-price"/>
+
+                        <Label fx:id="lblSelectedStatus"
+                               text=""
+                               wrapText="true"
+                               styleClass="shop-preview-status"/>
+                    </VBox>
+
+                    <Separator/>
+
+                    <!-- ACTION BUTTONS -->
+                    <Button fx:id="btnBuy"
+                            text="BUY"
+                            onAction="#onBuy"
+                            disable="true"
+                            styleClass="shop-btn-primary"/>
+
+                    <Button fx:id="btnEquip"
+                            text="EQUIP"
+                            onAction="#onEquip"
+                            disable="true"
+                            styleClass="shop-btn-accent"/>
+
+                    <!-- MESSAGE -->
+                    <Label fx:id="lblMessage"
+                           text=""
+                           wrapText="true"
+                           styleClass="shop-message"/>
+
+                    <Region VBox.vgrow="ALWAYS"/>
+
+                    <!-- FOOT NOTE -->
+                    <Label text="Cosmetics only • Fair play guaranteed"
+                           styleClass="shop-footnote"/>
+
+                </VBox>
+
+            </HBox>
+
+        </VBox>
+
+    </children>
+
+</StackPane>

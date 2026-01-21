@@ -129,6 +129,27 @@
                 <Insets top="18" right="18"/>
             </StackPane.margin>
         </Button>
+
+        <!-- SHOP BUTTON -->
+        <Button text="🛒"
+                fx:id="shopBtn"
+                styleClass="settings-btn"
+                onAction="#onOpenShop"
+                StackPane.alignment="TOP_RIGHT">
+            <StackPane.margin>
+                <Insets top="18" right="70"/>
+            </StackPane.margin>
+        </Button>
+
+        <Button text="👤"
+                styleClass="settings-btn"
+                onAction="#onProfile"
+                StackPane.alignment="TOP_RIGHT">
+            <StackPane.margin>
+                <Insets top="18" right="120"/>
+            </StackPane.margin>
+        </Button>
+
         <StackPane fx:id="tickerBar"
                    styleClass="ticker-bar"
                    minHeight="46" prefHeight="46" maxHeight="46"
