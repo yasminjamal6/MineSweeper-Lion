@@ -120,6 +120,9 @@ public class GameController {
     @FXML private Label turnBLabel;
     @FXML private Button pauseBtn;
     @FXML private Button hintBtn;
+    @FXML private Button restartBtn;
+    @FXML private StackPane rootStack;
+    @FXML private AnchorPane gameContent;
 
 
 
@@ -421,6 +424,7 @@ public class GameController {
 
         boardAGrid.setMinSize(0, 0);
         boardBGrid.setMinSize(0, 0);
+        initAIModeFromSetup();
 
         startCountdown();
     }
@@ -1267,9 +1271,12 @@ public class GameController {
 
         checkGameOver();
 
+
         if (tutorialManager != null) {
             tutorialManager.onCellAction(isBoardA, row, col);
         }
+        maybePlayAITurn();
+
     }
 
     private void handleSurpriseActivation(Cell cell, Button cellButton) {
@@ -2884,6 +2891,71 @@ public class GameController {
         );
         shake.setCycleCount(1);
         shake.play();
+    }
+    // ===================== AI (PLAYER B) =====================
+    private boolean playerBIsAI;
+
+    // Call this after startNewGameFlow() sets names/themes/boards
+    private void initAIModeFromSetup() {
+        playerBIsAI = GameSetupController.playerBIsAI;
+
+        // If AI -> lock the B label to Lion AI (safety)
+        if (playerBIsAI && playerBNameLabel != null) {
+            playerBNameLabel.setText("Lion AI");
+        }
+    }
+
+    // After Player A finishes a move, if it's AI turn -> make AI move automatically
+    private void maybePlayAITurn() {
+        if (!playerBIsAI) return;
+        if (lives <= 0) return;
+        if (gamePaused) return;
+        if (tutorialManager != null && tutorialManager.isActive()) return;
+
+        // AI is Player B -> plays when it's NOT player A turn
+        if (isPlayerATurn) return;
+
+        // delay a bit so it feels natural
+        Timeline t = new Timeline(new KeyFrame(Duration.millis(550), e -> doAIMove()));
+        t.setCycleCount(1);
+        t.play();
+    }
+
+    private void doAIMove() {
+        if (!playerBIsAI) return;
+        if (lives <= 0) return;
+        if (gamePaused) return;
+        if (isPlayerATurn) return; // if turn switched back meanwhile
+
+        // Simple AI: pick a safe random cell (your helper already exists)
+        int[] pick = pickSafeCell(boardB);
+        if (pick == null) {
+            // no safe cells -> fallback: pick any unrevealed not flagged
+            pick = pickAnyHiddenUnflagged(boardB);
+            if (pick == null) return;
+        }
+
+        int r = pick[0], c = pick[1];
+        Button btn = getButtonAt(boardBGrid, r, c);
+        if (btn != null) {
+            handleCellClick(btn, false, r, c);
+        }
+    }
+
+    private int[] pickAnyHiddenUnflagged(Board board) {
+        if (board == null) return null;
+        ArrayList<int[]> candidates = new ArrayList<>();
+        for (int r = 0; r < board.getRows(); r++) {
+            for (int c = 0; c < board.getCols(); c++) {
+                Cell cell = board.getCell(r, c);
+                if (!cell.isRevealed() && !cell.isFlagged()) {
+                    candidates.add(new int[]{r, c});
+                }
+            }
+        }
+        if (candidates.isEmpty()) return null;
+        int idx = java.util.concurrent.ThreadLocalRandom.current().nextInt(candidates.size());
+        return candidates.get(idx);
     }
 
 }

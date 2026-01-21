@@ -4,27 +4,18 @@ import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.util.ResourceUtils;
@@ -39,81 +30,68 @@ public class GameSetupController {
     public static Difficulty selectedDifficulty = Difficulty.EASY;
     public static String selectedPlayerAName;
     public static String selectedPlayerBName;
+
     public static Avatar selectedAvatarA = Avatar.SIMBA;
     public static Avatar selectedAvatarB = Avatar.NALA;
 
-    @FXML private ToggleButton easyBtn, mediumBtn, hardBtn;
-    @FXML private ToggleGroup difficultyGroup;
-    @FXML private TextField playerAName, playerBName;
-
-    @FXML private HBox themePickerA;
-    @FXML private HBox themePickerB;
-    @FXML private HBox avatarPickerA;
-    @FXML private HBox avatarPickerB;
-    @FXML private VBox mainCard;
-    @FXML private HBox playersRow;
-    @FXML private VBox difficultyBox;
-    @FXML private HBox startRow;
-
     public static Theme selectedThemeA = ThemeColors.themes.get(0);
     public static Theme selectedThemeB = ThemeColors.themes.get(1);
+
+    public static boolean playerBIsAI = false;
     public static boolean skipResumePrompt = false;
 
 
+    @FXML private ToggleButton easyBtn, mediumBtn, hardBtn;
+    @FXML private TextField playerAName, playerBName;
+
+    @FXML private HBox themePickerA, themePickerB;
+    @FXML private HBox avatarPickerA, avatarPickerB;
+
+    @FXML private VBox mainCard;
+    @FXML private HBox playersRow;
+    @FXML private VBox difficultyBox;
+
+    // אם אין fx:id="startRow" ב-FXML אז זה יהיה null וזה בסדר
+    @FXML private HBox startRow;
+
+    @FXML private CheckBox playerBAICheckbox;
     @FXML private StackPane root;
 
-    /**
-     * Initializes the controller. Sets the default difficulty and logs FXML/CSS loading status.
-     */
     @FXML
     private void initialize() {
         SettingsController.applyThemeToRoot(root);
 
-        easyBtn.setSelected(true);
-
-        System.out.println("Root = " + root);
-        if (root != null) {
-            System.out.println("Stylesheets from FXML = " + root.getStylesheets());
-        }
-        System.out.println("CSS exists? -> " + getClass().getResource("/css/game-setup.css"));
-        System.out.println("Image exists? -> " + getClass().getResource("/images/King.png"));
+        if (easyBtn != null) easyBtn.setSelected(true);
 
         ensureAvatarDefaults();
+
         rebuildPicker(themePickerA, selectedThemeA, true);
         rebuildPicker(themePickerB, selectedThemeB, false);
+
         rebuildAvatarPicker(avatarPickerA, selectedAvatarA, true);
         rebuildAvatarPicker(avatarPickerB, selectedAvatarB, false);
 
-        root.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null) {
-                SettingsController.refreshLanguageOnAllWindows();
-            }
-        });
+        // אם המסך נפתח כשהצ׳קבוקס כבר מסומן
+        onTogglePlayerBAI();
+
+        if (root != null) {
+            root.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null) SettingsController.refreshLanguageOnAllWindows();
+            });
+        }
 
         playIntroAnimation();
-
     }
 
-
-
-    /**
-     * Navigates back to the home screen with a smooth fade transition.
-     */
     @FXML
     private void onBack(ActionEvent event) {
-        System.out.println(">> Back clicked");
-
         try {
             var url = ResourceUtils.url(getClass(), "/view/home-view.fxml");
-            if (url == null) {
-                return;
-            }
-            FXMLLoader loader = new FXMLLoader(url);
-            Parent newRoot = loader.load();
+            if (url == null) return;
 
+            Parent newRoot = new FXMLLoader(url).load();
 
             Scene scene = ((Node) event.getSource()).getScene();
-
             newRoot.setOpacity(0);
             scene.setRoot(newRoot);
 
@@ -126,23 +104,18 @@ public class GameSetupController {
         }
     }
 
-    /**
-     * Adds a smooth entrance animation similar to the home page.
-     */
     private void playIntroAnimation() {
-        if (mainCard == null || playersRow == null || difficultyBox == null || startRow == null) {
-            return;
-        }
+        if (mainCard == null || playersRow == null || difficultyBox == null) return;
 
         mainCard.setOpacity(0);
         playersRow.setOpacity(0);
         difficultyBox.setOpacity(0);
-        startRow.setOpacity(0);
+        if (startRow != null) startRow.setOpacity(0);
 
         mainCard.setTranslateY(-30);
         playersRow.setTranslateY(20);
         difficultyBox.setTranslateY(30);
-        startRow.setTranslateY(40);
+        if (startRow != null) startRow.setTranslateY(40);
 
         FadeTransition mainFade = new FadeTransition(Duration.millis(520), mainCard);
         mainFade.setFromValue(0);
@@ -175,62 +148,48 @@ public class GameSetupController {
         diffSlide.setInterpolator(Interpolator.EASE_OUT);
         diffSlide.setDelay(Duration.millis(240));
 
-        FadeTransition startFade = new FadeTransition(Duration.millis(580), startRow);
-        startFade.setFromValue(0);
-        startFade.setToValue(1);
-        startFade.setDelay(Duration.millis(340));
+        ParallelTransition pt = new ParallelTransition(mainFade, mainSlide, playersFade, playersSlide, diffFade, diffSlide);
 
-        TranslateTransition startSlide = new TranslateTransition(Duration.millis(580), startRow);
-        startSlide.setFromY(40);
-        startSlide.setToY(0);
-        startSlide.setInterpolator(Interpolator.EASE_OUT);
-        startSlide.setDelay(Duration.millis(340));
+        if (startRow != null) {
+            FadeTransition startFade = new FadeTransition(Duration.millis(580), startRow);
+            startFade.setFromValue(0);
+            startFade.setToValue(1);
+            startFade.setDelay(Duration.millis(340));
 
-        new ParallelTransition(
-                mainFade, mainSlide,
-                playersFade, playersSlide,
-                diffFade, diffSlide,
-                startFade, startSlide
-        ).play();
+            TranslateTransition startSlide = new TranslateTransition(Duration.millis(580), startRow);
+            startSlide.setFromY(40);
+            startSlide.setToY(0);
+            startSlide.setInterpolator(Interpolator.EASE_OUT);
+            startSlide.setDelay(Duration.millis(340));
+
+            pt.getChildren().addAll(startFade, startSlide);
+        }
+
+        pt.play();
     }
 
-
-
-    /**
-     * Validates player input and starts the game if all data is valid.
-     * Displays alerts for missing or duplicate player names.
-     */
     @FXML
     private void onStart(ActionEvent event) {
-
         String a = playerAName.getText() == null ? "" : playerAName.getText().trim();
-        String b = playerBName.getText() == null ? "" : playerBName.getText().trim();
+        playerBIsAI = playerBAICheckbox != null && playerBAICheckbox.isSelected();
 
-        if (a.isEmpty() || b.isEmpty()) {
-            showAlert("Please enter a name for both players.");
-            return;
-        }
-        if (a.equalsIgnoreCase(b)) {
-            showAlert("Player names must be different.");
-            return;
-        }
-        // Letters/numbers only
-        if (!a.matches("[A-Za-z0-9א-ת\u0621-\u064A ]+") ||
-                !b.matches("[A-Za-z0-9א-ת\u0621-\u064A ]+")) {
+        String b = playerBIsAI ? "Lion AI"
+                : (playerBName.getText() == null ? "" : playerBName.getText().trim());
 
-            showAlert("Names must contain only letters and numbers.");
-            return;
-        }
+        if (a.isEmpty()) { showAlert("Please enter a name for Player A."); return; }
+        if (!isValidName(a)) { showAlert("Names must contain only letters and numbers."); return; }
+        if (!isValidLen(a)) { showAlert("Names must be 2 to 12 characters long."); return; }
 
-        // Length validation
-        if (a.length() < 2 || a.length() > 12 || b.length() < 2 || b.length() > 12) {
-            showAlert("Names must be 2 to 12 characters long.");
-            return;
+        if (!playerBIsAI) {
+            if (b.isEmpty()) { showAlert("Please enter a name for Player B."); return; }
+            if (a.equalsIgnoreCase(b)) { showAlert("Player names must be different."); return; }
+            if (!isValidName(b)) { showAlert("Names must contain only letters and numbers."); return; }
+            if (!isValidLen(b)) { showAlert("Names must be 2 to 12 characters long."); return; }
         }
 
         Difficulty diff = Difficulty.EASY;
-        if (mediumBtn.isSelected()) diff = Difficulty.MEDIUM;
-        if (hardBtn.isSelected())   diff = Difficulty.HARD;
+        if (mediumBtn != null && mediumBtn.isSelected()) diff = Difficulty.MEDIUM;
+        if (hardBtn != null && hardBtn.isSelected()) diff = Difficulty.HARD;
 
         selectedDifficulty = diff;
         selectedPlayerAName = a;
@@ -239,33 +198,57 @@ public class GameSetupController {
         switchSceneWithFade(event, "/view/game.fxml");
     }
 
+    private boolean isValidName(String s) {
+        return s.matches("[A-Za-z0-9א-ת\u0621-\u064A ]+");
+    }
+
+    private boolean isValidLen(String s) {
+        return s.length() >= 2 && s.length() <= 12;
+    }
+
+    @FXML
+    private void onTogglePlayerBAI() {
+        playerBIsAI = playerBAICheckbox != null && playerBAICheckbox.isSelected();
+
+        if (playerBIsAI) {
+            if (playerBName != null) {
+                playerBName.setText("Lion AI");
+                playerBName.setDisable(true);
+            }
+            if (avatarPickerB != null) avatarPickerB.setDisable(true);
+            if (themePickerB != null) themePickerB.setDisable(true);
+        } else {
+            if (playerBName != null) {
+                playerBName.setDisable(false);
+                String cur = playerBName.getText() == null ? "" : playerBName.getText().trim();
+                if ("Lion AI".equalsIgnoreCase(cur)) playerBName.clear();
+            }
+            if (avatarPickerB != null) avatarPickerB.setDisable(false);
+            if (themePickerB != null) themePickerB.setDisable(false);
+        }
+    }
+
     private void switchSceneWithFade(ActionEvent event, String fxmlPath) {
         try {
             var url = ResourceUtils.url(getClass(), fxmlPath);
-            if (url == null) {
-                return;
-            }
-            FXMLLoader loader = new FXMLLoader(url);
-            Parent newRoot = loader.load();
+            if (url == null) return;
 
-            // Get current scene + stage
+            Parent newRoot = new FXMLLoader(url).load();
+
             Scene scene = ((Node) event.getSource()).getScene();
             Stage stage = (Stage) scene.getWindow();
 
-            // Fade-in transition
             newRoot.setOpacity(0);
             scene.setRoot(newRoot);
 
             FadeTransition ft = new FadeTransition(Duration.millis(300), newRoot);
-            ft.setFromValue(0.0);
-            ft.setToValue(1.0);
+            ft.setFromValue(0);
+            ft.setToValue(1);
             ft.play();
 
-            // Fix window size so it can't be smaller than the content
-            stage.sizeToScene();                    // fit window to newRoot size
-            stage.setMinWidth(stage.getWidth());    // don't allow smaller width
-            stage.setMinHeight(stage.getHeight());  // don't allow smaller height
-
+            stage.sizeToScene();
+            stage.setMinWidth(stage.getWidth());
+            stage.setMinHeight(stage.getHeight());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -275,6 +258,7 @@ public class GameSetupController {
         Alert alert = new Alert(Alert.AlertType.WARNING, msg, ButtonType.OK);
         alert.setHeaderText(null);
         alert.setContentText(msg);
+
         var dialogPane = alert.getDialogPane();
         String alertCss = ResourceUtils.externalForm(getClass(), "/css/alert.css");
         if (alertCss != null) {
@@ -285,26 +269,19 @@ public class GameSetupController {
         alert.showAndWait();
     }
 
+
     private Button createThemeButton(Theme theme, boolean isSelected) {
         Button btn = new Button();
         btn.setPrefSize(40, 40);
         btn.getStyleClass().add("theme-btn");
-
-        btn.setStyle(
-                theme.previewStyle +
-                        (isSelected
-                                ? "-fx-border-color: white; -fx-border-width: 3; -fx-scale-x:1.1; -fx-scale-y:1.1;"
-                                : "-fx-border-color: rgba(255,255,255,0.3); -fx-border-width: 2;")
-        );
+        btn.setStyle(theme.previewStyle + (isSelected
+                ? "-fx-border-color: white; -fx-border-width: 3; -fx-scale-x:1.1; -fx-scale-y:1.1;"
+                : "-fx-border-color: rgba(255,255,255,0.3); -fx-border-width: 2;"));
 
         btn.setOnAction(e -> {
-            boolean isInA = themePickerA.getChildren().contains(btn);
-
-            if (isInA) {
-                selectedThemeA = theme;
-            } else {
-                selectedThemeB = theme;
-            }
+            boolean isInA = themePickerA != null && themePickerA.getChildren().contains(btn);
+            if (isInA) selectedThemeA = theme;
+            else selectedThemeB = theme;
 
             rebuildPicker(themePickerA, selectedThemeA, true);
             rebuildPicker(themePickerB, selectedThemeB, false);
@@ -314,11 +291,12 @@ public class GameSetupController {
     }
 
     private void rebuildPicker(HBox box, Theme selected, boolean isPlayerA) {
-        box.getChildren().clear();
+        if (box == null) return;
 
+        box.getChildren().clear();
         for (Theme t : ThemeColors.themes) {
-            boolean isSelected = selected != null && t.id.equals(selected.id);
-            Button btn = createThemeButton(t, isSelected);
+            boolean sel = selected != null && t.id.equals(selected.id);
+            Button btn = createThemeButton(t, sel);
 
             boolean usedByOther = isPlayerA
                     ? (selectedThemeB != null && t.id.equals(selectedThemeB.id))
@@ -334,21 +312,20 @@ public class GameSetupController {
     }
 
     private void rebuildAvatarPicker(HBox box, Avatar selected, boolean isPlayerA) {
-        if (box == null) {
-            return;
-        }
-        box.getChildren().clear();
+        if (box == null) return;
 
+        box.getChildren().clear();
         ToggleGroup group = new ToggleGroup();
+
         for (Avatar avatar : Avatar.values()) {
-            boolean isSelected = selected != null && avatar == selected;
-            ToggleButton btn = createAvatarButton(avatar, isSelected, isPlayerA, group);
+            boolean sel = selected != null && avatar == selected;
+            ToggleButton btn = createAvatarButton(avatar, sel, isPlayerA, group);
 
             boolean usedByOther = isPlayerA
                     ? (selectedAvatarB != null && avatar == selectedAvatarB)
                     : (selectedAvatarA != null && avatar == selectedAvatarA);
 
-            if (usedByOther && !isSelected) {
+            if (usedByOther && !sel) {
                 btn.setDisable(true);
                 btn.setOpacity(0.45);
             }
@@ -359,9 +336,12 @@ public class GameSetupController {
 
     private ToggleButton createAvatarButton(Avatar avatar, boolean isSelected, boolean isPlayerA, ToggleGroup group) {
         ToggleButton btn = new ToggleButton();
+
+        // ✅ Keep fixed size (prevents shrinking)
         btn.setPrefSize(56, 56);
         btn.setMinSize(56, 56);
         btn.setMaxSize(56, 56);
+
         btn.getStyleClass().add("avatar-btn");
         btn.setToggleGroup(group);
         btn.setSelected(isSelected);
@@ -372,6 +352,8 @@ public class GameSetupController {
         } else {
             btn.setText(avatar.displayName);
         }
+
+        // ✅ Tooltip back (nice UX)
         btn.setTooltip(new Tooltip(avatar.displayName));
 
         btn.setOnAction(e -> {
@@ -380,20 +362,20 @@ public class GameSetupController {
             } else {
                 selectedAvatarB = avatar;
             }
+
             rebuildAvatarPicker(avatarPickerA, selectedAvatarA, true);
             rebuildAvatarPicker(avatarPickerB, selectedAvatarB, false);
         });
+
         return btn;
     }
 
+
     private ImageView loadAvatarView(Avatar avatar) {
-        if (avatar == null) {
-            return null;
-        }
+        if (avatar == null) return null;
+
         try (var is = ResourceUtils.stream(getClass(), avatar.resourcePath)) {
-            if (is == null) {
-                return null;
-            }
+            if (is == null) return null;
             Image image = new Image(is);
             ImageView view = new ImageView(image);
             view.setFitWidth(42);
@@ -407,12 +389,9 @@ public class GameSetupController {
     }
 
     private void ensureAvatarDefaults() {
-        if (selectedAvatarA == null) {
-            selectedAvatarA = Avatar.SIMBA;
-        }
+        if (selectedAvatarA == null) selectedAvatarA = Avatar.SIMBA;
         if (selectedAvatarB == null || selectedAvatarB == selectedAvatarA) {
-            selectedAvatarB = selectedAvatarA == Avatar.NALA ? Avatar.MUFASA : Avatar.NALA;
+            selectedAvatarB = (selectedAvatarA == Avatar.NALA) ? Avatar.MUFASA : Avatar.NALA;
         }
     }
-
 }
