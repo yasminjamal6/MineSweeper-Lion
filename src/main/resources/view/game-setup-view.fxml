@@ -36,7 +36,9 @@
                       AnchorPane.leftAnchor="0"
                       AnchorPane.rightAnchor="0"
                       style="-fx-padding: 10 80 10 80;">
-                    <VBox alignment="TOP_CENTER"
+
+                    <VBox fx:id="mainCard"
+                          alignment="TOP_CENTER"
                           spacing="14"
                           styleClass="card-main">
 
@@ -106,11 +108,17 @@
                                        styleClass="field-label" text="Board style" />
                                 <HBox fx:id="themePickerB"
                                       alignment="CENTER" spacing="10"/>
+
+
                             </VBox>
                         </HBox>
 
+                        <CheckBox fx:id="playerBAICheckbox"
+                                  text="Play WITH Lion AI 🦁"
+                                  onAction="#onTogglePlayerBAI"
+                                  styleClass="ai-checkbox"/>
                         <!-- Difficulty -->
-                        <VBox alignment="CENTER" spacing="10">
+                        <VBox fx:id="difficultyBox" alignment="CENTER" spacing="10">
                             <Label id="challengeTitleLabel"
                                    styleClass="section-title"
                                    text="Choose the challenge level" />
@@ -147,10 +155,13 @@
                         </VBox>
 
                         <!-- Start button -->
-                        <Button id="startAdventureButton"
-                                onAction="#onStart"
-                                styleClass="primary-action-btn"
-                                text="Start the Adventure 🦁" />
+                        <HBox fx:id="startRow" alignment="CENTER">
+                            <Button id="startAdventureButton"
+                                    onAction="#onStart"
+                                    styleClass="primary-action-btn"
+                                    text="Start the Adventure 🦁" />
+                        </HBox>
+
 
                     </VBox>
                 </VBox>

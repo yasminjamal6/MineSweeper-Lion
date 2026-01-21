@@ -471,3 +471,43 @@ GLOBAL FONT
 .dark-mode .board-container {
     -fx-background-color: transparent;
 }
+.ai-checkbox {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5a2e00;
+
+    -fx-background-color: linear-gradient(
+            to right,
+            #ffe6b3,
+            #ffd36a
+    );
+
+    -fx-background-radius: 30;
+    -fx-padding: 10 18 10 18;
+
+    -fx-effect: dropshadow(gaussian, rgba(255, 170, 0, 0.45), 14, 0.6, 0, 0);
+
+    -fx-cursor: hand;
+}
+
+/* Hover – מרגיש חי */
+.ai-checkbox:hover {
+    -fx-background-color: linear-gradient(
+            to right,
+            #ffd36a,
+            #ffb703
+    );
+}
+
+/* כשנבחר */
+.ai-checkbox:selected {
+    -fx-text-fill: #3b1f00;
+
+    -fx-background-color: linear-gradient(
+            to right,
+            #ffb703,
+            #ff8f00
+    );
+
+    -fx-effect: dropshadow(gaussian, rgba(255, 140, 0, 0.85), 22, 0.8, 0, 0);
+}

@@ -35,198 +35,198 @@
                       AnchorPane.leftAnchor="10.0"
                       AnchorPane.rightAnchor="10.0">
 
-            <Label text="Avoid Scar! Right-click to place Simba's paw marks"
-                   maxWidth="Infinity"
-                   alignment="CENTER"
-                   styleClass="hint-text"/>
-
-            <!-- TOP BAR -->
-            <HBox spacing="10" alignment="CENTER" styleClass="top-bar">
-
-                <Label fx:id="scoreLabel"
-                       text="Score: 0 🏆"
-                       styleClass="score-label"/>
-
-                <Label fx:id="timerLabel"
-                       text="00:00"
-                       styleClass="timer-label"/>
-
-                <Region HBox.hgrow="ALWAYS"/>
-
-                <HBox fx:id="heartsBox"
-                      alignment="CENTER"
-                      spacing="0"
-                      styleClass="hearts-row"/>
-
-                <Region HBox.hgrow="ALWAYS"/>
-
-                <Label fx:id="livesLabel"
-                       text="10 / 10"
-                       styleClass="lives-counter"/>
-
-                <!-- PAUSE BUTTON -->
-                <Button fx:id="pauseBtn"
-                        onAction="#onPause"
-                        styleClass="back-home-btn">
-                    <graphic>
-                        <ImageView fitWidth="26" fitHeight="26" preserveRatio="true">
-                            <image>
-                                <Image url="@/images/puse0.png"/>
-                            </image>
-                        </ImageView>
-                    </graphic>
-                </Button>
-                <Button fx:id="restartBtn"
-                        onAction="#onRestart"
-                        styleClass="back-home-btn">
-                    <graphic>
-                        <ImageView fitWidth="26" fitHeight="26" preserveRatio="true">
-                            <image>
-                                <Image url="@/images/reload.png"/>
-                            </image>
-                        </ImageView>
-                    </graphic>
-                </Button>
-
-                <Button fx:id="hintBtn"
-                        onAction="#onHint"
-                        styleClass="back-home-btn">
-                    <graphic>
-                        <ImageView fitWidth="26" fitHeight="26" preserveRatio="true">
-                            <image>
-                                <Image url="@/images/hint.png"/>
-                            </image>
-                        </ImageView>
-                    </graphic>
-                </Button>
-
-
-
-                <Button fx:id="backHomeBtn"
-                        onAction="#onBackToHome"
-                        styleClass="back-home-btn">
-
-                    <graphic>
-                        <ImageView fitWidth="26" fitHeight="26" preserveRatio="true">
-                            <image>
-                                <Image url="@/images/home.png"/>                            </image>
-                        </ImageView>
-                    </graphic>
-                </Button>
-            </HBox>
-
-            <!-- ===== BOARDS ===== -->
-            <HBox spacing="16" VBox.vgrow="ALWAYS">
-
-                <VBox spacing="10" HBox.hgrow="ALWAYS">
-
-                    <VBox alignment="CENTER" spacing="6">
-                        <HBox alignment="CENTER" spacing="8"
-                              styleClass="player-header player-header-a">
-                            <ImageView fx:id="playerAAvatarView"
-                                       fitWidth="26" fitHeight="26"
-                                       preserveRatio="true"
-                                       smooth="true"
-                                       styleClass="player-avatar"/>
-                            <Label fx:id="playerANameLabel"
-                                   text="Player A"
-                                   styleClass="player-name"/>
-                        </HBox>
-
-                        <HBox alignment="CENTER" spacing="6"
-                              styleClass="mines-chip">
-                            <ImageView fitWidth="20" fitHeight="20" preserveRatio="true" smooth="true">
-                                <image>
-                                    <Image url="@/images/bomb2.png"/>
-                                </image>
-                            </ImageView>
-
-                            <Label fx:id="playerAMinesLabel"
-                                   text="10"
-                                   styleClass="mines-count"/>
-                            <Label text="MINES" styleClass="mines-text"/>
-                        </HBox>
-                    </VBox>
-
-                    <!-- תור של שחקן A -->
-                    <Label fx:id="turnALabel"
-                           text="Your turn"
+                    <Label text="Avoid Scar! Right-click to place Simba's paw marks"
+                           maxWidth="Infinity"
                            alignment="CENTER"
-                           styleClass="turn-label"/>
+                           styleClass="hint-text"/>
 
-                    <Label text="Board A" styleClass="board-title"/>
+                    <!-- TOP BAR -->
+                    <HBox spacing="10" alignment="CENTER" styleClass="top-bar">
 
-                    <StackPane fx:id="boardAContainer"
-                               styleClass="board-container"
-                               VBox.vgrow="ALWAYS">
-                        <GridPane fx:id="boardAGrid"
-                                  hgap="2" vgap="2"
-                                  alignment="CENTER"/>
-                    </StackPane>
-                </VBox>
+                        <Label fx:id="scoreLabel"
+                               text="Score: 0 🏆"
+                               styleClass="score-label"/>
 
-                <VBox spacing="10" HBox.hgrow="ALWAYS">
+                        <Label fx:id="timerLabel"
+                               text="00:00"
+                               styleClass="timer-label"/>
 
-                    <VBox alignment="CENTER" spacing="6">
-                        <HBox alignment="CENTER" spacing="8"
-                              styleClass="player-header player-header-b">
-                            <ImageView fx:id="playerBAvatarView"
-                                       fitWidth="26" fitHeight="26"
-                                       preserveRatio="true"
-                                       smooth="true"
-                                       styleClass="player-avatar"/>
-                            <Label fx:id="playerBNameLabel"
-                                   text="Player B"
-                                   styleClass="player-name"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+
+                        <HBox fx:id="heartsBox"
+                              alignment="CENTER"
+                              spacing="0"
+                              styleClass="hearts-row"/>
+
+                        <Region HBox.hgrow="ALWAYS"/>
+
+                        <Label fx:id="livesLabel"
+                               text="10 / 10"
+                               styleClass="lives-counter"/>
+
+                        <!-- PAUSE BUTTON -->
+                        <Button fx:id="pauseBtn"
+                                onAction="#onPause"
+                                styleClass="back-home-btn">
+                            <graphic>
+                                <ImageView fitWidth="26" fitHeight="26" preserveRatio="true">
+                                    <image>
+                                        <Image url="@/images/puse0.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="restartBtn"
+                                onAction="#onRestart"
+                                styleClass="back-home-btn">
+                            <graphic>
+                                <ImageView fitWidth="26" fitHeight="26" preserveRatio="true">
+                                    <image>
+                                        <Image url="@/images/reload.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+
+                        <Button fx:id="hintBtn"
+                                onAction="#onHint"
+                                styleClass="back-home-btn">
+                            <graphic>
+                                <ImageView fitWidth="26" fitHeight="26" preserveRatio="true">
+                                    <image>
+                                        <Image url="@/images/hint.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+
+
+
+                        <Button fx:id="backHomeBtn"
+                                onAction="#onBackToHome"
+                                styleClass="back-home-btn">
+
+                            <graphic>
+                                <ImageView fitWidth="26" fitHeight="26" preserveRatio="true">
+                                    <image>
+                                        <Image url="@/images/home.png"/>                            </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                    </HBox>
+
+                    <!-- ===== BOARDS ===== -->
+                    <HBox spacing="16" VBox.vgrow="ALWAYS">
+
+                        <VBox spacing="10" HBox.hgrow="ALWAYS">
+
+                            <VBox alignment="CENTER" spacing="6">
+                                <HBox alignment="CENTER" spacing="8"
+                                      styleClass="player-header player-header-a">
+                                    <ImageView fx:id="playerAAvatarView"
+                                               fitWidth="26" fitHeight="26"
+                                               preserveRatio="true"
+                                               smooth="true"
+                                               styleClass="player-avatar"/>
+                                    <Label fx:id="playerANameLabel"
+                                           text="Player A"
+                                           styleClass="player-name"/>
+                                </HBox>
+
+                                <HBox alignment="CENTER" spacing="6"
+                                      styleClass="mines-chip">
+                                    <ImageView fitWidth="20" fitHeight="20" preserveRatio="true" smooth="true">
+                                        <image>
+                                            <Image url="@/images/bomb2.png"/>
+                                        </image>
+                                    </ImageView>
+
+                                    <Label fx:id="playerAMinesLabel"
+                                           text="10"
+                                           styleClass="mines-count"/>
+                                    <Label text="MINES" styleClass="mines-text"/>
+                                </HBox>
+                            </VBox>
+
+                            <!-- תור של שחקן A -->
+                            <Label fx:id="turnALabel"
+                                   text="Your turn"
+                                   alignment="CENTER"
+                                   styleClass="turn-label"/>
+
+                            <Label text="Board A" styleClass="board-title"/>
+
+                            <StackPane fx:id="boardAContainer"
+                                       styleClass="board-container"
+                                       VBox.vgrow="ALWAYS">
+                                <GridPane fx:id="boardAGrid"
+                                          hgap="2" vgap="2"
+                                          alignment="CENTER"/>
+                            </StackPane>
+                        </VBox>
+
+                        <VBox spacing="10" HBox.hgrow="ALWAYS">
+
+                            <VBox alignment="CENTER" spacing="6">
+                                <HBox alignment="CENTER" spacing="8"
+                                      styleClass="player-header player-header-b">
+                                    <ImageView fx:id="playerBAvatarView"
+                                               fitWidth="26" fitHeight="26"
+                                               preserveRatio="true"
+                                               smooth="true"
+                                               styleClass="player-avatar"/>
+                                    <Label fx:id="playerBNameLabel"
+                                           text="Player B"
+                                           styleClass="player-name"/>
+                                </HBox>
+
+                                <HBox alignment="CENTER" spacing="6"
+                                      styleClass="mines-chip">
+                                    <ImageView fitWidth="20" fitHeight="20" preserveRatio="true" smooth="true">
+                                        <image>
+                                            <Image url="@/images/bomb2.png"/>
+                                        </image>
+                                    </ImageView>
+
+                                    <Label fx:id="playerBMinesLabel"
+                                           text="10"
+                                           styleClass="mines-count"/>
+                                    <Label text="MINES" styleClass="mines-text"/>
+                                </HBox>
+                            </VBox>
+                            <!-- תור של שחקן B -->
+                            <Label fx:id="turnBLabel"
+                                   text="Your turn"
+                                   alignment="CENTER"
+                                   styleClass="turn-label"/>
+
+                            <Label text="Board B" styleClass="board-title"/>
+
+                            <StackPane fx:id="boardBContainer"
+                                       styleClass="board-container"
+                                       VBox.vgrow="ALWAYS">
+                                <GridPane fx:id="boardBGrid"
+                                          hgap="2" vgap="2"
+                                          alignment="CENTER"/>
+                            </StackPane>
+                        </VBox>
+
+                    </HBox>
+
+                    <HBox alignment="CENTER"
+                          spacing="40"
+                          styleClass="legend-row">
+
+
+                        <!-- Simba's Mark (Flag) -->
+                        <HBox alignment="CENTER" spacing="8">
+                            <Label text="🐾"
+                                   styleClass="legend-flag-icon"/>
+                            <Label text="Simba's Mark (Flag)"
+                                   styleClass="legend-text"/>
                         </HBox>
 
-                        <HBox alignment="CENTER" spacing="6"
-                              styleClass="mines-chip">
-                            <ImageView fitWidth="20" fitHeight="20" preserveRatio="true" smooth="true">
-                                <image>
-                                    <Image url="@/images/bomb2.png"/>
-                                </image>
-                            </ImageView>
-
-                            <Label fx:id="playerBMinesLabel"
-                                   text="10"
-                                   styleClass="mines-count"/>
-                            <Label text="MINES" styleClass="mines-text"/>
-                        </HBox>
-                    </VBox>
-                    <!-- תור של שחקן B -->
-                    <Label fx:id="turnBLabel"
-                           text="Your turn"
-                           alignment="CENTER"
-                           styleClass="turn-label"/>
-
-                    <Label text="Board B" styleClass="board-title"/>
-
-                    <StackPane fx:id="boardBContainer"
-                               styleClass="board-container"
-                               VBox.vgrow="ALWAYS">
-                        <GridPane fx:id="boardBGrid"
-                                  hgap="2" vgap="2"
-                                  alignment="CENTER"/>
-                    </StackPane>
-                </VBox>
-
-            </HBox>
-
-            <HBox alignment="CENTER"
-                  spacing="40"
-                  styleClass="legend-row">
-
-
-                <!-- Simba's Mark (Flag) -->
-                <HBox alignment="CENTER" spacing="8">
-                    <Label text="🐾"
-                           styleClass="legend-flag-icon"/>
-                    <Label text="Simba's Mark (Flag)"
-                           styleClass="legend-text"/>
-                </HBox>
-
-            </HBox>
+                    </HBox>
 
                 </VBox>
 
