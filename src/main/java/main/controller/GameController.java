@@ -7,10 +7,11 @@ import javafx.scene.control.ContentDisplay;
 import model.CellType;
 import model.Question;
 import javafx.animation.Animation;
-import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.ScaleTransition;
+import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -29,9 +30,9 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import main.util.ResourceUtils;
@@ -99,6 +100,10 @@ public class GameController {
     @FXML private HBox heartsBox;
     @FXML private StackPane boardAContainer;
     @FXML private StackPane boardBContainer;
+    @FXML private StackPane rewardToastA;
+    @FXML private StackPane rewardToastB;
+    @FXML private Label rewardToastLabelA;
+    @FXML private Label rewardToastLabelB;
     @FXML private AnchorPane root;
     @FXML private StackPane countdownOverlay;
     @FXML private StackPane resumeOverlay;
@@ -267,6 +272,8 @@ public class GameController {
     private Image mineImage;
     private double mineImageSize;
     private AudioClip boomSound;
+    private PauseTransition rewardToastTimerA;
+    private PauseTransition rewardToastTimerB;
 
 
     // Heart images (full + broken)
@@ -1332,14 +1339,14 @@ public class GameController {
                 if (lives < 0) lives = 0;
                 updateLivesUI(diff);
 
-                if (correct && diff == Difficulty.EASY && level == QuestionLevel.HARD) {
-                    System.out.println(">>> Bonus trigger: EASY game + HARD question + correct");
-                    revealQuestionBonusBlock(board, isBoardA);
+        if (correct && diff == Difficulty.EASY && level == QuestionLevel.HARD) {
+            System.out.println(">>> Bonus trigger: EASY game + HARD question + correct");
+            revealQuestionBonusBlock(board, isBoardA);
                 } else if (correct && diff == Difficulty.MEDIUM && level == QuestionLevel.MEDIUM) {
-                    System.out.println(">>> Bonus trigger: MEDIUM game + MEDIUM question (single mine)");
+                    System.out.println(">>> Bonus trigger: MEDIUM game + MEDIUM question (bonus flag)");
                     revealSingleBonusMine(board, isBoardA);
                 } else if (correct && diff == Difficulty.EASY && level == QuestionLevel.MEDIUM) {
-                    System.out.println(">>> Bonus trigger: EASY game + MEDIUM question (single mine)");
+                    System.out.println(">>> Bonus trigger: EASY game + MEDIUM question (bonus flag)");
                     revealSingleBonusMine(board, isBoardA);
                 } else if (diff == Difficulty.EASY && level == QuestionLevel.HARD) {
                     System.out.println(">>> Bonus skipped: EASY game + HARD question but incorrect");
@@ -1358,20 +1365,6 @@ public class GameController {
             }
         }
     }
-    private void removeBonusHighlightAfterDelay(Button btn, Duration delay) {
-        if (btn == null) return;
-
-        Timeline t = new Timeline(
-                new KeyFrame(delay, e -> {
-                    btn.getStyleClass().remove("bonus-revealed");
-                    btn.getStyleClass().remove("bonus-mine");
-                })
-        );
-        t.setCycleCount(1);
-        t.play();
-    }
-
-
     private void revealQuestionBonusBlock(Board board, boolean isBoardA) {
         if (board == null) {
             System.out.println(">>> Bonus reveal: board is null");
@@ -1473,9 +1466,6 @@ public class GameController {
                     updateCellView(board, target, r, c);
                     if (!target.getStyleClass().contains("bonus-revealed")) {
                         target.getStyleClass().add("bonus-revealed");
-
-                        // ⏱ הירוק ייעלם אחרי 2.5 שניות
-                        removeBonusHighlightAfterDelay(target, Duration.seconds(2.5));
                     }
                 }
             }
@@ -1485,6 +1475,7 @@ public class GameController {
 
         refreshEntireBoard(board, grid);
         updateMinesUI(isBoardA);
+        showRewardToast(isBoardA, "✅ Correct! +3×3 revealed");
         System.out.println(">>> Bonus reveal: UI refresh complete");
     }
 
@@ -1534,6 +1525,7 @@ public class GameController {
         if (target != null) {
             applyBonusMineIndicator(target);
         }
+        showRewardToast(isBoardA, "⭐ Bonus flag");
         updateMinesUI(isBoardA);
         System.out.println(">>> Bonus mine reveal: flagged (" + row + "," + col + ")");
     }
@@ -2227,6 +2219,49 @@ public class GameController {
                 grid.add(cell, col, row);
             }
         }
+        hideRewardToast(isBoardA);
+    }
+
+    private void showRewardToast(boolean isBoardA, String message) {
+        StackPane toast = isBoardA ? rewardToastA : rewardToastB;
+        Label label = isBoardA ? rewardToastLabelA : rewardToastLabelB;
+        if (toast == null || label == null) {
+            return;
+        }
+        label.setText(message);
+        toast.setOpacity(0);
+        toast.setVisible(true);
+        toast.toFront();
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(120), toast);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+
+        PauseTransition timer = isBoardA ? rewardToastTimerA : rewardToastTimerB;
+        if (timer != null) {
+            timer.stop();
+        }
+        timer = new PauseTransition(Duration.millis(1500));
+        timer.setOnFinished(e -> hideRewardToast(isBoardA));
+        if (isBoardA) {
+            rewardToastTimerA = timer;
+        } else {
+            rewardToastTimerB = timer;
+        }
+        timer.playFromStart();
+    }
+
+    private void hideRewardToast(boolean isBoardA) {
+        StackPane toast = isBoardA ? rewardToastA : rewardToastB;
+        if (toast == null || !toast.isVisible()) {
+            return;
+        }
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(140), toast);
+        fadeOut.setFromValue(toast.getOpacity());
+        fadeOut.setToValue(0);
+        fadeOut.setOnFinished(e -> toast.setVisible(false));
+        fadeOut.play();
     }
 
     // -------------------------------------------------------------------------

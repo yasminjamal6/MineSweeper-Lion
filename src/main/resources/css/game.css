@@ -219,9 +219,9 @@
 }
 
 .bonus-revealed {
-    -fx-border-color: rgba(34, 197, 94, 0.95);
+    -fx-border-color: rgba(239, 68, 68, 0.95);
     -fx-border-width: 2.4;
-    -fx-effect: dropshadow(gaussian, rgba(34, 197, 94, 0.9), 18, 0.6, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgba(239, 68, 68, 0.9), 18, 0.6, 0, 0);
 }
 
 .bonus-mine {
@@ -229,6 +229,31 @@
     -fx-font-size: 20px;
     -fx-effect: dropshadow(gaussian, rgba(251, 191, 36, 0.9), 14, 0.6, 0, 0);
 }
+
+.reward-toast {
+    -fx-padding: 10 12 0 0;
+}
+
+.reward-toast-card {
+    -fx-background-color: rgba(17, 24, 39, 0.92);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(251, 191, 36, 0.85);
+    -fx-border-width: 1.2;
+    -fx-border-radius: 12;
+    -fx-padding: 6 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.55), 16, 0.4, 0, 3);
+}
+
+.reward-toast-icon {
+    -fx-font-size: 14px;
+}
+
+.reward-toast-text {
+    -fx-text-fill: #fde68a;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+}
+
 
 
 .cell-number-1 {
