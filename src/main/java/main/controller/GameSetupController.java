@@ -22,6 +22,8 @@ import main.util.ResourceUtils;
 import model.Avatar;
 import model.Theme;
 import model.ThemeColors;
+import model.Session;
+
 
 public class GameSetupController {
 
@@ -186,6 +188,7 @@ public class GameSetupController {
             if (!isValidName(b)) { showAlert("Names must contain only letters and numbers."); return; }
             if (!isValidLen(b)) { showAlert("Names must be 2 to 12 characters long."); return; }
         }
+        Session.setActivePlayerName(a);
 
         Difficulty diff = Difficulty.EASY;
         if (mediumBtn != null && mediumBtn.isSelected()) diff = Difficulty.MEDIUM;

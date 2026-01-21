@@ -47,6 +47,11 @@
                                text="Score: 0 🏆"
                                styleClass="score-label"/>
 
+                        <Label fx:id="coinsLabel"
+                               text="Coins: 0 💰"
+                               styleClass="score-label"/>
+
+
                         <Label fx:id="timerLabel"
                                text="00:00"
                                styleClass="timer-label"/>

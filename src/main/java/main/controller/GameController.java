@@ -78,6 +78,8 @@ import model.EasyBoardSetup;
 import model.MediumBoardSetup;
 import model.HardBoardSetup;
 import javafx.scene.media.AudioClip;
+import model.PlayerProfile;
+import model.ProfileStore;
 
 
 
@@ -123,6 +125,8 @@ public class GameController {
     @FXML private Button restartBtn;
     @FXML private StackPane rootStack;
     @FXML private AnchorPane gameContent;
+    @FXML private Label coinsLabel;
+
 
 
 
@@ -133,6 +137,8 @@ public class GameController {
     private static final int TUTORIAL_TURNS = 3;
     private static boolean tutorialUsed = false;
     private TutorialOverlayManager tutorialManager;
+    private PlayerProfile profileA;
+    private PlayerProfile profileB;
 
 
     @FXML
@@ -292,6 +298,9 @@ public class GameController {
     private boolean timerRunning;
     private Image openGiftImage;
     private GameSaveData pendingSavedGame;
+    // reward coins only once per match
+    private boolean coinsRewarded = false;
+
 
     private static final Gson GSON = new Gson();
     private static final DateTimeFormatter SAVE_TIME_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -352,6 +361,21 @@ public class GameController {
             stage.setOnCloseRequest(e -> saveGameState(SaveStatus.IN_PROGRESS));
         }
     }
+    private int getWinCoinsReward(model.Difficulty diff) {
+        return switch (diff) {
+            case EASY -> 30;
+            case MEDIUM -> 60;
+            case HARD -> 100;
+        };
+    }
+
+    private void updateCoinsUI() {
+        if (coinsLabel == null) return;
+
+        // אם Coins משותפים לשני שחקנים (פשוט): נציג של Player A
+        // אפשר אחר כך לעשות 2 labels - לכל שחקן
+        coinsLabel.setText("Coins: " + profileA.getCoins() + " 💰");
+    }
 
     private void startNewGameFlow() {
         historySaved = false;
@@ -362,6 +386,11 @@ public class GameController {
 
         playerANameLabel.setText(GameSetupController.selectedPlayerAName);
         playerBNameLabel.setText(GameSetupController.selectedPlayerBName);
+
+        profileA = ProfileStore.loadOrCreate(GameSetupController.selectedPlayerAName);
+        profileB = ProfileStore.loadOrCreate(GameSetupController.selectedPlayerBName);
+
+        updateCoinsUI();
 
         playerATheme = GameSetupController.selectedThemeA;
         playerBTheme = GameSetupController.selectedThemeB;
@@ -2305,18 +2334,25 @@ public class GameController {
      *  - LOSS : no hearts left
      *  - WIN  : all mines on both boards are revealed
      */
+    /**
+     * Checks if the game should end:
+     *  - LOSS : no hearts left
+     *  - WIN  : one of the boards has all mines revealed/flagged
+     */
     private void checkGameOver() {
         boolean noHeartsLeft = (lives <= 0);
 
-        boolean allMinesBoardA = areAllMinesRevealed(boardA);
-        boolean allMinesBoardB = areAllMinesRevealed(boardB);
-        boolean allMinesCleared = allMinesBoardA || allMinesBoardB;
+        boolean allMinesBoardA = (boardA != null) && areAllMinesRevealed(boardA);
+        boolean allMinesBoardB = (boardB != null) && areAllMinesRevealed(boardB);
+
+        boolean someoneClearedAllMines = allMinesBoardA || allMinesBoardB;
 
         System.out.println(">>> checkGameOver: lives=" + lives +
                 ", allMinesA=" + allMinesBoardA +
-                ", allMinesB=" + allMinesBoardB);
+                ", allMinesB=" + allMinesBoardB +
+                ", win=" + someoneClearedAllMines);
 
-        if (!noHeartsLeft && !allMinesCleared) {
+        if (!noHeartsLeft && !someoneClearedAllMines) {
             return;
         }
 
@@ -2326,11 +2362,12 @@ public class GameController {
         if (noHeartsLeft) {
             System.out.println(">>> GAME OVER: LOSE");
             openResultScreen(false);
-        } else if (allMinesCleared) {
+        } else {
             System.out.println(">>> GAME OVER: WIN");
             openResultScreen(true);
         }
     }
+
 
     private void openResultScreen(boolean win) {
         try {
@@ -2356,6 +2393,23 @@ public class GameController {
                 updateLivesUI(currentDifficulty);
             }
             persistHistoryIfNeeded(win, heartsLeft);
+
+            if (win && !coinsRewarded) {
+                coinsRewarded = true;
+                int reward = getWinCoinsReward(currentDifficulty);
+
+                if (profileA != null) {
+                    profileA.addCoins(reward);
+                    ProfileStore.save(profileA);
+                }
+                if (!playerBIsAI && profileB != null) {
+                    profileB.addCoins(reward);
+                    ProfileStore.save(profileB);
+                }
+                updateCoinsUI();
+            }
+
+
 
             if (win) {
                 controller.initAsWin(playerA, playerB, baseScoreValue, heartsLeft, heartValue);

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane xmlns="http://javafx.com/javafx/23"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="main.controller.ProfileController"
+           stylesheets="@/css/profile.css"
+           prefWidth="1200" prefHeight="800">
+
+    <!-- Background -->
+    <AnchorPane styleClass="pf-background"
+                AnchorPane.topAnchor="0"
+                AnchorPane.bottomAnchor="0"
+                AnchorPane.leftAnchor="0"
+                AnchorPane.rightAnchor="0"/>
+
+    <!-- Main Content -->
+    <VBox spacing="22"
+          maxWidth="1050"
+          StackPane.alignment="TOP_CENTER"
+          styleClass="pf-root">
+
+        <!-- HEADER -->
+        <HBox spacing="14" alignment="CENTER_LEFT" styleClass="pf-header">
+
+            <StackPane styleClass="pf-header-icon">
+                <Label text="🦁" styleClass="shop-header-icon-emoji"/>
+
+            </StackPane>
+
+            <VBox spacing="4">
+                <Label text="Player Profile" styleClass="pf-header-title"/>
+                <Label text="Your items, coins and avatar"
+                       styleClass="pf-header-subtitle"/>
+            </VBox>
+
+            <Pane HBox.hgrow="ALWAYS"/>
+
+            <Button text="🛒 Shop"
+                    onAction="#onOpenShop"
+                    styleClass="pf-btn-primary"/>
+
+            <Button text="Home"
+                    onAction="#onBackHome"
+                    styleClass="pf-btn-secondary"/>
+        </HBox>
+
+        <!-- PLAYER INFO CARD -->
+        <VBox spacing="8" styleClass="pf-card">
+
+            <Label fx:id="playerNameLabel"
+                   text="Player:"
+                   styleClass="pf-player-name"/>
+
+            <Label fx:id="coinsLabel"
+                   text="Coins:"
+                   styleClass="pf-coins"/>
+
+            <Label fx:id="selectedAvatarLabel"
+                   text="Selected Avatar:"
+                   styleClass="pf-selected-avatar"/>
+        </VBox>
+
+        <!-- OWNED AVATARS -->
+        <VBox spacing="12" styleClass="pf-card">
+
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label text="Owned Avatars" styleClass="pf-section-title"/>
+                <Label text="🦁" styleClass="pf-section-emoji"/>
+            </HBox>
+
+            <!-- Avatars Grid -->
+            <FlowPane fx:id="avatarsFlow"
+                      hgap="14"
+                      vgap="14"
+                      prefWrapLength="950"/>
+        </VBox>
+
+    </VBox>
+
+</StackPane>

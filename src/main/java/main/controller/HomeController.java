@@ -237,6 +237,55 @@ public class HomeController {
     }
 
     @FXML
+    private void onOpenShop(ActionEvent event) {
+        try {
+            var url = ResourceUtils.url(getClass(), "/view/shopView.fxml");
+            if (url == null) return;
+
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent newRoot = loader.load();
+
+            SettingsController.applyThemeToRoot(newRoot);
+            SettingsController.refreshLanguageOnAllWindows();
+
+            Scene scene = ((Node) event.getSource()).getScene();
+            newRoot.setOpacity(0);
+            scene.setRoot(newRoot);
+
+            FadeTransition ft = new FadeTransition(Duration.millis(250), newRoot);
+            ft.setFromValue(0);
+            ft.setToValue(1);
+            ft.play();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void onProfile(ActionEvent event) {
+        try {
+            var url = ResourceUtils.url(getClass(), "/view/profile-view.fxml");
+            if (url == null) return;
+
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent newRoot = loader.load();
+
+            Scene scene = ((Node) event.getSource()).getScene();
+            newRoot.setOpacity(0);
+            scene.setRoot(newRoot);
+
+            FadeTransition ft = new FadeTransition(Duration.millis(250), newRoot);
+            ft.setFromValue(0);
+            ft.setToValue(1);
+            ft.play();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @FXML
     private void onHistory(ActionEvent event) {
 
         // 1) מבקשים סיסמה (אותו דיאלוג בדיוק)
