@@ -72,6 +72,10 @@
                             text="Game History"
                             styleClass="secondary-btn"
                             onAction="#onHistory" />
+                    <Button fx:id="profilesButton"
+                            text="Player Profiles"
+                            styleClass="secondary-btn"
+                            onAction="#onProfiles" />
                 </HBox>
 
             </VBox>
