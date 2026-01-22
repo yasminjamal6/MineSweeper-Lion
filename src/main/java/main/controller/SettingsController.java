@@ -116,6 +116,7 @@ public class SettingsController {
             Button startBtn = (Button) root.lookup("#startButton");
             Button questionBtn = (Button) root.lookup("#questionManagerButton");
             Button historyBtn = (Button) root.lookup("#historyButton");
+            Button profilesBtn = (Button) root.lookup("#profilesButton");
             Button howBtn = (Button) root.lookup("#howButton");
 
             // ----- חלון ההגדרות -----
@@ -165,6 +166,7 @@ public class SettingsController {
                 if (startBtn != null)   startBtn.setText("התחל הרפתקה");
                 if (questionBtn != null)questionBtn.setText("מנהל שאלות");
                 if (historyBtn != null) historyBtn.setText("היסטוריית משחק");
+                if (profilesBtn != null) profilesBtn.setText("פרופילי שחקן");
                 if (howBtn != null)     howBtn.setText("איך משחקים?");
 
                 // הגדרות
@@ -206,6 +208,7 @@ public class SettingsController {
                 if (startBtn != null)   startBtn.setText("Start Adventure");
                 if (questionBtn != null)questionBtn.setText("Question Manager");
                 if (historyBtn != null) historyBtn.setText("Game History");
+                if (profilesBtn != null) profilesBtn.setText("Player Profiles");
                 if (howBtn != null)     howBtn.setText("How to Play?");
 
                 // הגדרות

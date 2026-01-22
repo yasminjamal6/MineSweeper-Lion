@@ -1,0 +1,94 @@
+[
+  {
+    "playerName": "layan",
+    "avatarId": "simba",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-10T21:47:49.9455317",
+        "opponent": "dana",
+        "result": "Loss",
+        "score": 93,
+        "durationSeconds": 167,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "SIMBA",
+      "SCAR",
+      "NALA"
+    ],
+    "selectedAvatarId": "SIMBA"
+  },
+  {
+    "playerName": "dana",
+    "avatarId": "nala",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-10T21:47:49.9455317",
+        "opponent": "layan",
+        "result": "Loss",
+        "score": 93,
+        "durationSeconds": 167,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "SIMBA",
+      "SCAR",
+      "NALA"
+    ],
+    "selectedAvatarId": "SIMBA"
+  },
+  {
+    "playerName": "janadan",
+    "avatarId": "simba",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-10T21:49:09.2371001",
+        "opponent": "yasmeen",
+        "result": "Loss",
+        "score": 102,
+        "durationSeconds": 37,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "SIMBA",
+      "SCAR",
+      "NALA"
+    ],
+    "selectedAvatarId": "SIMBA"
+  },
+  {
+    "playerName": "yasmeen",
+    "avatarId": "nala",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-10T21:49:09.2371001",
+        "opponent": "janadan",
+        "result": "Loss",
+        "score": 102,
+        "durationSeconds": 37,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "SIMBA",
+      "SCAR",
+      "NALA"
+    ],
+    "selectedAvatarId": "SIMBA"
+  }
+]

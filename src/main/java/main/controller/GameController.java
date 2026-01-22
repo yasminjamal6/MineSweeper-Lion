@@ -55,6 +55,7 @@ import model.Board;
 import model.Cell;
 import model.RevealResult;
 import model.Avatar;
+import model.PlayerProfileManager;
 import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -2493,6 +2494,20 @@ public class GameController {
                     playerBHeartsLeft
             );
             GameHistoryManager.addGame(history);
+
+            int boardSize = boardA != null ? boardA.getRows() : 0;
+            PlayerProfileManager.addMatchForPlayers(
+                    playerA,
+                    GameSetupController.selectedAvatarA != null ? GameSetupController.selectedAvatarA.id : null,
+                    playerB,
+                    GameSetupController.selectedAvatarB != null ? GameSetupController.selectedAvatarB.id : null,
+                    success,
+                    score,
+                    startedAt,
+                    endedAt,
+                    boardSize,
+                    difficulty
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }

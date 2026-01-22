@@ -372,6 +372,32 @@ public class HomeController {
         }
     }
 
+    @FXML
+    private void onProfiles(ActionEvent event) {
+        try {
+            var url = ResourceUtils.url(getClass(), "/view/player-profile.fxml");
+            if (url == null) {
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent root = loader.load();
+
+            SettingsController.applyThemeToRoot(root);
+            SettingsController.refreshLanguageOnAllWindows();
+
+            Scene scene = ((Node) event.getSource()).getScene();
+            root.setOpacity(0);
+            scene.setRoot(root);
+
+            FadeTransition ft = new FadeTransition(Duration.millis(250), root);
+            ft.setFromValue(0);
+            ft.setToValue(1);
+            ft.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private AccessResult requestAdminAccess() {
         Dialog<String> dialog = new Dialog<>();

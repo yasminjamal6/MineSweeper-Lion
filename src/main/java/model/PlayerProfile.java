@@ -1,10 +1,14 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class PlayerProfile {
     private String playerName;
+    private String avatarId;
+    private List<MatchRecord> matches = new ArrayList<>();
     private int coins;
     private Set<String> ownedAvatars;
     private String selectedAvatarId;
@@ -13,16 +17,25 @@ public class PlayerProfile {
     private static final Set<String> FREE_AVATARS = Set.of("SIMBA", "NALA", "MUFASA", "SCAR");
 
     public PlayerProfile() {
-        this("Player");
+        this("Player", null);
     }
 
     public PlayerProfile(String playerName) {
+        this(playerName, null);
+    }
+
+    public PlayerProfile(String playerName, String avatarId) {
         this.playerName = playerName;
+        this.avatarId = avatarId;
         this.coins = 0;
         this.ownedAvatars = new HashSet<>();
-
         ownedAvatars.addAll(FREE_AVATARS);
-        selectedAvatarId = "SIMBA";
+        if (avatarId != null && !avatarId.isBlank()) {
+            ownedAvatars.add(avatarId);
+            selectedAvatarId = avatarId;
+        } else {
+            selectedAvatarId = "SIMBA";
+        }
     }
 
     // ✅ לקרוא אחרי טעינה מהקובץ
@@ -31,12 +44,42 @@ public class PlayerProfile {
         ownedAvatars.addAll(FREE_AVATARS);
 
         if (selectedAvatarId == null || !ownedAvatars.contains(selectedAvatarId)) {
-            selectedAvatarId = "SIMBA";
+            selectedAvatarId = (avatarId != null && !avatarId.isBlank()) ? avatarId : "SIMBA";
         }
     }
 
     public String getPlayerName() { return playerName; }
     public void setPlayerName(String playerName) { this.playerName = playerName; }
+
+    public String getAvatarId() {
+        if (avatarId != null && !avatarId.isBlank()) {
+            return avatarId;
+        }
+        return selectedAvatarId;
+    }
+
+    public void setAvatarId(String avatarId) {
+        this.avatarId = avatarId;
+        if (avatarId != null && !avatarId.isBlank()) {
+            if (ownedAvatars != null) {
+                ownedAvatars.add(avatarId);
+            }
+            selectedAvatarId = avatarId;
+        }
+    }
+
+    public List<MatchRecord> getMatches() {
+        if (matches == null) {
+            matches = new ArrayList<>();
+        }
+        return matches;
+    }
+
+    public void addMatch(MatchRecord record) {
+        if (record != null) {
+            getMatches().add(0, record);
+        }
+    }
 
     public int getCoins() { return coins; }
     public void setCoins(int coins) { this.coins = Math.max(0, coins); }
@@ -66,7 +109,12 @@ public class PlayerProfile {
         ownedAvatars.add(avatarId);
     }
 
-    public String getSelectedAvatarId() { return selectedAvatarId; }
+    public String getSelectedAvatarId() {
+        if (selectedAvatarId != null && !selectedAvatarId.isBlank()) {
+            return selectedAvatarId;
+        }
+        return avatarId;
+    }
 
     public boolean selectAvatar(String avatarId) {
         if (avatarId == null) return false;
