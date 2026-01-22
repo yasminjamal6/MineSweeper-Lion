@@ -867,6 +867,17 @@ public class GameController {
         if (key == null) return null;
         GameSaveData data = SavedGameRepository.loadLatest(key);
         if (data == null) {
+            String legacyKey = legacySaveKey();
+            if (legacyKey != null && !legacyKey.equals(key)) {
+                GameSaveData legacyData = SavedGameRepository.loadLatest(legacyKey);
+                if (legacyData != null && matchesPlayerOrder(legacyData)) {
+                    SavedGameRepository.save(key, legacyData);
+                    SavedGameRepository.delete(legacyKey);
+                    data = legacyData;
+                }
+            }
+        }
+        if (data == null) {
             return null;
         }
         if (data.status == null || data.boardSize <= 0 || data.difficulty == null) {
@@ -900,10 +911,34 @@ public class GameController {
     private String makeSaveKey(String playerA, String playerB, String difficulty, int size) {
         String normA = normalizeName(playerA);
         String normB = normalizeName(playerB);
+        String base = normA + "_" + normB + "_" + (difficulty == null ? "" : difficulty.toLowerCase()) + "_" + size;
+        return base.replaceAll("[^a-z0-9_-]", "_");
+    }
+
+    private String legacySaveKey() {
+        String a = GameSetupController.selectedPlayerAName;
+        String b = GameSetupController.selectedPlayerBName;
+        GameSetupController.Difficulty diff = GameSetupController.selectedDifficulty;
+        if (a == null || b == null || diff == null) {
+            return null;
+        }
+        int size = getBoardSize(diff);
+        String normA = normalizeName(a);
+        String normB = normalizeName(b);
         String[] pair = new String[]{normA, normB};
         Arrays.sort(pair);
-        String base = pair[0] + "_" + pair[1] + "_" + (difficulty == null ? "" : difficulty.toLowerCase()) + "_" + size;
+        String base = pair[0] + "_" + pair[1] + "_" + diff.name().toLowerCase() + "_" + size;
         return base.replaceAll("[^a-z0-9_-]", "_");
+    }
+
+    private boolean matchesPlayerOrder(GameSaveData data) {
+        String a = GameSetupController.selectedPlayerAName;
+        String b = GameSetupController.selectedPlayerBName;
+        if (a == null || b == null || data == null) {
+            return false;
+        }
+        return normalizeName(a).equals(normalizeName(data.playerAName))
+                && normalizeName(b).equals(normalizeName(data.playerBName));
     }
 
     private String normalizeName(String name) {
