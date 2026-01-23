@@ -81,6 +81,12 @@ import model.HardBoardSetup;
 import javafx.scene.media.AudioClip;
 import model.PlayerProfile;
 import model.ProfileStore;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.geometry.Side;
+import javafx.animation.ParallelTransition;
+import javafx.animation.Interpolator;
+import javafx.event.ActionEvent;
 
 
 
@@ -126,7 +132,13 @@ public class GameController {
     @FXML private Button restartBtn;
     @FXML private StackPane rootStack;
     @FXML private AnchorPane gameContent;
-    @FXML private Label coinsLabel;
+    @FXML private Label coinsALabel;
+    @FXML private Label coinsBLabel;
+    @FXML private Button emojiBtn;
+    @FXML private StackPane rootGame; // ה-root של המשחק (חשוב לאנימציה)
+
+    private PlayerProfile activeProfile;
+
 
 
 
@@ -140,6 +152,7 @@ public class GameController {
     private TutorialOverlayManager tutorialManager;
     private PlayerProfile profileA;
     private PlayerProfile profileB;
+    private final java.util.Map<String, Integer> sharedEmojiCounts = new java.util.HashMap<>();
 
 
     @FXML
@@ -369,14 +382,15 @@ public class GameController {
             case HARD -> 100;
         };
     }
-
     private void updateCoinsUI() {
-        if (coinsLabel == null) return;
-
-        // אם Coins משותפים לשני שחקנים (פשוט): נציג של Player A
-        // אפשר אחר כך לעשות 2 labels - לכל שחקן
-        coinsLabel.setText("Coins: " + profileA.getCoins() + " 💰");
+        if (profileA != null && coinsALabel != null) {
+            coinsALabel.setText("Coins A: " + profileA.getCoins() + " 💰");
+        }
+        if (profileB != null && coinsBLabel != null) {
+            coinsBLabel.setText("Coins B: " + profileB.getCoins() + " 💰");
+        }
     }
+
 
     private void startNewGameFlow() {
         historySaved = false;
@@ -584,6 +598,10 @@ public class GameController {
 
             playerANameLabel.setText(savedState.playerAName);
             playerBNameLabel.setText(savedState.playerBName);
+            profileA = ProfileStore.loadOrCreate(savedState.playerAName);
+            profileB = ProfileStore.loadOrCreate(savedState.playerBName);
+            updateCoinsUI();
+
 
             int mines = getMinesForDifficulty(savedDifficulty);
             playerAMinesLabel.setText(String.valueOf(mines));
@@ -672,6 +690,39 @@ public class GameController {
             }
         }
     }
+    private void showFloatingEmoji(String emojiChar) {
+        if (rootStack == null) return; // אצלך rootStack קיים וזה הכי טוב להשתמש בו
+
+        Label l = new Label(emojiChar);
+        l.setStyle("-fx-font-size: 44px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 14, 0.2, 0, 4);");
+        l.setMouseTransparent(true);
+
+        // מוסיפים למסך
+        rootStack.getChildren().add(l);
+
+        // מיקום התחלתי ליד הכפתור 😀 (כמעט)
+        l.setTranslateX(380);
+        l.setTranslateY(-260);
+
+        TranslateTransition tt = new TranslateTransition(Duration.millis(900), l);
+        tt.setFromY(-260);
+        tt.setToY(-340);
+        tt.setInterpolator(Interpolator.EASE_OUT);
+
+        FadeTransition ft = new FadeTransition(Duration.millis(900), l);
+        ft.setFromValue(1);
+        ft.setToValue(0);
+
+        ScaleTransition st = new ScaleTransition(Duration.millis(900), l);
+        st.setFromX(1);
+        st.setFromY(1);
+        st.setToX(1.2);
+        st.setToY(1.2);
+
+        ParallelTransition pt = new ParallelTransition(tt, ft, st);
+        pt.setOnFinished(e -> rootStack.getChildren().remove(l));
+        pt.play();
+    }
 
     private boolean[][] ensureMineRewards(boolean[][] saved, int size) {
         if (saved != null && saved.length == size) {
@@ -734,6 +785,73 @@ public class GameController {
             countdownOverlay.setVisible(false);
             countdownOverlay.setMouseTransparent(true);
         }
+    }
+
+    @FXML
+    private void onOpenEmojiMenu(ActionEvent e) {
+        activeProfile = isPlayerATurn ? profileA : profileB;
+        loadActiveProfileIfNeeded();
+        if (activeProfile == null || emojiBtn == null) return;
+
+
+        ContextMenu menu = new ContextMenu();
+
+        var map = activeProfile.getEmojiCounts();
+        boolean hasAny = false;
+
+        for (var entry : map.entrySet()) {
+            String id = entry.getKey();
+            int count = entry.getValue();
+            if (count <= 0) continue;
+
+            hasAny = true;
+            String emoji = emojiToChar(id);
+
+            MenuItem item = new MenuItem(emoji + "  x" + count);
+            item.setOnAction(ev -> {
+                if (activeProfile.consumeEmoji(id)) {
+                    ProfileStore.save(activeProfile);
+                    showFloatingEmoji(emoji);
+                }
+            });
+
+            menu.getItems().add(item);
+        }
+
+        if (!hasAny) {
+            MenuItem none = new MenuItem("No emojis yet 🎁");
+            none.setDisable(true);
+            menu.getItems().add(none);
+        }
+
+        // לפתוח ליד הכפתור
+        menu.show(emojiBtn, javafx.geometry.Side.BOTTOM, 0, 6);
+    }
+    private void loadActiveProfileIfNeeded() {
+        if (activeProfile != null) return;
+
+        // אם המשחק כבר התחיל ויש פרופילים – קח לפי התור
+        if (profileA != null && profileB != null) {
+            activeProfile = isPlayerATurn ? profileA : profileB;
+            return;
+        }
+
+        // fallback (אם משום מה עוד לא נטענו)
+        String name = GameSetupController.selectedPlayerAName;
+        if (name == null || name.isBlank()) name = "Player";
+        activeProfile = ProfileStore.loadOrCreate(name);
+    }
+
+
+    private String emojiToChar(String id) {
+        return switch (id) {
+            case "FIRE" -> "🔥";
+            case "SMILE" -> "😄";
+            case "CROWN" -> "👑";
+            case "BOOM" -> "💥";
+            case "LION" -> "🦁";
+            default -> "✨";
+        };
     }
 
     private Theme findThemeById(String id, Theme fallback) {
@@ -982,6 +1100,7 @@ public class GameController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
         // Load open gift image
         try {
@@ -1313,6 +1432,19 @@ public class GameController {
         updateCellView(board, cellButton, row, col);
         refreshEntireBoard(board, isBoardA ? boardAGrid : boardBGrid);
         updateMinesUI(isBoardA);
+        // ✅ SURPRISE שנחשפה עכשיו – להפעיל מיד (קליק אחד)
+        if (cell.isRevealed()
+                && cell.getType() == CellType.SURPRISE
+                && !cell.isSurpriseUsed()) {
+
+            handleSurpriseActivation(cell, cellButton);
+
+            isPlayerATurn = !isPlayerATurn;
+            updateBoardHighlight();
+            checkGameOver();
+            return;
+        }
+
 
         int revealedAfter = countRevealed(board);
         int newlyRevealed = Math.max(0, revealedAfter - revealedBefore);
@@ -2187,6 +2319,7 @@ public class GameController {
         addScore(change.getPointsDelta());
         updateLivesUI(diff);
 
+
         // אם ההפתעה גמרה את כל הלבבות – מיד מסיימים משחק, בלי פופאפ
         checkGameOver();
         if (lives <= 0) {
@@ -2197,29 +2330,35 @@ public class GameController {
     }
 
     private void showSurprisePopup(ScoreRules.ScoreChange change) {
-        try {
-            var url = ResourceUtils.url(getClass(), "/view/surprise-view.fxml");
-            if (url == null) {
-                return;
+        Platform.runLater(() -> {
+            try {
+                var url = ResourceUtils.url(getClass(), "/view/surprise-view.fxml");
+                if (url == null) {
+                    System.err.println("❌ surprise-view.fxml NOT FOUND at /view/surprise-view.fxml");
+                    return;
+                }
+
+                FXMLLoader loader = new FXMLLoader(url);
+                Parent root = loader.load();
+
+                SurpriseController controller = loader.getController();
+                controller.setData(change);
+
+                Stage dialog = new Stage();
+                dialog.initOwner(this.root.getScene().getWindow()); // יותר בטוח מ-scoreLabel
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.initStyle(StageStyle.UNDECORATED);
+
+                dialog.setScene(new Scene(root));
+                dialog.showAndWait();
+
+            } catch (Exception e) {
+                System.err.println("❌ Failed to open surprise popup:");
+                e.printStackTrace();
             }
-            FXMLLoader loader = new FXMLLoader(url);
-            Parent root = loader.load();
-
-            SurpriseController controller = loader.getController();
-            controller.setData(change);
-
-            Stage dialog = new Stage();
-            dialog.initOwner(scoreLabel.getScene().getWindow());
-            dialog.initModality(Modality.APPLICATION_MODAL);
-
-            Scene scene = new Scene(root);
-            dialog.setScene(scene);
-            dialog.showAndWait();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        });
     }
+
 
     // -------------------------------------------------------------------------
     // BUILD BOARD GRID
@@ -2381,17 +2520,20 @@ public class GameController {
         boolean allMinesBoardA = (boardA != null) && areAllMinesRevealed(boardA);
         boolean allMinesBoardB = (boardB != null) && areAllMinesRevealed(boardB);
 
-        boolean someoneClearedAllMines = allMinesBoardA || allMinesBoardB;
+        boolean win = allMinesBoardA || allMinesBoardB;
 
         System.out.println(">>> checkGameOver: lives=" + lives +
                 ", allMinesA=" + allMinesBoardA +
                 ", allMinesB=" + allMinesBoardB +
-                ", win=" + someoneClearedAllMines);
+                ", win=" + win);
 
-        if (!noHeartsLeft && !someoneClearedAllMines) {
+        if (!noHeartsLeft && !win) {
             return;
         }
-
+        // ⬅️ עדכון מתנת פרופיל רק כשבאמת ניצחון (ולא כל פעם שלוח אחד נסגר)
+        if (win) {
+            awardWinForGiftProgress();
+        }
         pauseTimer();
         saveGameState(SaveStatus.COMPLETED);
 
@@ -3060,6 +3202,20 @@ public class GameController {
         if (candidates.isEmpty()) return null;
         int idx = java.util.concurrent.ThreadLocalRandom.current().nextInt(candidates.size());
         return candidates.get(idx);
+    }
+    private void awardWinForGiftProgress() {
+        if (profileA != null) {
+            profileA.ensureDefaults();
+            profileA.onWin();
+            ProfileStore.save(profileA);
+        }
+
+        // אם B הוא AI – לא לתת לו התקדמות
+        if (!playerBIsAI && profileB != null) {
+            profileB.ensureDefaults();
+            profileB.onWin();
+            ProfileStore.save(profileB);
+        }
     }
 
 }

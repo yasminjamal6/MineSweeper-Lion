@@ -3,7 +3,7 @@ package model;
 public enum Avatar {
     SIMBA("simba", "Simba", "/images/avatars/simba.png"),
     NALA("nala", "Nala", "/images/avatars/nala.png"),
-    MUFASA("mufasa", "Mufasa", "/images/avatars/mufasa.jpg"),
+    MUFASA("mufasa", "Mufasa", "/images/avatars/mufasa.png"),
     SCAR("scar", "Scar", "/images/avatars/scar.png");
 
     public final String id;

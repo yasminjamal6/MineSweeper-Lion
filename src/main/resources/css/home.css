@@ -858,3 +858,75 @@
     -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
+.gift-overlay {
+    -fx-background-color: transparent;
+}
+
+
+
+.gift-box {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-min-height: 0;
+    -fx-pref-height: -1;
+    -fx-max-height: -1;
+
+    /* חשוב! אם יש לך translate שעושה את זה באמצע – לבטל */
+    -fx-translate-y: 0;
+}
+
+
+.gift-image {
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 10, 0.2, 0, 2);
+}
+
+.gift-image:hover {
+    -fx-opacity: 0.9;
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.gift-progress {
+    /* הצבע של המילוי (progress) */
+    -fx-accent: #6b3f1f; /* חום כהה */
+}
+
+.gift-progress .track {
+    -fx-background-color: rgba(255, 220, 170, 0.22);
+    -fx-background-radius: 999;
+    -fx-border-color: rgba(255, 203, 100, 0.25);
+    -fx-border-radius: 999;
+}
+
+.gift-progress .bar {
+    -fx-background-insets: 0;
+    -fx-background-radius: 999;
+}
+
+.gift-time {
+    -fx-text-fill: rgba(255, 235, 205, 0.95);
+    -fx-font-weight: 700;
+    -fx-font-size: 12px;
+}
+
+.gift-pay-row {
+    -fx-padding: 2 0 0 0;
+}
+
+.gift-pay-hint {
+    -fx-text-fill: rgba(255, 220, 170, 0.85);
+    -fx-font-size: 11px;
+}
+
+.gift-pay-link {
+    -fx-text-fill: #ffcc66;
+    -fx-font-weight: 800;
+    -fx-underline: false;
+    -fx-cursor: hand;
+}
+
+.gift-pay-link:hover {
+    -fx-text-fill: #ffe1a6;
+    -fx-underline: true;
+}

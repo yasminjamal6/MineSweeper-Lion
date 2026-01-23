@@ -22,7 +22,6 @@ import javafx.util.Duration;
 import main.util.ResourceUtils;
 import javafx.scene.control.*;
 
-
 /**
  * Controller for the Home screen.
  * <p>
@@ -39,8 +38,9 @@ public class HomeController {
     @FXML private VBox footerBox;
     @FXML private Pane tickerClip;
     @FXML private Label tickerLabel;
+    @FXML private StackPane rootPane;
 
-    @FXML private StackPane rootPane;   // root הראשי
+
 
     @FXML
     private void initialize() {
@@ -49,7 +49,10 @@ public class HomeController {
         SettingsController.refreshLanguageOnAllWindows();
         playEntranceAnimations();
         javafx.application.Platform.runLater(this::startTicker);
+
     }
+
+
     private void startTicker() {
         String tickerText =
                 "🦁 Every move shapes your destiny.   •   " +
@@ -285,6 +288,7 @@ public class HomeController {
     }
 
 
+
     @FXML
     private void onHistory(ActionEvent event) {
 
@@ -442,4 +446,6 @@ public class HomeController {
     private enum AccessResult {
         GRANTED, DENIED, CANCELED
     }
+
+
 }

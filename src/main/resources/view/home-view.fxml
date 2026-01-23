@@ -72,10 +72,7 @@
                             text="Game History"
                             styleClass="secondary-btn"
                             onAction="#onHistory" />
-                    <Button fx:id="profilesButton"
-                            text="Player Profiles"
-                            styleClass="secondary-btn"
-                            onAction="#onProfiles" />
+
                 </HBox>
 
             </VBox>
@@ -154,6 +151,7 @@
             </StackPane.margin>
         </Button>
 
+
         <StackPane fx:id="tickerBar"
                    styleClass="ticker-bar"
                    minHeight="46" prefHeight="46" maxHeight="46"
@@ -166,6 +164,8 @@
             </Pane>
 
         </StackPane>
+
+
 
     </children>
 

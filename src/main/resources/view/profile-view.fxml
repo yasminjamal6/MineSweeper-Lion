@@ -1,84 +1,147 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 
-<StackPane xmlns="http://javafx.com/javafx/23"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="main.controller.ProfileController"
-           stylesheets="@/css/profile.css"
-           prefWidth="1200" prefHeight="800">
+<AnchorPane xmlns="http://javafx.com/javafx/23"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="main.controller.ProfileController"
+            stylesheets="@/css/player-profile.css"
+            prefWidth="1200.0" prefHeight="800.0"
+            styleClass="profile-root">
 
-    <!-- Background -->
-    <AnchorPane styleClass="pf-background"
-                AnchorPane.topAnchor="0"
-                AnchorPane.bottomAnchor="0"
-                AnchorPane.leftAnchor="0"
-                AnchorPane.rightAnchor="0"/>
+    <children>
+        <VBox spacing="16"
+              AnchorPane.topAnchor="16.0"
+              AnchorPane.bottomAnchor="16.0"
+              AnchorPane.leftAnchor="16.0"
+              AnchorPane.rightAnchor="16.0">
 
-    <!-- Main Content -->
-    <VBox spacing="22"
-          maxWidth="1050"
-          StackPane.alignment="TOP_CENTER"
-          styleClass="pf-root">
-
-        <!-- HEADER -->
-        <HBox spacing="14" alignment="CENTER_LEFT" styleClass="pf-header">
-
-            <StackPane styleClass="pf-header-icon">
-                <Label text="🦁" styleClass="shop-header-icon-emoji"/>
-
-            </StackPane>
-
-            <VBox spacing="4">
-                <Label text="Player Profile" styleClass="pf-header-title"/>
-                <Label text="Your items, coins and avatar"
-                       styleClass="pf-header-subtitle"/>
-            </VBox>
-
-            <Pane HBox.hgrow="ALWAYS"/>
-
-            <Button text="🛒 Shop"
-                    onAction="#onOpenShop"
-                    styleClass="pf-btn-primary"/>
-
-            <Button text="Home"
-                    onAction="#onBackHome"
-                    styleClass="pf-btn-secondary"/>
-        </HBox>
-
-        <!-- PLAYER INFO CARD -->
-        <VBox spacing="8" styleClass="pf-card">
-
-            <Label fx:id="playerNameLabel"
-                   text="Player:"
-                   styleClass="pf-player-name"/>
-
-            <Label fx:id="coinsLabel"
-                   text="Coins:"
-                   styleClass="pf-coins"/>
-
-            <Label fx:id="selectedAvatarLabel"
-                   text="Selected Avatar:"
-                   styleClass="pf-selected-avatar"/>
-        </VBox>
-
-        <!-- OWNED AVATARS -->
-        <VBox spacing="12" styleClass="pf-card">
-
-            <HBox spacing="8" alignment="CENTER_LEFT">
-                <Label text="Owned Avatars" styleClass="pf-section-title"/>
-                <Label text="🦁" styleClass="pf-section-emoji"/>
+            <!-- HEADER (same as your old design) -->
+            <HBox alignment="CENTER_LEFT" spacing="12" styleClass="profile-header">
+                <Button text="← Back"
+                        onAction="#onBackHome"
+                        styleClass="profile-back"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="Player Profile" styleClass="profile-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="shopBtn"
+                        text="🛒 Shop"
+                        onAction="#onOpenShop"
+                        styleClass="profile-back"/>
             </HBox>
 
-            <!-- Avatars Grid -->
-            <FlowPane fx:id="avatarsFlow"
-                      hgap="14"
-                      vgap="14"
-                      prefWrapLength="950"/>
+            <HBox spacing="16" VBox.vgrow="ALWAYS">
+
+                <!-- LEFT SIDEBAR -->
+                <VBox spacing="10" styleClass="profile-sidebar" prefWidth="260">
+                    <Label text="Players" styleClass="profile-sidebar-title"/>
+                    <ListView fx:id="profilesList"
+                              styleClass="profile-list"
+                              VBox.vgrow="ALWAYS"/>
+                </VBox>
+
+                <!-- RIGHT CONTENT -->
+                <VBox spacing="14" HBox.hgrow="ALWAYS">
+
+                    <!-- TOP CARD -->
+                    <HBox alignment="CENTER_LEFT" spacing="14" styleClass="profile-card">
+                        <ImageView fx:id="avatarView"
+                                   fitWidth="64" fitHeight="64"
+                                   preserveRatio="true"
+                                   smooth="true"
+                                   styleClass="profile-avatar"/>
+                        <VBox spacing="6">
+                            <Label fx:id="playerNameLabel"
+                                   text="Player"
+                                   styleClass="profile-name"/>
+                            <Label fx:id="playerSubtitleLabel"
+                                   text="Profile AND Match History"
+                                   styleClass="profile-subtitle"/>
+                        </VBox>
+
+                        <Region HBox.hgrow="ALWAYS"/>
+
+
+                        <!-- ACTIVE PLAYER INFO -->
+                        <VBox spacing="4" alignment="CENTER_RIGHT">
+                            <Label fx:id="coinsLabel"
+                                   text="Coins: 0"
+                                   styleClass="profile-subtitle"/>
+                            <Label fx:id="selectedAvatarLabel"
+                                   text="Selected Avatar: SIMBA"
+                                   styleClass="profile-subtitle"/>
+                            <Label fx:id="avatarsHintLabel"
+                                   text=""
+                                   styleClass="profile-subtitle"/>
+                        </VBox>
+
+                    </HBox>
+
+                    <!-- STATS -->
+                    <HBox spacing="12" styleClass="profile-stats">
+                        <VBox spacing="4" styleClass="profile-stat-card">
+                            <Label text="Total Games" styleClass="profile-stat-title"/>
+                            <Label fx:id="totalGamesLabel" text="0" styleClass="profile-stat-value"/>
+                        </VBox>
+                        <VBox spacing="4" styleClass="profile-stat-card">
+                            <Label text="Wins / Losses" styleClass="profile-stat-title"/>
+                            <Label fx:id="winsLossesLabel" text="0 / 0" styleClass="profile-stat-value"/>
+                        </VBox>
+                        <VBox spacing="4" styleClass="profile-stat-card">
+                            <Label text="Win Rate" styleClass="profile-stat-title"/>
+                            <Label fx:id="winRateLabel" text="0%" styleClass="profile-stat-value"/>
+                        </VBox>
+                        <!-- GIFT CARD -->
+                        <VBox spacing="6" styleClass="profile-stat-card" prefWidth="220">
+
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <ImageView fx:id="giftImageView"
+                                           fitWidth="22" fitHeight="22"
+                                           preserveRatio="true" smooth="true"/>
+                                <Label text="Gift" styleClass="profile-stat-title"/>
+                            </HBox>
+
+                            <Label fx:id="giftProgressLabel"
+                                   text="Wins until gift: 0/3"
+                                   styleClass="profile-stat-value"/>
+
+                            <ProgressBar fx:id="giftProgressBar" progress="0" prefWidth="220"/>
+
+                            <Button fx:id="openGiftBtn"
+                                    text="🔒 Not ready"
+                                    onAction="#onOpenGiftInProfile"
+                                    disable="true"
+                                    styleClass="profile-back"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- OWNED AVATARS (using existing CSS cards theme) -->
+                    <VBox spacing="10" styleClass="profile-card">
+                        <Label text="Owned Avatars" styleClass="profile-sidebar-title"/>
+                        <FlowPane fx:id="avatarsFlow"
+                                  hgap="14"
+                                  vgap="14"
+                                  prefWrapLength="880"/>
+                    </VBox>
+
+                    <!-- TABLE -->
+                    <TableView fx:id="matchesTable" styleClass="profile-table" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="playedAtCol" text="Played At" prefWidth="160"/>
+                            <TableColumn fx:id="opponentCol" text="Opponent" prefWidth="140"/>
+                            <TableColumn fx:id="resultCol" text="Result" prefWidth="90"/>
+                            <TableColumn fx:id="scoreCol" text="Score" prefWidth="90"/>
+                            <TableColumn fx:id="durationCol" text="Duration (s)" prefWidth="120"/>
+                            <TableColumn fx:id="boardSizeCol" text="Board" prefWidth="90"/>
+                            <TableColumn fx:id="difficultyCol" text="Difficulty" prefWidth="120"/>
+                        </columns>
+                    </TableView>
+
+                </VBox>
+            </HBox>
+
         </VBox>
-
-    </VBox>
-
-</StackPane>
+    </children>
+</AnchorPane>
