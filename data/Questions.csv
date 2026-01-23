@@ -4,18 +4,23 @@ ID,Question,Difficulty,A,B,C,D,Correct Answer
 3,What is a main characteristic of Agile development?,1,Development with fixed requirements,Iterative development with customer feedback,Development without documentation,Testing only at the end,B
 4,What is the main purpose of an SRS document?,1,Describe system architecture,Define system requirements clearly,Write test cases,Implement source code,B
 5,Which JUnit annotation is used to temporarily disable a test?,1,@Test,@Before,@Ignore,@After,C
-6,Which requirement type describes response time?,2,Functional,Business,Non-functional,User,C
-7,What is the main goal of a System Requirement Review (SRR)?,2,Verify clarity and feasibility of requirements,Deploy the system,Perform unit testing,Improve system performance,A
-8,In MVC architecture which component updates the View when data changes?,2,Controller,View,Model,Database,C
-9,What is the main advantage of Agile development?,2,Fixed requirements,Adapting to changes,No documentation,No testing,B
-10,Which of the following is a functional requirement?,2,Fast response time,User login with username and password,High system availability,Easy maintenance,B
-11,What is the main purpose of surveys in requirements gathering?,2,Testing system performance,Designing databases,Collecting user needs,Writing code,C
-12,Which pattern is NOT a GoF design pattern?,3,Factory,Observer,MVC,Template,C
-13,Why should JUnit tests not depend on each other?,3,To improve performance,To allow execution in any order,To reduce memory usage,To support UI testing,B
-14,Which architectural principle helps improve system maintainability?,3,Single large module,Hard coded values,Separation into layers,Avoiding interfaces,C
-15,What is the main goal of unit testing?,3,Testing the full system,Testing integration between components,Testing individual functions or classes,Testing user experience,C
-16,Why did Mufasa insist on a clear SRS before ruling the Pride Lands?,1,To define system requirements clearly,To design the UI,To write test cases,To deploy the system,A
-17,During the SRR of the Pride Lands system, what is the main goal Rafiki checks?,2,Verify clarity and feasibility of requirements,Add new features,Improve performance,Write code,A
-18,In the Pride Lands MVC system, who updates the View when Simba changes state?,2,Controller,View,Model,Database,C
+6,Why did Mufasa insist on a clear SRS before ruling the Pride Lands?,1,To define system requirements clearly,To design the UI,To write test cases,To deploy the system,A
+7,Which requirement type describes response time?,2,Functional,Business,Non-functional,User,C
+8,What is the main goal of a System Requirement Review (SRR)?,2,Verify clarity and feasibility of requirements,Deploy the system,Perform unit testing,Improve system performance,A
+9,In MVC architecture which component updates the View when data changes?,2,Controller,View,Model,Database,C
+10,What is the main advantage of Agile development?,2,Fixed requirements,Adapting to changes,No documentation,No testing,B
+11,Which of the following is a functional requirement?,2,Fast response time,User login with username and password,High system availability,Easy maintenance,B
+12,What is the main purpose of surveys in requirements gathering?,2,Testing system performance,Designing databases,Collecting user needs,Writing code,C
+13,"During the SRR of the Pride Lands system, what is the main goal Rafiki checks?",2,Verify clarity and feasibility of requirements,Add new features,Improve performance,Write code,A
+14,"In the Pride Lands MVC system, who updates the View when Simba changes state?",2,Controller,View,Model,Database,C
+15,Which pattern is NOT a GoF design pattern?,3,Factory,Observer,MVC,Template,C
+16,Why should JUnit tests not depend on each other?,3,To improve performance,To allow execution in any order,To reduce memory usage,To support UI testing,B
+17,Which architectural principle helps improve system maintainability?,3,Single large module,Hard coded values,Separation into layers,Avoiding interfaces,C
+18,What is the main goal of unit testing?,3,Testing the full system,Testing integration between components,Testing individual functions or classes,Testing user experience,C
 19,Which design pattern best describes Zazu reporting changes in the Pride Lands?,3,Factory Method,Observer,Template,Singleton,B
 20,Simba uses a factory to create different animal roles at runtime. Which pattern is this?,3,Observer,Decorator,Factory Method,Adapter,C
+21,Template Method is mainly an?,4,Algorithm skeleton,Object creation,Data storage,UI pattern,A
+22,In MVC which part is the Subject?,4,Model,View,Controller,Listener,A
+23,Main Observer benefit?,4,Loose coupling,Fast runtime,Less code,More memory,A
+24,SRR verifies?,4,Requirements readiness,Code quality,Test coverage,UI design,A
+25,JUnit tests should be?,4,Independent,Ordered,Sequential,Manual,A
