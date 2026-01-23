@@ -51,10 +51,17 @@ public class ShopController {
         // אם יש לכם root ב-FXML אפשר גם להחיל עליו theme כמו אצלכם.
         // כאן אנחנו לא צריכים fx:id לשורש, כי אתם מחילים Theme על newRoot אחרי load.
 
-        // טוענים פרופיל לפי Player A (אם כבר הוזן ב-Setup)
-        String name = GameSetupController.selectedPlayerAName;
-        if (name == null || name.isBlank()) name = "Player";
-        profile = ProfileStore.loadOrCreate(Session.getActivePlayerName());
+
+        String name = Session.getActivePlayerName();
+        if (name == null || name.isBlank()) {
+            name = GameSetupController.selectedPlayerAName;
+        }
+        if (name == null || name.isBlank()) {
+            name = "Player";
+        }
+        profile = ProfileStore.loadOrCreate(name);
+
+
 
         // UI init
         if (sortChoice != null) {
@@ -149,7 +156,9 @@ public class ShopController {
         status.getStyleClass().add("shop-item-status");
 
         boolean owned = profile != null && profile.ownsAvatar(item.getId());
-        boolean equipped = profile != null && item.getId().equals(profile.getSelectedAvatarId());
+        boolean equipped = profile != null &&
+                item.getId() != null &&
+                item.getId().equalsIgnoreCase(profile.getSelectedAvatarId());
 
         if (equipped) status.setText("⭐ Equipped");
         else if (owned) status.setText("✅ Owned");
@@ -189,7 +198,9 @@ public class ShopController {
         if (lblSelectedPrice != null) lblSelectedPrice.setText(item.getPrice() == 0 ? "Free" : ("💰 Price: " + item.getPrice()));
 
         boolean owned = profile != null && profile.ownsAvatar(item.getId());
-        boolean equipped = profile != null && item.getId().equals(profile.getSelectedAvatarId());
+        boolean equipped = profile != null &&
+                item.getId() != null &&
+                item.getId().equalsIgnoreCase(profile.getSelectedAvatarId());
 
         if (lblSelectedStatus != null) {
             if (equipped) lblSelectedStatus.setText("⭐ Currently Equipped");
@@ -209,6 +220,13 @@ public class ShopController {
 
         PurchaseResult result = shopService.purchaseAvatar(profile, selectedItem.getId());
 
+        if (result == PurchaseResult.SUCCESS) {
+            ProfileStore.save(profile);
+
+            // ✅ חשוב: לעדכן גם את ה-Manager בזיכרון כדי שהProfileController יראה את זה מיד
+            PlayerProfileManager.upsertProfileData(profile);
+        }
+
         if (lblMessage != null) {
             switch (result) {
                 case SUCCESS -> lblMessage.setText("✅ Purchased!");
@@ -221,6 +239,7 @@ public class ShopController {
         refreshTopBar();
         refreshGrid();
         setSelectedItem(selectedItem);
+
     }
 
     @FXML

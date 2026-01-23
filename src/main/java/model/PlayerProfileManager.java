@@ -220,4 +220,45 @@ public class PlayerProfileManager {
         } catch (Exception ignored) {
         }
     }
+    // ✅ מאפשר לשמור מבחוץ (למשל מ-ProfileController)
+    public static void saveAll() {
+        saveToFile();
+    }
+
+    public static void upsertProfileData(PlayerProfile updated) {
+        if (updated == null || updated.getPlayerName() == null || updated.getPlayerName().isBlank()) return;
+
+        PlayerProfile stored = getOrCreateProfile(updated.getPlayerName(), updated.getAvatarId());
+        if (stored == null) return;
+
+        // שדות "פרופיל" (לא היסטוריה)
+        stored.setCoins(updated.getCoins());
+        stored.setNextGiftEpochMillis(updated.getNextGiftEpochMillis());
+
+        // ✅ COPY לפני שמנקים (כי stored ו-updated יכולים להיות אותו אובייקט)
+        var ownedCopy = (updated.getOwnedAvatars() == null) ? null : new java.util.HashSet<>(updated.getOwnedAvatars());
+        var emojiCopy = (updated.getEmojiCounts() == null) ? null : new java.util.HashMap<>(updated.getEmojiCounts());
+        String selectedCopy = updated.getSelectedAvatarId();
+
+        stored.ensureDefaults();
+
+        if (ownedCopy != null) {
+            stored.getOwnedAvatars().clear();
+            stored.getOwnedAvatars().addAll(ownedCopy);
+        }
+
+        stored.ensureDefaults();
+
+        if (selectedCopy != null) {
+            stored.selectAvatar(selectedCopy); // עובד גם אם זה לא uppercase אצלך
+        }
+
+        if (emojiCopy != null) {
+            stored.getEmojiCounts().clear();
+            stored.getEmojiCounts().putAll(emojiCopy);
+        }
+
+        saveToFile();
+    }
+
 }

@@ -1,39 +1,52 @@
 [
   {
-    "playerName": "layan",
-    "avatarId": "simba",
+    "playerName": "ךך",
+    "avatarId": "SIMBA",
     "matches": [
       {
-        "playedAtIso": "2026-01-10T21:47:49.9455317",
-        "opponent": "dana",
-        "result": "Loss",
-        "score": 93,
-        "durationSeconds": 167,
+        "playedAtIso": "2026-01-23T19:28:11.4913588",
+        "opponent": "Lion AI",
+        "result": "Win",
+        "score": 183,
+        "durationSeconds": 31,
         "boardSize": 0,
         "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2025-12-08T14:08:12.95606",
+        "opponent": "תת",
+        "result": "Loss",
+        "score": 44,
+        "durationSeconds": 34,
+        "boardSize": 0,
+        "difficulty": "MEDIUM"
       }
     ],
-    "coins": 0,
+    "coins": 30,
     "ownedAvatars": [
       "MUFASA",
+      "simba",
       "SIMBA",
       "SCAR",
       "NALA"
     ],
-    "selectedAvatarId": "SIMBA"
+    "selectedAvatarId": "SIMBA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
   },
   {
-    "playerName": "dana",
+    "playerName": "תת",
     "avatarId": "nala",
     "matches": [
       {
-        "playedAtIso": "2026-01-10T21:47:49.9455317",
-        "opponent": "layan",
+        "playedAtIso": "2025-12-08T14:08:12.95606",
+        "opponent": "ךך",
         "result": "Loss",
-        "score": 93,
-        "durationSeconds": 167,
+        "score": 44,
+        "durationSeconds": 34,
         "boardSize": 0,
-        "difficulty": "EASY"
+        "difficulty": "MEDIUM"
       }
     ],
     "coins": 0,
@@ -41,43 +54,800 @@
       "MUFASA",
       "SIMBA",
       "SCAR",
+      "nala",
       "NALA"
     ],
-    "selectedAvatarId": "SIMBA"
+    "selectedAvatarId": "nala",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
   },
   {
-    "playerName": "janadan",
+    "playerName": "تت",
     "avatarId": "simba",
     "matches": [
       {
-        "playedAtIso": "2026-01-10T21:49:09.2371001",
-        "opponent": "yasmeen",
-        "result": "Loss",
-        "score": 102,
-        "durationSeconds": 37,
+        "playedAtIso": "2025-12-13T23:56:57.080242",
+        "opponent": "عع",
+        "result": "Win",
+        "score": 77,
+        "durationSeconds": 53,
         "boardSize": 0,
-        "difficulty": "EASY"
+        "difficulty": "MEDIUM"
+      },
+      {
+        "playedAtIso": "2025-12-13T23:55:38.777675",
+        "opponent": "عع",
+        "result": "Win",
+        "score": 85,
+        "durationSeconds": 7,
+        "boardSize": 0,
+        "difficulty": "MEDIUM"
       }
     ],
     "coins": 0,
     "ownedAvatars": [
       "MUFASA",
+      "simba",
       "SIMBA",
       "SCAR",
       "NALA"
     ],
-    "selectedAvatarId": "SIMBA"
+    "selectedAvatarId": "SIMBA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
   },
   {
-    "playerName": "yasmeen",
+    "playerName": "عع",
     "avatarId": "nala",
     "matches": [
       {
-        "playedAtIso": "2026-01-10T21:49:09.2371001",
-        "opponent": "janadan",
+        "playedAtIso": "2025-12-13T23:56:57.080242",
+        "opponent": "تت",
+        "result": "Win",
+        "score": 77,
+        "durationSeconds": 53,
+        "boardSize": 0,
+        "difficulty": "MEDIUM"
+      },
+      {
+        "playedAtIso": "2025-12-13T23:55:38.777675",
+        "opponent": "تت",
+        "result": "Win",
+        "score": 85,
+        "durationSeconds": 7,
+        "boardSize": 0,
+        "difficulty": "MEDIUM"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "SIMBA",
+      "SCAR",
+      "nala",
+      "NALA"
+    ],
+    "selectedAvatarId": "NALA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
+  },
+  {
+    "playerName": "חחח",
+    "avatarId": "simba",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-21T16:14:42.0021857",
+        "opponent": "אאא",
         "result": "Loss",
-        "score": 102,
-        "durationSeconds": 37,
+        "score": 107,
+        "durationSeconds": 35,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "simba",
+      "SIMBA",
+      "SCAR",
+      "NALA"
+    ],
+    "selectedAvatarId": "SIMBA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
+  },
+  {
+    "playerName": "אאא",
+    "avatarId": "nala",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-21T16:14:42.0021857",
+        "opponent": "חחח",
+        "result": "Loss",
+        "score": 107,
+        "durationSeconds": 35,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "SIMBA",
+      "SCAR",
+      "nala",
+      "NALA"
+    ],
+    "selectedAvatarId": "NALA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
+  },
+  {
+    "playerName": "עע",
+    "avatarId": "simba",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-21T17:17:33.7300156",
+        "opponent": "Lion AI",
+        "result": "Loss",
+        "score": 141,
+        "durationSeconds": 45,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "simba",
+      "SIMBA",
+      "SCAR",
+      "NALA"
+    ],
+    "selectedAvatarId": "SIMBA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
+  },
+  {
+    "playerName": "Lion AI",
+    "avatarId": "NALA",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-23T21:32:51.5782837",
+        "opponent": "Dana",
+        "result": "Win",
+        "score": 141,
+        "durationSeconds": 54,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T20:29:44.5277891",
+        "opponent": "Dana",
+        "result": "Win",
+        "score": 130,
+        "durationSeconds": 46,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T20:23:47.8585059",
+        "opponent": "Dana",
+        "result": "Win",
+        "score": 180,
+        "durationSeconds": 24,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T20:02:09.4646234",
+        "opponent": "Dana",
+        "result": "Win",
+        "score": 146,
+        "durationSeconds": 32,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T19:59:53.350897",
+        "opponent": "Dana",
+        "result": "Win",
+        "score": 130,
+        "durationSeconds": 57,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T19:28:11.4913588",
+        "opponent": "ךך",
+        "result": "Win",
+        "score": 183,
+        "durationSeconds": 31,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T18:51:15.2554912",
+        "opponent": "Dana",
+        "result": "Win",
+        "score": 132,
+        "durationSeconds": 44,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T17:31:13.1281842",
+        "opponent": "AAAAAAAA",
+        "result": "Loss",
+        "score": 133,
+        "durationSeconds": 38,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T15:30:17.0265393",
+        "opponent": "Dana",
+        "result": "Win",
+        "score": 133,
+        "durationSeconds": 40,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-22T16:20:24.8472357",
+        "opponent": "Dana",
+        "result": "Win",
+        "score": 162,
+        "durationSeconds": 45,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-22T10:41:07.3734383",
+        "opponent": "mm",
+        "result": "Win",
+        "score": 163,
+        "durationSeconds": 57,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-21T22:02:20.0492349",
+        "opponent": "יע",
+        "result": "Win",
+        "score": 169,
+        "durationSeconds": 42,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-21T20:08:54.3369129",
+        "opponent": "Dana",
+        "result": "Win",
+        "score": 118,
+        "durationSeconds": 104,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-21T19:52:14.2242793",
+        "opponent": "Dana",
+        "result": "Win",
+        "score": 140,
+        "durationSeconds": 118,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-21T19:49:32.4158457",
+        "opponent": "gggggggg",
+        "result": "Loss",
+        "score": 126,
+        "durationSeconds": 41,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-21T18:09:14.7626665",
+        "opponent": "LOLO",
+        "result": "Win",
+        "score": 148,
+        "durationSeconds": 61,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-21T18:08:03.7581135",
+        "opponent": "DANAAAAAAAAA",
+        "result": "Loss",
+        "score": 133,
+        "durationSeconds": 41,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-21T17:24:20.8865625",
+        "opponent": "לחיע",
+        "result": "Loss",
+        "score": 263,
+        "durationSeconds": 139,
+        "boardSize": 0,
+        "difficulty": "MEDIUM"
+      },
+      {
+        "playedAtIso": "2026-01-21T17:21:00.873601",
+        "opponent": "גכעי",
+        "result": "Win",
+        "score": 132,
+        "durationSeconds": 71,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-21T17:17:33.7300156",
+        "opponent": "עע",
+        "result": "Loss",
+        "score": 141,
+        "durationSeconds": 45,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "SIMBA",
+      "SCAR",
+      "nala",
+      "NALA"
+    ],
+    "selectedAvatarId": "NALA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
+  },
+  {
+    "playerName": "גכעי",
+    "avatarId": "simba",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-21T17:21:00.873601",
+        "opponent": "Lion AI",
+        "result": "Win",
+        "score": 132,
+        "durationSeconds": 71,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "simba",
+      "SIMBA",
+      "SCAR",
+      "NALA"
+    ],
+    "selectedAvatarId": "SIMBA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
+  },
+  {
+    "playerName": "לחיע",
+    "avatarId": "simba",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-21T17:24:20.8865625",
+        "opponent": "Lion AI",
+        "result": "Loss",
+        "score": 263,
+        "durationSeconds": 139,
+        "boardSize": 0,
+        "difficulty": "MEDIUM"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "simba",
+      "SIMBA",
+      "SCAR",
+      "NALA"
+    ],
+    "selectedAvatarId": "SIMBA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
+  },
+  {
+    "playerName": "DANAAAAAAAAA",
+    "avatarId": "simba",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-21T18:08:03.7581135",
+        "opponent": "Lion AI",
+        "result": "Loss",
+        "score": 133,
+        "durationSeconds": 41,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "simba",
+      "SIMBA",
+      "SCAR",
+      "NALA"
+    ],
+    "selectedAvatarId": "SIMBA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
+  },
+  {
+    "playerName": "LOLO",
+    "avatarId": "simba",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-21T18:09:14.7626665",
+        "opponent": "Lion AI",
+        "result": "Win",
+        "score": 148,
+        "durationSeconds": 61,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "simba",
+      "SIMBA",
+      "SCAR",
+      "NALA"
+    ],
+    "selectedAvatarId": "SIMBA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
+  },
+  {
+    "playerName": "gggggggg",
+    "avatarId": "simba",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-21T19:49:32.4158457",
+        "opponent": "Lion AI",
+        "result": "Loss",
+        "score": 126,
+        "durationSeconds": 41,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "simba",
+      "SIMBA",
+      "SCAR",
+      "NALA"
+    ],
+    "selectedAvatarId": "SIMBA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
+  },
+  {
+    "playerName": "Dana",
+    "avatarId": "SIMBA",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-23T21:32:51.5782837",
+        "opponent": "Lion AI",
+        "result": "Win",
+        "score": 141,
+        "durationSeconds": 54,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T20:29:44.5277891",
+        "opponent": "Lion AI",
+        "result": "Win",
+        "score": 130,
+        "durationSeconds": 46,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T20:23:47.8585059",
+        "opponent": "Lion AI",
+        "result": "Win",
+        "score": 180,
+        "durationSeconds": 24,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T20:22:50.3116371",
+        "opponent": "lolo",
+        "result": "Win",
+        "score": 83,
+        "durationSeconds": 86,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T20:02:09.4646234",
+        "opponent": "Lion AI",
+        "result": "Win",
+        "score": 146,
+        "durationSeconds": 32,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T19:59:53.350897",
+        "opponent": "Lion AI",
+        "result": "Win",
+        "score": 130,
+        "durationSeconds": 57,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T19:58:27.9839995",
+        "opponent": "lolo",
+        "result": "Win",
+        "score": 151,
+        "durationSeconds": 43,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T18:51:15.2554912",
+        "opponent": "Lion AI",
+        "result": "Win",
+        "score": 132,
+        "durationSeconds": 44,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T15:30:17.0265393",
+        "opponent": "Lion AI",
+        "result": "Win",
+        "score": 133,
+        "durationSeconds": 40,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-22T16:20:24.8472357",
+        "opponent": "Lion AI",
+        "result": "Win",
+        "score": 162,
+        "durationSeconds": 45,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-21T22:12:44.0570964",
+        "opponent": "dd",
+        "result": "Loss",
+        "score": 100,
+        "durationSeconds": 63,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-21T20:08:54.3369129",
+        "opponent": "Lion AI",
+        "result": "Win",
+        "score": 118,
+        "durationSeconds": 104,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-21T19:52:14.2242793",
+        "opponent": "Lion AI",
+        "result": "Win",
+        "score": 140,
+        "durationSeconds": 118,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 240,
+    "ownedAvatars": [
+      "MUFASA",
+      "SIMBA",
+      "SCAR",
+      "NALA"
+    ],
+    "selectedAvatarId": "SIMBA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 1,
+    "emojiCounts": {
+      "FIRE": 2,
+      "LION": 3
+    }
+  },
+  {
+    "playerName": "יע",
+    "avatarId": "simba",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-21T22:02:20.0492349",
+        "opponent": "Lion AI",
+        "result": "Win",
+        "score": 169,
+        "durationSeconds": 42,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "simba",
+      "SIMBA",
+      "SCAR",
+      "NALA"
+    ],
+    "selectedAvatarId": "SIMBA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
+  },
+  {
+    "playerName": "dd",
+    "avatarId": "nala",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-21T22:12:44.0570964",
+        "opponent": "Dana",
+        "result": "Loss",
+        "score": 100,
+        "durationSeconds": 63,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "SIMBA",
+      "SCAR",
+      "nala",
+      "NALA"
+    ],
+    "selectedAvatarId": "NALA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
+  },
+  {
+    "playerName": "mm",
+    "avatarId": "simba",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-22T10:41:07.3734383",
+        "opponent": "Lion AI",
+        "result": "Win",
+        "score": 163,
+        "durationSeconds": 57,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "simba",
+      "SIMBA",
+      "SCAR",
+      "NALA"
+    ],
+    "selectedAvatarId": "SIMBA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
+  },
+  {
+    "playerName": "lolo",
+    "avatarId": "NALA",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-23T20:22:50.3116371",
+        "opponent": "Dana",
+        "result": "Win",
+        "score": 83,
+        "durationSeconds": 86,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T19:58:27.9839995",
+        "opponent": "Dana",
+        "result": "Win",
+        "score": 151,
+        "durationSeconds": 43,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      },
+      {
+        "playedAtIso": "2026-01-23T15:08:44.363036",
+        "opponent": "toto",
+        "result": "Loss",
+        "score": 110,
+        "durationSeconds": 332,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 60,
+    "ownedAvatars": [
+      "MUFASA",
+      "simba",
+      "SIMBA",
+      "SCAR",
+      "NALA"
+    ],
+    "selectedAvatarId": "NALA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 1,
+    "emojiCounts": {}
+  },
+  {
+    "playerName": "toto",
+    "avatarId": "nala",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-23T15:08:44.363036",
+        "opponent": "lolo",
+        "result": "Loss",
+        "score": 110,
+        "durationSeconds": 332,
+        "boardSize": 0,
+        "difficulty": "EASY"
+      }
+    ],
+    "coins": 0,
+    "ownedAvatars": [
+      "MUFASA",
+      "SIMBA",
+      "SCAR",
+      "nala",
+      "NALA"
+    ],
+    "selectedAvatarId": "NALA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
+  },
+  {
+    "playerName": "AAAAAAAA",
+    "avatarId": "SIMBA",
+    "matches": [
+      {
+        "playedAtIso": "2026-01-23T17:31:13.1281842",
+        "opponent": "Lion AI",
+        "result": "Loss",
+        "score": 133,
+        "durationSeconds": 38,
         "boardSize": 0,
         "difficulty": "EASY"
       }
@@ -89,6 +859,9 @@
       "SCAR",
       "NALA"
     ],
-    "selectedAvatarId": "SIMBA"
+    "selectedAvatarId": "SIMBA",
+    "nextGiftEpochMillis": 0,
+    "winsSinceGift": 0,
+    "emojiCounts": {}
   }
 ]
