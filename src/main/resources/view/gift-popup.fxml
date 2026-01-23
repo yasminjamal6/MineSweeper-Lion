@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane xmlns="http://javafx.com/javafx/23"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="main.controller.GiftPopupController"
+           styleClass="gift-popup-root">
+
+    <VBox styleClass="gift-popup-card" spacing="16" maxWidth="520">
+
+        <HBox alignment="CENTER_LEFT">
+            <Label fx:id="titleLabel" text="🎁 Gift opened!" styleClass="gift-popup-title"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Button text="✕" onAction="#onClose" styleClass="gift-popup-close"/>
+        </HBox>
+
+        <HBox spacing="16" alignment="CENTER_LEFT">
+            <!-- ICON / EMOJI CIRCLE -->
+            <StackPane styleClass="gift-popup-iconCircle">
+                <Label fx:id="bigIconLabel" text="💰" styleClass="gift-popup-bigIcon"/>
+            </StackPane>
+
+            <VBox spacing="6">
+                <Label fx:id="rewardTitle" text="You won!" styleClass="gift-popup-rewardTitle"/>
+                <Label fx:id="rewardDesc" text="..." wrapText="true" styleClass="gift-popup-desc"/>
+            </VBox>
+        </HBox>
+
+        <HBox alignment="CENTER_RIGHT">
+            <Button text="Awesome!" onAction="#onClose" styleClass="gift-popup-ok"/>
+        </HBox>
+
+    </VBox>
+</StackPane>

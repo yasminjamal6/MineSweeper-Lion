@@ -41,20 +41,34 @@
                            styleClass="hint-text"/>
 
                     <!-- TOP BAR -->
-                    <HBox spacing="10" alignment="CENTER" styleClass="top-bar">
+                    <HBox spacing="8" alignment="CENTER" styleClass="top-bar">
 
                         <Label fx:id="scoreLabel"
-                               text="Score: 0 🏆"
+                               text="Score: 0"
                                styleClass="score-label"/>
 
-                        <Label fx:id="coinsLabel"
-                               text="Coins: 0 💰"
-                               styleClass="score-label"/>
+
 
 
                         <Label fx:id="timerLabel"
                                text="00:00"
                                styleClass="timer-label"/>
+
+                        <Region HBox.hgrow="ALWAYS"/>
+
+                        <!-- ... heartsBox ... -->
+
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="coinsALabel"
+                               text="Coins A: 0 💰"
+                               styleClass="score-label"/>
+
+                        <Label fx:id="coinsBLabel"
+                               text="Coins B: 0 💰"
+                               styleClass="score-label"/>
+
+
+
 
                         <Region HBox.hgrow="ALWAYS"/>
 
@@ -104,6 +118,14 @@
                                     </image>
                                 </ImageView>
                             </graphic>
+                        </Button>
+
+                        <Button fx:id="emojiBtn"
+                                text="😀"
+                                onAction="#onOpenEmojiMenu"
+                                styleClass="settings-btn"
+                                StackPane.alignment="TOP_RIGHT">
+
                         </Button>
 
                         <Button fx:id="backHomeBtn"
