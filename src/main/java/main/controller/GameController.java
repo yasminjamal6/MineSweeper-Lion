@@ -87,6 +87,8 @@ import javafx.geometry.Side;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Interpolator;
 import javafx.event.ActionEvent;
+import javafx.scene.control.CustomMenuItem;
+
 
 
 
@@ -789,12 +791,28 @@ public class GameController {
 
     @FXML
     private void onOpenEmojiMenu(ActionEvent e) {
-        activeProfile = isPlayerATurn ? profileA : profileB;
-        loadActiveProfileIfNeeded();
+
+        String name = isPlayerATurn ? GameSetupController.selectedPlayerAName
+                : GameSetupController.selectedPlayerBName;
+
+        activeProfile = ProfileStore.loadOrCreate(name);
+        if (activeProfile != null) activeProfile.ensureDefaults();
         if (activeProfile == null || emojiBtn == null) return;
 
-
         ContextMenu menu = new ContextMenu();
+
+        // ✅ עיצוב של ה-popup עצמו
+        menu.getStyleClass().add("emoji-menu");
+
+        // ✅ להוסיף CSS לתפריט
+        String css = ResourceUtils.externalForm(getClass(), "/css/emoji-menu.css");
+        if (css != null && !menu.getScene().getStylesheets().contains(css)) {
+            // workaround: לטעון ל-scene של הכפתור (בטוח עובד)
+            Scene scene = emojiBtn.getScene();
+            if (scene != null && !scene.getStylesheets().contains(css)) {
+                scene.getStylesheets().add(css);
+            }
+        }
 
         var map = activeProfile.getEmojiCounts();
         boolean hasAny = false;
@@ -807,7 +825,23 @@ public class GameController {
             hasAny = true;
             String emoji = emojiToChar(id);
 
-            MenuItem item = new MenuItem(emoji + "  x" + count);
+            // Row UI
+            Label icon = new Label(emoji);
+            icon.getStyleClass().add("emoji-icon");
+
+            Label nameLbl = new Label(id);
+            nameLbl.getStyleClass().add("emoji-name");
+
+            Label countLbl = new Label("x" + count);
+            countLbl.getStyleClass().add("emoji-count");
+
+            javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
+            javafx.scene.layout.HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+
+            HBox row = new HBox(icon, nameLbl, spacer, countLbl);
+            row.getStyleClass().add("emoji-item");
+
+            CustomMenuItem item = new CustomMenuItem(row, true);
             item.setOnAction(ev -> {
                 if (activeProfile.consumeEmoji(id)) {
                     ProfileStore.save(activeProfile);
@@ -819,14 +853,20 @@ public class GameController {
         }
 
         if (!hasAny) {
-            MenuItem none = new MenuItem("No emojis yet 🎁");
-            none.setDisable(true);
+            Label t = new Label("No emojis yet 🎁");
+            t.getStyleClass().add("emoji-empty-text");
+            HBox empty = new HBox(t);
+            empty.getStyleClass().add("emoji-empty");
+
+            CustomMenuItem none = new CustomMenuItem(empty, false);
+            none.setHideOnClick(true);
             menu.getItems().add(none);
         }
 
-        // לפתוח ליד הכפתור
-        menu.show(emojiBtn, javafx.geometry.Side.BOTTOM, 0, 6);
+        menu.show(emojiBtn, Side.BOTTOM, 0, 6);
     }
+
+
     private void loadActiveProfileIfNeeded() {
         if (activeProfile != null) return;
 
@@ -1432,18 +1472,6 @@ public class GameController {
         updateCellView(board, cellButton, row, col);
         refreshEntireBoard(board, isBoardA ? boardAGrid : boardBGrid);
         updateMinesUI(isBoardA);
-        // ✅ SURPRISE שנחשפה עכשיו – להפעיל מיד (קליק אחד)
-        if (cell.isRevealed()
-                && cell.getType() == CellType.SURPRISE
-                && !cell.isSurpriseUsed()) {
-
-            handleSurpriseActivation(cell, cellButton);
-
-            isPlayerATurn = !isPlayerATurn;
-            updateBoardHighlight();
-            checkGameOver();
-            return;
-        }
 
 
         int revealedAfter = countRevealed(board);
