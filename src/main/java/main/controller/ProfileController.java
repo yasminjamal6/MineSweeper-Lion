@@ -333,6 +333,7 @@ public class ProfileController {
 
         p.consumeGift();     // מאפס winsSinceGift ל-0
         ProfileStore.save(p);
+        renderProfileAreaFor(p);
 
         refreshGiftArea(p);
     }

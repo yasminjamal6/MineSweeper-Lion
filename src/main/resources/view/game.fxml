@@ -41,10 +41,14 @@
                            styleClass="hint-text"/>
 
                     <!-- TOP BAR -->
-                    <HBox spacing="10" alignment="CENTER" styleClass="top-bar">
-                        <Label fx:id="coinsALabel"
-                               text="Coins A: 0 💰"
+                    <HBox spacing="8" alignment="CENTER" styleClass="top-bar">
+
+                        <Label fx:id="scoreLabel"
+                               text="Score: 0"
                                styleClass="score-label"/>
+
+
+
 
                         <Label fx:id="timerLabel"
                                text="00:00"
@@ -55,6 +59,9 @@
                         <!-- ... heartsBox ... -->
 
                         <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="coinsALabel"
+                               text="Coins A: 0 💰"
+                               styleClass="score-label"/>
 
                         <Label fx:id="coinsBLabel"
                                text="Coins B: 0 💰"
