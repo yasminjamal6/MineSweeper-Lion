@@ -138,8 +138,10 @@ public class GameController {
     @FXML private Label coinsBLabel;
     @FXML private Button emojiBtn;
     @FXML private StackPane rootGame; // ה-root של המשחק (חשוב לאנימציה)
+    @FXML private Label dangerBanner;
 
     private PlayerProfile activeProfile;
+    private Timeline dangerBlinkTimeline;
 
 
 
@@ -228,6 +230,37 @@ public class GameController {
         }
     }
 
+    private void updateDangerBanner() {
+        if (dangerBanner == null) return;
+
+        boolean shouldWarn = (lives > 0 && lives <= 2);
+
+        if (!shouldWarn) {
+            dangerBanner.setVisible(false);
+            dangerBanner.setManaged(false);
+            dangerBanner.setOpacity(1.0);
+
+            if (dangerBlinkTimeline != null) {
+                dangerBlinkTimeline.stop();
+                dangerBlinkTimeline = null;
+            }
+            return;
+        }
+
+        dangerBanner.setText("⚠️ The hyenas are closing in! Only " + lives + " hearts left!");
+        dangerBanner.setVisible(true);
+        dangerBanner.setManaged(true);
+
+        if (dangerBlinkTimeline == null) {
+            dangerBlinkTimeline = new Timeline(
+                    new KeyFrame(Duration.ZERO, e -> dangerBanner.setOpacity(1.0)),
+                    new KeyFrame(Duration.millis(250), e -> dangerBanner.setOpacity(0.15)),
+                    new KeyFrame(Duration.millis(500), e -> dangerBanner.setOpacity(1.0))
+            );
+            dangerBlinkTimeline.setCycleCount(Animation.INDEFINITE);
+            dangerBlinkTimeline.play();
+        }
+    }
 
     private void pauseGame() {
         gamePaused = true;
@@ -425,6 +458,10 @@ public class GameController {
         lives = currentDifficulty.getInitialLives();
         previousLives = lives;
         score = 0;
+
+
+
+
 
         buildHearts(currentDifficulty);
         updateLivesUI(currentDifficulty);
@@ -2279,6 +2316,7 @@ public class GameController {
                 }
             }
         }
+        updateDangerBanner();
 
         // לזכור למהלך הבא
         previousLives = lives;

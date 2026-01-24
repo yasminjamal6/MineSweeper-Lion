@@ -40,6 +40,15 @@
                            alignment="CENTER"
                            styleClass="hint-text"/>
 
+                    <Label fx:id="dangerBanner"
+                           text=""
+                           maxWidth="Infinity"
+                           alignment="CENTER"
+                           visible="false"
+                           managed="false"
+                           styleClass="danger-banner"/>
+
+
                     <!-- TOP BAR -->
                     <HBox spacing="8" alignment="CENTER" styleClass="top-bar">
 
@@ -56,16 +65,6 @@
 
                         <Region HBox.hgrow="ALWAYS"/>
 
-                        <!-- ... heartsBox ... -->
-
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Label fx:id="coinsALabel"
-                               text="Coins A: 0 💰"
-                               styleClass="score-label"/>
-
-                        <Label fx:id="coinsBLabel"
-                               text="Coins B: 0 💰"
-                               styleClass="score-label"/>
 
 
 
@@ -180,7 +179,13 @@
                                    alignment="CENTER"
                                    styleClass="turn-label"/>
 
-                            <Label text="Board A" styleClass="board-title"/>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label text="Board A" styleClass="board-title"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="coinsALabel"
+                                       text="Coins A: 0 💰"
+                                       styleClass="coins-label"/>
+                            </HBox>
 
                             <StackPane fx:id="boardAContainer"
                                        styleClass="board-container"
@@ -241,7 +246,13 @@
                                    alignment="CENTER"
                                    styleClass="turn-label"/>
 
-                            <Label text="Board B" styleClass="board-title"/>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label text="Board B" styleClass="board-title"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="coinsBLabel"
+                                       text="Coins B: 0 💰"
+                                       styleClass="coins-label"/>
+                            </HBox>
 
                             <StackPane fx:id="boardBContainer"
                                        styleClass="board-container"
