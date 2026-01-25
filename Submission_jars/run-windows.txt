@@ -7,6 +7,7 @@ https://drive.google.com/file/d/1t4S6BI7-M7AtyZHTD5AjbYc6uefRfiYI/view?usp=shari
 ## Folder Structure
 After extraction, the directory must look like this:
 
+
 Submission_jars/
 ├── MineSweeper-Lion.jar
 ├── lib_win/
