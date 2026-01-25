@@ -23,6 +23,11 @@ import java.util.stream.Collectors;
 
 public class ShopController {
 
+    public enum StoreSource {
+        HOME,
+        PROFILE
+    }
+
     // ----- FXML -----
     @FXML private Label lblCoins;
     @FXML private Label lblPlayerName;
@@ -45,6 +50,7 @@ public class ShopController {
     private final ShopService shopService = new ShopService();
     private PlayerProfile profile;
     private ShopAvatarItem selectedItem;
+    private StoreSource storeSource = StoreSource.HOME;
 
     @FXML
     private void initialize() {
@@ -258,8 +264,17 @@ public class ShopController {
 
     @FXML
     private void onBack(ActionEvent event) {
-        // Return to setup using the same flow as other screens.
-        switchSceneWithFade(event, "/view/game-setup-view.fxml");
+        if (storeSource == StoreSource.PROFILE) {
+            switchSceneWithFade(event, "/view/profile-view.fxml");
+        } else {
+            switchSceneWithFade(event, "/view/home-view.fxml");
+        }
+    }
+
+    public void setStoreSource(StoreSource storeSource) {
+        if (storeSource != null) {
+            this.storeSource = storeSource;
+        }
     }
 
     // Helper aligned with GameSetupController's transition style.
