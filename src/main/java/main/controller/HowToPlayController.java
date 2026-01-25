@@ -37,26 +37,24 @@ public class HowToPlayController {
     @FXML private Button startButton;
     @FXML private Label objectiveTitleLabel;
     @FXML private Label objectiveTextLabel;
-    @FXML private Label elementsTitleLabel;
-    @FXML private Label bombsTitleLabel;
-    @FXML private Label bombsTextLabel;
-    @FXML private Label triviaTitleLabel;
-    @FXML private Label triviaTextLabel;
-    @FXML private Label surprisesTitleLabel;
-    @FXML private Label surprisesTextLabel;
+    @FXML private Label controlsTitleLabel;
+    @FXML private Label controlsTextLabel;
     @FXML private Label numbersTitleLabel;
     @FXML private Label numbersTextLabel;
-    @FXML private Label howPlayTitleLabel;
-    @FXML private Label step1Label;
-    @FXML private Label step2Label;
-    @FXML private Label step3Label;
-    @FXML private Label step4Label;
-    @FXML private Label step5Label;
+    @FXML private Label livesTitleLabel;
+    @FXML private Label livesTextLabel;
+    @FXML private Label scoreTitleLabel;
+    @FXML private Label scoreTextLabel;
+    @FXML private Label hintsTitleLabel;
+    @FXML private Label hintsTextLabel;
+    @FXML private Label surpriseTitleLabel;
+    @FXML private Label surpriseTextLabel;
+    @FXML private Label difficultyTitleLabel;
+    @FXML private Label difficultyTextLabel;
+    @FXML private Label profilesTitleLabel;
+    @FXML private Label profilesTextLabel;
     @FXML private Label tipsTitleLabel;
-    @FXML private Label tip1Label;
-    @FXML private Label tip2Label;
-    @FXML private Label tip3Label;
-    @FXML private Label tip4Label;
+    @FXML private Label tipsTextLabel;
 
 
     /**
@@ -84,38 +82,43 @@ public class HowToPlayController {
 
             if (objectiveTitleLabel != null) objectiveTitleLabel.setText("🎯 מטרה");
             if (objectiveTextLabel != null)
-                objectiveTextLabel.setText("לנקות את כל המשבצות הבטוחות בלי לפגוע במוקשים! לשני השחקנים יש לבבות משותפים – שימו לב ושמרו על החיים שלכם.");
+                objectiveTextLabel.setText("• חשפו תאים בטוחים והימנעו ממוקשים.\n• לכל שחקן לוח משלו, ומשחקים בתור.\n• שמרו על הלבבות ונסו להגיע לניקוד הגבוה ביותר.");
 
-            if (elementsTitleLabel != null) elementsTitleLabel.setText("📦 מרכיבי המשחק:");
-
-            if (bombsTitleLabel != null) bombsTitleLabel.setText("💣 מוקשים");
-            if (bombsTextLabel != null)
-                bombsTextLabel.setText("היזהרו ממוקשים – חשיפת מוקש מורידה לב. סימון מוקש אמיתי עם דגל נותן נקודות.");
-
-            if (triviaTitleLabel != null) triviaTitleLabel.setText("❓ שאלות טריוויה");
-            if (triviaTextLabel != null)
-                triviaTextLabel.setText("שאלות טריוויה נותנות פרס על תשובה נכונה וקנס על תשובה שגויה. ההשפעה משתנה לפי רמת הקושי.");
-
-            if (surprisesTitleLabel != null) surprisesTitleLabel.setText("🎁 הפתעות");
-            if (surprisesTextLabel != null)
-                surprisesTextLabel.setText("משבצות הפתעה נותנות אפקט טוב או רע באקראי. הן יכולות להוסיף או להוריד לבבות או נקודות. כל הפתעה ניתנת לשימוש פעם אחת, והאפקט מושפע מרמת הקושי.");
+            if (controlsTitleLabel != null) controlsTitleLabel.setText("🕹 שליטה");
+            if (controlsTextLabel != null)
+                controlsTextLabel.setText("• לחיצה שמאלית = חשיפת תא.\n• לחיצה ימנית = סימון או ביטול סימון של סימן סימבה/דגל (טביעת כף) על מוקשים חשודים.");
 
             if (numbersTitleLabel != null) numbersTitleLabel.setText("🔢 מספרים");
             if (numbersTextLabel != null)
-                numbersTextLabel.setText("המספרים מראים כמה מוקשים יש סביב המשבצת. השתמשו בהם כדי לתכנן את המהלכים שלכם.");
+                numbersTextLabel.setText("• המספר מראה כמה מוקשים צמודים לתא.");
 
-            if (howPlayTitleLabel != null) howPlayTitleLabel.setText("⚡ איך משחקים");
-            if (step1Label != null) step1Label.setText("1. לכל שחקן יש לוח משלו והוא משחק בתורו.");
-            if (step2Label != null) step2Label.setText("2. לחיצה שמאלית = גילוי משבצת.");
-            if (step3Label != null) step3Label.setText("3. לחיצה ימנית = הוספה או הסרה של דגל על מוקש חשוד.");
-            if (step4Label != null) step4Label.setText("4. נסו לשמור על הלבבות המשותפים בחיים כמה שיותר זמן.");
-            if (step5Label != null) step5Label.setText("5. המנצח הוא השחקן שסימן נכון את כל המוקשים ראשון.");
+            if (livesTitleLabel != null) livesTitleLabel.setText("❤️ חיים");
+            if (livesTextLabel != null)
+                livesTextLabel.setText("• מתחילים עם לבבות; פגיעה במוקש מורידה לב אחד.\n• כשנגמרים הלבבות — מפסידים.");
 
-            if (tipsTitleLabel != null) tipsTitleLabel.setText("🏁 טיפים לניצחון");
-            if (tip1Label != null) tip1Label.setText("• השתמשו במספרים כדי להסיק איפה מסתתרים מוקשים.");
-            if (tip2Label != null) tip2Label.setText("• תחשבו לפני שאתם לוחצים – טעות אחת יכולה לעלות בלב.");
-            if (tip3Label != null) tip3Label.setText("• התכוננו לשאלות טריוויה כדי להרוויח נקודות נוספות.");
-            if (tip4Label != null) tip4Label.setText("• הפתעות יכולות להפוך את המשחק – תהיו מוכנים!");
+            if (scoreTitleLabel != null) scoreTitleLabel.setText("🏆 ניקוד / נקודות");
+            if (scoreTextLabel != null)
+                scoreTextLabel.setText("• חשיפות בטוחות והתקדמות יציבה מוסיפות נקודות.\n• סימון מוקש נכון מוסיף נקודות; סימון שגוי מוריד נקודות.\n• שאלות טריוויה יכולות להוסיף או להוריד נקודות (ההשפעה משתנה לפי הקושי).\n• מוקשים, הפתעות מסוכנות ושימוש ברמז מורידים נקודות.");
+
+            if (hintsTitleLabel != null) hintsTitleLabel.setText("💡 רמזים");
+            if (hintsTextLabel != null)
+                hintsTextLabel.setText("• לכל שחקן יש בדיוק 2 רמזים בכל משחק.\n• לחצו על כפתור הרמז כדי להדגיש תא בטוח; הרמזים מוגבלים ועולים בנקודות.");
+
+            if (surpriseTitleLabel != null) surpriseTitleLabel.setText("🎁 מערכת מתנות / הפתעות");
+            if (surpriseTextLabel != null)
+                surpriseTextLabel.setText("• Lucky Surprise יכולה לתת +חיים ו/או +נקודות.\n• Risky Surprise יכולה להוריד חיים/נקודות.");
+
+            if (difficultyTitleLabel != null) difficultyTitleLabel.setText("🧭 קושי");
+            if (difficultyTextLabel != null)
+                difficultyTextLabel.setText("• Easy / Medium / Hard — יותר מוקשים = יותר קשה.");
+
+            if (profilesTitleLabel != null) profilesTitleLabel.setText("👤 פרופילים");
+            if (profilesTextLabel != null)
+                profilesTextLabel.setText("• נכנסים לפרופיל מהמסך הראשי.\n• משנים אווטאר בתוך עמוד הפרופיל.\n• הפרופיל מציג היסטוריית משחקים וסטטיסטיקות.");
+
+            if (tipsTitleLabel != null) tipsTitleLabel.setText("🏁 טיפים מהירים");
+            if (tipsTextLabel != null)
+                tipsTextLabel.setText("• השתמשו בדגלים כדי לעקוב אחרי מוקשים חשודים.\n• אל תמהרו — נקו אזורים בטוחים שלב אחר שלב.\n• שמרו רמזים לרגעים קשים.");
 
             // RTL layout
             if (rootPane != null)
