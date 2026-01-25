@@ -17,7 +17,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -79,6 +82,10 @@ public class GameSetupController {
 
     @FXML private CheckBox playerBAICheckbox;
     @FXML private StackPane root;
+    @FXML private StackPane helpPopupRoot;
+    @FXML private VBox helpPopupCard;
+    @FXML private Label helpPopupTitle;
+    @FXML private VBox helpPopupContent;
 
     /** Mapping between difficulty and its accordion pane for fast lookup/highlight. */
     private final Map<Difficulty, TitledPane> rulePanes = new EnumMap<>(Difficulty.class);
@@ -99,6 +106,7 @@ public class GameSetupController {
 
         setupDifficultySync();
         buildLevelRulesAccordion();
+        setupHelpPopup();
 
         // If AI checkbox is already selected when screen opens
         onTogglePlayerBAI();
@@ -537,6 +545,81 @@ public class GameSetupController {
         expandRuleFor(selectedDifficulty != null ? selectedDifficulty : Difficulty.EASY);
     }
 
+    private void setupHelpPopup() {
+        if (helpPopupRoot == null) return;
+        helpPopupRoot.setVisible(false);
+        helpPopupRoot.setManaged(false);
+        helpPopupRoot.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            if (event.getTarget() == helpPopupRoot) {
+                hideHelpPopup();
+            }
+        });
+    }
+
+    @FXML
+    private void onShowHelpPopup(ActionEvent event) {
+        if (!(event.getSource() instanceof Node)) return;
+        Object data = ((Node) event.getSource()).getUserData();
+        Difficulty difficulty = parseDifficulty(data);
+        if (difficulty == null) return;
+        showLevelRulesPopup(difficulty);
+    }
+
+    @FXML
+    private void onCloseHelpPopup(ActionEvent event) {
+        hideHelpPopup();
+    }
+
+    private void hideHelpPopup() {
+        if (helpPopupRoot == null) return;
+        helpPopupRoot.setVisible(false);
+        helpPopupRoot.setManaged(false);
+    }
+
+    private Difficulty parseDifficulty(Object data) {
+        if (data instanceof Difficulty) return (Difficulty) data;
+        if (data instanceof String) {
+            try {
+                return Difficulty.valueOf(((String) data).toUpperCase());
+            } catch (IllegalArgumentException ignored) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    private void showLevelRulesPopup(Difficulty level) {
+        LevelRuleSpec spec = findRuleSpec(level);
+        if (spec == null || helpPopupRoot == null || helpPopupContent == null || helpPopupTitle == null) return;
+        showRulesPopup(spec.title + " Rules", spec);
+    }
+
+    private void showRulesPopup(String title, LevelRuleSpec spec) {
+        helpPopupTitle.setText(title);
+        helpPopupContent.getChildren().clear();
+        helpPopupContent.getChildren().addAll(
+                createHelpRow("🧩", "Board size", spec.rows + " x " + spec.cols),
+                createHelpRow("💣", "Mines", String.valueOf(spec.mines)),
+                createHelpRow("❓", "Questions", String.valueOf(spec.questions)),
+                createHelpRow("🎁", "Surprise", String.valueOf(spec.surprises)),
+                createHelpRow("❤️", "Hearts", String.valueOf(spec.hearts)),
+                createHelpRow("💰", "Cost", spec.activationCost + " points"),
+                createHelpRow("🎲", "Surprise effect",
+                        "Good: +1 heart, +" + spec.surpriseGood + " points\nBad: -1 heart, " + spec.surpriseBad + " points")
+        );
+        helpPopupRoot.setVisible(true);
+        helpPopupRoot.setManaged(true);
+        helpPopupRoot.toFront();
+    }
+
+    private LevelRuleSpec findRuleSpec(Difficulty difficulty) {
+        if (difficulty == null) return null;
+        for (LevelRuleSpec spec : LEVEL_RULES) {
+            if (spec.difficulty == difficulty) return spec;
+        }
+        return null;
+    }
+
     /**
      * Expands the rule pane that matches the given difficulty and updates highlight styling.
      */
@@ -594,17 +677,25 @@ public class GameSetupController {
         pane.setCollapsible(true);
         pane.setFocusTraversable(true);
         pane.getStyleClass().add("level-rule-card");
+        pane.getStyleClass().add("level-row");
 
         HBox header = new HBox(8);
         header.setAlignment(Pos.CENTER_LEFT);
         header.getStyleClass().add("level-rule-header");
 
         Label icon = new Label(spec.icon);
-        icon.getStyleClass().add("level-rule-header-icon");
+        icon.getStyleClass().addAll("level-rule-header-icon", "level-dot");
         Label title = new Label(spec.title);
         title.getStyleClass().add("level-rule-header-title");
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        Label arrow = new Label("▾");
+        arrow.getStyleClass().add("level-arrow");
+        arrow.setMinSize(18, 18);
+        arrow.setMaxSize(18, 18);
+        arrow.setAlignment(Pos.CENTER);
 
-        header.getChildren().addAll(icon, title);
+        header.getChildren().addAll(icon, title, spacer, arrow);
         pane.setText("");
         pane.setGraphic(header);
 
@@ -623,8 +714,16 @@ public class GameSetupController {
                         "Good: +1 heart, +" + spec.surpriseGood + " points\nBad: -1 heart, " + spec.surpriseBad + " points")
         );
 
-        pane.setContent(content);
+        ScrollPane contentScroll = new ScrollPane(content);
+        contentScroll.setFitToWidth(true);
+        contentScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        contentScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        contentScroll.setMaxHeight(220);
+        contentScroll.getStyleClass().add("level-content");
+
+        pane.setContent(contentScroll);
         pane.expandedProperty().addListener((obs, wasExpanded, isExpanded) -> {
+            arrow.setRotate(isExpanded ? 180 : 0);
             if (isExpanded) {
                 content.setOpacity(0);
                 FadeTransition ft = new FadeTransition(Duration.millis(220), content);
@@ -667,6 +766,24 @@ public class GameSetupController {
         Label text = new Label(labelText + ": " + valueText);
         text.setWrapText(true);
         text.getStyleClass().add("level-rule-row-text");
+
+        row.getChildren().addAll(icon, text);
+        return row;
+    }
+
+    private HBox createHelpRow(String iconText, String labelText, String valueText) {
+        HBox row = new HBox(10);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.getStyleClass().add("help-popup-row");
+
+        Label icon = new Label(iconText);
+        icon.getStyleClass().add("help-popup-row-icon");
+
+        Label text = new Label(labelText + ": " + valueText);
+        text.setWrapText(true);
+        text.setMaxWidth(Double.MAX_VALUE);
+        text.getStyleClass().add("help-popup-row-text");
+        HBox.setHgrow(text, Priority.ALWAYS);
 
         row.getChildren().addAll(icon, text);
         return row;
