@@ -339,6 +339,55 @@ GLOBAL FONT
     -fx-padding: 4 2 6 2;
 }
 
+/* Question rules cards */
+.question-rule-card {
+    -fx-background-color: rgba(255, 244, 224, 0.92);
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: rgba(222, 170, 60, 0.7);
+    -fx-border-width: 1.2;
+    -fx-padding: 8 10 10 10;
+}
+
+.question-rule-title {
+    -fx-text-fill: #3b2304;
+    -fx-font-size: 13.5;
+    -fx-font-weight: bold;
+}
+
+.question-rule-row {
+    -fx-background-color: rgba(255, 248, 236, 0.9);
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 6 8;
+}
+
+.question-rule-row-correct {
+    -fx-border-color: rgba(22, 163, 74, 0.5);
+}
+
+.question-rule-row-wrong {
+    -fx-border-color: rgba(220, 38, 38, 0.5);
+}
+
+.question-rule-tag {
+    -fx-background-color: rgba(120, 53, 15, 0.1);
+    -fx-text-fill: #5c3a12;
+    -fx-font-size: 11.5;
+    -fx-font-weight: bold;
+    -fx-padding: 2 8;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-min-width: 54;
+    -fx-alignment: center;
+}
+
+.question-rule-detail {
+    -fx-text-fill: #4b3213;
+    -fx-font-size: 12;
+}
+
 /* Level Rules accordion */
 .level-rules-box {
     -fx-padding: 2 0 6 0;
@@ -517,6 +566,36 @@ GLOBAL FONT
 .dark-mode .hearts-label {
     -fx-text-fill: #fecaca;
     -fx-font-size: 13;
+}
+
+.dark-mode .question-rule-card {
+    -fx-background-color: rgba(36, 24, 10, 0.92);
+    -fx-border-color: rgba(250, 204, 21, 0.5);
+}
+
+.dark-mode .question-rule-title {
+    -fx-text-fill: #fde68a;
+}
+
+.dark-mode .question-rule-row {
+    -fx-background-color: rgba(24, 16, 8, 0.9);
+}
+
+.dark-mode .question-rule-row-correct {
+    -fx-border-color: rgba(34, 197, 94, 0.5);
+}
+
+.dark-mode .question-rule-row-wrong {
+    -fx-border-color: rgba(248, 113, 113, 0.6);
+}
+
+.dark-mode .question-rule-tag {
+    -fx-background-color: rgba(250, 204, 21, 0.12);
+    -fx-text-fill: #fde68a;
+}
+
+.dark-mode .question-rule-detail {
+    -fx-text-fill: #e7e5e4;
 }
 
 .dark-mode .heart-icon {

@@ -49,13 +49,49 @@ public class GameSetupController {
 
     private static final String USERNAME_REGEX = "^[a-zA-Z][a-zA-Z0-9._-]{2,19}$";
 
-    private static final List<LevelRuleSpec> LEVEL_RULES = List.of(
-            new LevelRuleSpec(Difficulty.EASY, "Easy", "🟢",
-                    9, 9, 10, 6, 2, 10, 5, 8, -8),
-            new LevelRuleSpec(Difficulty.MEDIUM, "Medium", "🟠",
-                    13, 13, 26, 7, 3, 8, 8, 12, -12),
-            new LevelRuleSpec(Difficulty.HARD, "Hard", "🔴",
-                    16, 16, 44, 11, 4, 6, 12, 16, -16)
+    private static final List<LevelQuestionRules> LEVEL_QUESTION_RULES = List.of(
+            new LevelQuestionRules(Difficulty.EASY, "Easy", List.of(
+                    new QuestionTypeRule(QuestionType.EASY,
+                            new OutcomeSpec("Correct", "⭐ +3 points  •  ❤️ +1 heart  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -3 points or no change  •  ❤️ no change  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.MEDIUM,
+                            new OutcomeSpec("Correct", "⭐ +6 points  •  ❤️ no change  •  🧩 Reveal tiles"),
+                            new OutcomeSpec("Wrong", "⭐ -6 points or no change  •  ❤️ no change  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.HARD,
+                            new OutcomeSpec("Correct", "⭐ +10 points  •  ❤️ no change  •  🧩 Random 3x3 reveal"),
+                            new OutcomeSpec("Wrong", "⭐ -10 points  •  ❤️ no change  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.EXPERT,
+                            new OutcomeSpec("Correct", "⭐ +15 points  •  ❤️ +2 hearts  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -15 points  •  ❤️ -1 heart  •  🧩 No special effect"))
+            )),
+            new LevelQuestionRules(Difficulty.MEDIUM, "Medium", List.of(
+                    new QuestionTypeRule(QuestionType.EASY,
+                            new OutcomeSpec("Correct", "⭐ +8 points  •  ❤️ +1 heart  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -8 points  •  ❤️ no change  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.MEDIUM,
+                            new OutcomeSpec("Correct", "⭐ +10 points  •  ❤️ +1 heart  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -10 points and ❤️ -1 heart, or no change  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.HARD,
+                            new OutcomeSpec("Correct", "⭐ +15 points  •  ❤️ +1 heart  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -15 points  •  ❤️ -1 heart  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.EXPERT,
+                            new OutcomeSpec("Correct", "⭐ +20 points  •  ❤️ +2 hearts  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -20 points  •  ❤️ -1 or -2 hearts  •  🧩 No special effect"))
+            )),
+            new LevelQuestionRules(Difficulty.HARD, "Hard", List.of(
+                    new QuestionTypeRule(QuestionType.EASY,
+                            new OutcomeSpec("Correct", "⭐ +10 points  •  ❤️ +1 heart  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -10 points  •  ❤️ -1 heart  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.MEDIUM,
+                            new OutcomeSpec("Correct", "⭐ +15 points  •  ❤️ +1 or +2 hearts  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -15 points  •  ❤️ -1 or -2 hearts  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.HARD,
+                            new OutcomeSpec("Correct", "⭐ +20 points  •  ❤️ +2 hearts  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -20 points  •  ❤️ -2 hearts  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.EXPERT,
+                            new OutcomeSpec("Correct", "⭐ +40 points  •  ❤️ +3 hearts  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -40 points  •  ❤️ -3 hearts  •  🧩 No special effect"))
+            ))
     );
 
     @FXML private ToggleButton easyBtn, mediumBtn, hardBtn;
@@ -535,53 +571,62 @@ public class GameSetupController {
     }
 
     private void showLevelRulesPopup(Difficulty level) {
-        LevelRuleSpec spec = findRuleSpec(level);
-        if (spec == null || helpPopupRoot == null || helpPopupContent == null || helpPopupTitle == null) return;
-        showRulesPopup(spec.title + " Rules", spec);
+        LevelQuestionRules rules = findQuestionRules(level);
+        if (rules == null || helpPopupRoot == null || helpPopupContent == null || helpPopupTitle == null) return;
+        showRulesPopup("Level Rules - " + rules.title, rules);
     }
 
-    private void showRulesPopup(String title, LevelRuleSpec spec) {
+    private void showRulesPopup(String title, LevelQuestionRules rules) {
         helpPopupTitle.setText(title);
         helpPopupContent.getChildren().clear();
-        helpPopupContent.getChildren().addAll(
-                createHelpRow("🧩", "Board size", spec.rows + " x " + spec.cols),
-                createHelpRow("💣", "Mines", String.valueOf(spec.mines)),
-                createHelpRow("❓", "Questions", String.valueOf(spec.questions)),
-                createHelpRow("🎁", "Surprise", String.valueOf(spec.surprises)),
-                createHelpRow("❤️", "Hearts", String.valueOf(spec.hearts)),
-                createHelpRow("💰", "Cost", spec.activationCost + " points"),
-                createHelpRow("🎲", "Surprise effect",
-                        "Good: +1 heart, +" + spec.surpriseGood + " points\nBad: -1 heart, " + spec.surpriseBad + " points")
-        );
+        for (QuestionTypeRule rule : rules.rules) {
+            helpPopupContent.getChildren().add(createQuestionRuleCard(rule));
+        }
         helpPopupRoot.setVisible(true);
         helpPopupRoot.setManaged(true);
         helpPopupRoot.toFront();
     }
 
-    private LevelRuleSpec findRuleSpec(Difficulty difficulty) {
+    private LevelQuestionRules findQuestionRules(Difficulty difficulty) {
         if (difficulty == null) return null;
-        for (LevelRuleSpec spec : LEVEL_RULES) {
-            if (spec.difficulty == difficulty) return spec;
+        for (LevelQuestionRules rules : LEVEL_QUESTION_RULES) {
+            if (rules.difficulty == difficulty) return rules;
         }
         return null;
     }
 
+    private VBox createQuestionRuleCard(QuestionTypeRule rule) {
+        VBox card = new VBox(6);
+        card.getStyleClass().add("question-rule-card");
 
-    private HBox createHelpRow(String iconText, String labelText, String valueText) {
+        Label title = new Label(rule.type.displayName);
+        title.getStyleClass().add("question-rule-title");
+
+        VBox rows = new VBox(6);
+        rows.getChildren().addAll(
+                createOutcomeRow(rule.correct),
+                createOutcomeRow(rule.wrong)
+        );
+
+        card.getChildren().addAll(title, rows);
+        return card;
+    }
+
+    private HBox createOutcomeRow(OutcomeSpec outcome) {
         HBox row = new HBox(10);
         row.setAlignment(Pos.CENTER_LEFT);
-        row.getStyleClass().add("help-popup-row");
+        row.getStyleClass().addAll("question-rule-row", outcome.styleClass);
 
-        Label icon = new Label(iconText);
-        icon.getStyleClass().add("help-popup-row-icon");
+        Label tag = new Label(outcome.label);
+        tag.getStyleClass().add("question-rule-tag");
 
-        Label text = new Label(labelText + ": " + valueText);
+        Label text = new Label(outcome.detailText);
         text.setWrapText(true);
         text.setMaxWidth(Double.MAX_VALUE);
-        text.getStyleClass().add("help-popup-row-text");
+        text.getStyleClass().add("question-rule-detail");
         HBox.setHgrow(text, Priority.ALWAYS);
 
-        row.getChildren().addAll(icon, text);
+        row.getChildren().addAll(tag, text);
         return row;
     }
 
@@ -590,44 +635,54 @@ public class GameSetupController {
      * Immutable rule specification for a difficulty level.
      * Holds both UI metadata (title/icon) and gameplay parameters (board size, mines, etc.).
      */
-    private static final class LevelRuleSpec {
+    private enum QuestionType {
+        EASY("Easy Question"),
+        MEDIUM("Medium Question"),
+        HARD("Hard Question"),
+        EXPERT("Expert Question");
+
+        private final String displayName;
+
+        QuestionType(String displayName) {
+            this.displayName = displayName;
+        }
+    }
+
+    private static final class LevelQuestionRules {
         private final Difficulty difficulty;
         private final String title;
-        private final String icon;
-        private final int rows;
-        private final int cols;
-        private final int mines;
-        private final int questions;
-        private final int surprises;
-        private final int hearts;
-        private final int activationCost;
-        private final int surpriseGood;
-        private final int surpriseBad;
+        private final List<QuestionTypeRule> rules;
 
-        private LevelRuleSpec(Difficulty difficulty,
-                              String title,
-                              String icon,
-                              int rows,
-                              int cols,
-                              int mines,
-                              int questions,
-                              int surprises,
-                              int hearts,
-                              int activationCost,
-                              int surpriseGood,
-                              int surpriseBad) {
+        private LevelQuestionRules(Difficulty difficulty, String title, List<QuestionTypeRule> rules) {
             this.difficulty = difficulty;
             this.title = title;
-            this.icon = icon;
-            this.rows = rows;
-            this.cols = cols;
-            this.mines = mines;
-            this.questions = questions;
-            this.surprises = surprises;
-            this.hearts = hearts;
-            this.activationCost = activationCost;
-            this.surpriseGood = surpriseGood;
-            this.surpriseBad = surpriseBad;
+            this.rules = rules;
+        }
+    }
+
+    private static final class QuestionTypeRule {
+        private final QuestionType type;
+        private final OutcomeSpec correct;
+        private final OutcomeSpec wrong;
+
+        private QuestionTypeRule(QuestionType type, OutcomeSpec correct, OutcomeSpec wrong) {
+            this.type = type;
+            this.correct = correct;
+            this.wrong = wrong;
+        }
+    }
+
+    private static final class OutcomeSpec {
+        private final String label;
+        private final String detailText;
+        private final String styleClass;
+
+        private OutcomeSpec(String label, String detailText) {
+            this.label = label;
+            this.detailText = detailText;
+            this.styleClass = label.toLowerCase().contains("correct")
+                    ? "question-rule-row-correct"
+                    : "question-rule-row-wrong";
         }
     }
 }
