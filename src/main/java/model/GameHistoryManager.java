@@ -26,6 +26,8 @@ public class GameHistoryManager {
     static {
         loadFromFile();
     }
+
+    /** Deletes a matching game from history, saves CSV, and notifies observers. */
     public static void deleteGame(GameHistory game) {
         if (game == null) return;
 
@@ -53,7 +55,7 @@ public class GameHistoryManager {
     private static boolean safeEqualsDate(java.time.LocalDateTime a, java.time.LocalDateTime b) {
         return a == null ? b == null : a.equals(b);
     }
-
+    /** Adds a new game to history, saves CSV, and notifies observers. */
     public static void addGame(GameHistory game) {
         if (game != null) {
             history.add(game);
@@ -62,6 +64,7 @@ public class GameHistoryManager {
         }
     }
 
+    /** Registers an observer that will be notified on history changes. */
     public static void addObserver(GameHistoryObserver o) {
         if (o != null) observers.addIfAbsent(o);
     }
@@ -81,6 +84,7 @@ public class GameHistoryManager {
         }
     }
 
+    /** Returns an unmodifiable view of the history list. */
     public static List<GameHistory> getHistory() {
         return Collections.unmodifiableList(history);
     }

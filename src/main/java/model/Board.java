@@ -9,6 +9,8 @@ public class Board {
     private Cell[][] cells;
     private Theme theme;
 
+
+    /** Creates a board with a fixed size and initializes all cells as empty Cell objects. */
     public Board(int rows, int cols, Theme theme) {
         this.rows = rows;
         this.cols = cols;
@@ -22,17 +24,22 @@ public class Board {
         }
     }
 
+    /** @return number of rows in the board. */
     public int getRows() {
         return rows;
     }
 
+
+    /** @return number of columns in the board. */
     public int getCols() {
         return cols;
     }
 
+    /** Returns the cell at the given coordinates (assumes valid bounds). */
     public Cell[][] getCells() {
         return cells;
     }
+
 
     public Cell getCell(int row, int col) {
         return cells[row][col];
@@ -228,16 +235,18 @@ public class Board {
         System.out.println("Reveal (" + row + "," + col + ") mine=" + cell.isMine()
                 + " adj=" + cell.getAdjacentMines());
 
+
         if (cell.getType() == CellType.QUESTION) {
             return RevealResult.QUESTION_CELL;
         }
 
+        // Empty regular cell → flood fill
         // 5) No adjacent mines → expand empty area (ONLY regular cells)
         if (cell.getAdjacentMines() == 0 && cell.getType() == CellType.REGULAR) {
             revealNeighbors(row, col);
             return RevealResult.EMPTY_AREA;
         }
-
+        // Regular numbered safe cell
         return RevealResult.SAFE_NUMBER;
     }
 

@@ -7,16 +7,24 @@ public class GiftManager {
     public static final long COOLDOWN_MILLIS = 3L * 24 * 60 * 60 * 1000; // 3 ימים
     public static final int OPEN_NOW_COST = 10;
 
+    /** Returns true if the gift can be claimed now (cooldown passed). */
     public static boolean isReady(GiftState s) {
         long now = System.currentTimeMillis();
         return s.nextAvailableEpochMillis <= now;
     }
 
+    /** Returns remaining cooldown time in milliseconds (0 if ready). */
     public static long remainingMillis(GiftState s) {
         long now = System.currentTimeMillis();
         return Math.max(0, s.nextAvailableEpochMillis - now);
     }
 
+    /**
+     * Opens a gift for the given player.
+     * If payNow==true and gift not ready, tries to charge OPEN_NOW_COST coins.
+     * Updates GiftState timings, applies the reward to the profile, saves profile+gift state,
+     * and returns a Reward describing what was granted.
+     */
     public static Reward openGift(String playerName, PlayerProfile profile, GiftState s, boolean payNow) {
         if (profile == null || s == null) return Reward.none();
 
