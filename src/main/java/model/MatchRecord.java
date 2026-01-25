@@ -3,7 +3,7 @@ package model;
 public class MatchRecord {
 
     private String playedAtIso;
-    private String opponent;
+    private String Teammate;
     private String result;
     private int score;
     private long durationSeconds;
@@ -14,14 +14,14 @@ public class MatchRecord {
     }
 
     public MatchRecord(String playedAtIso,
-                       String opponent,
+                       String Teammate,
                        String result,
                        int score,
                        long durationSeconds,
                        int boardSize,
                        String difficulty) {
         this.playedAtIso = playedAtIso;
-        this.opponent = opponent;
+        this.Teammate = Teammate;
         this.result = result;
         this.score = score;
         this.durationSeconds = durationSeconds;
@@ -33,8 +33,8 @@ public class MatchRecord {
         return playedAtIso;
     }
 
-    public String getOpponent() {
-        return opponent;
+    public String getTeammate() {
+        return Teammate;
     }
 
     public String getResult() {
@@ -56,4 +56,5 @@ public class MatchRecord {
     public String getDifficulty() {
         return difficulty;
     }
+
 }

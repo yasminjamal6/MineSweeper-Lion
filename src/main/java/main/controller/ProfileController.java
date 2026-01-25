@@ -49,7 +49,7 @@ public class ProfileController {
     @FXML private Button openGiftBtn;
     @FXML private ImageView giftImageView;
 
-    // RIGHT (opponent)
+    // RIGHT (Teammate)
     @FXML private ImageView avatarViewRight;
     @FXML private Label playerNameLabelRight;
     @FXML private Label playerSubtitleLabelRight;
@@ -68,7 +68,7 @@ public class ProfileController {
     // TABLE
     @FXML private TableView<MatchRecord> matchesTable;
     @FXML private TableColumn<MatchRecord, String> playedAtCol;
-    @FXML private TableColumn<MatchRecord, String> opponentCol;
+    @FXML private TableColumn<MatchRecord, String> TeammateCol;
     @FXML private TableColumn<MatchRecord, String> resultCol;
     @FXML private TableColumn<MatchRecord, Integer> scoreCol;
     @FXML private TableColumn<MatchRecord, Long> durationCol;
@@ -79,14 +79,14 @@ public class ProfileController {
     private final ObservableList<MatchRecord> matches = FXCollections.observableArrayList();
     private static final DateTimeFormatter DISPLAY_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    private PlayerProfile viewerProfile;     // Active session player
-    private PlayerProfile opponentProfile;   // Last opponent from history
+    private PlayerProfile viewerProfile;     // השחקן המחובר (Session)
+    private PlayerProfile TeammateProfile;   // יריב אחרון מהיסטוריה
 
     @FXML
     private void initialize() {
         setupTable();
         javafx.application.Platform.runLater(() -> {
-            loadViewerAndOpponent();
+            loadViewerAndTeammate();
             loadGiftIcon(giftImageView);
             loadGiftIcon(giftImageViewRight);
         });
@@ -98,7 +98,7 @@ public class ProfileController {
             String iso = cell.getValue().getPlayedAtIso();
             return new SimpleStringProperty(formatPlayedAt(iso));
         });
-        opponentCol.setCellValueFactory(new PropertyValueFactory<>("opponent"));
+        TeammateCol.setCellValueFactory(new PropertyValueFactory<>("Teammate"));
         resultCol.setCellValueFactory(new PropertyValueFactory<>("result"));
         scoreCol.setCellValueFactory(new PropertyValueFactory<>("score"));
         durationCol.setCellValueFactory(new PropertyValueFactory<>("durationSeconds"));
@@ -108,7 +108,7 @@ public class ProfileController {
         matchesTable.setItems(matches);
     }
 
-    private void loadViewerAndOpponent() {
+    private void loadViewerAndTeammate() {
         String viewerName = Session.getActivePlayerName();
         viewerProfile = ProfileStore.loadOrCreate(viewerName);
         if (viewerProfile != null) {
@@ -116,16 +116,16 @@ public class ProfileController {
         }
 
         List<MatchRecord> viewerHistory = getHistoryFor(viewerName);
-        String opponentName = findLastOpponent(viewerHistory);
+        String TeammateName = findLastTeammate(viewerHistory);
 
-        opponentProfile = findProfileByName(opponentName);
-        if (opponentProfile != null) {
-            opponentProfile.ensureDefaults();
+        TeammateProfile = findProfileByName(TeammateName);
+        if (TeammateProfile != null) {
+            TeammateProfile.ensureDefaults();
         }
 
         renderViewerPanel(viewerProfile, viewerHistory);
-        renderOpponentPanel(opponentProfile, opponentName);
-        loadMatchesTable(viewerHistory, opponentName);
+        renderTeammatePanel(TeammateProfile, TeammateName);
+        loadMatchesTable(viewerHistory, TeammateName);
     }
 
     private List<MatchRecord> getHistoryFor(String playerName) {
@@ -137,10 +137,10 @@ public class ProfileController {
         return (historyProfile != null) ? historyProfile.getMatches() : List.of();
     }
 
-    private String findLastOpponent(List<MatchRecord> history) {
+    private String findLastTeammate(List<MatchRecord> history) {
         if (history == null || history.isEmpty()) return null;
-        String opponent = history.get(0).getOpponent();
-        return (opponent == null || opponent.isBlank()) ? null : opponent;
+        String Teammate = history.get(0).getTeammate();
+        return (Teammate == null || Teammate.isBlank()) ? null : Teammate;
     }
 
     private PlayerProfile findProfileByName(String name) {
@@ -306,10 +306,10 @@ public class ProfileController {
         refreshGiftArea(p, giftProgressLabel, giftProgressBar, openGiftBtn, true);
     }
 
-    private void renderOpponentPanel(PlayerProfile p, String opponentName) {
-        if (opponentName == null || opponentName.isBlank() || p == null) {
-            playerNameLabelRight.setText("No opponent yet");
-            playerSubtitleLabelRight.setText("Opponent Profile");
+    private void renderTeammatePanel(PlayerProfile p, String TeammateName) {
+        if (TeammateName == null || TeammateName.isBlank() || p == null) {
+            playerNameLabelRight.setText("No Teammate yet");
+            playerSubtitleLabelRight.setText("Teammate Profile");
             avatarViewRight.setImage(null);
             avatarViewRight.setVisible(false);
             coinsLabelRight.setText("Coins: 0");
@@ -324,7 +324,7 @@ public class ProfileController {
         }
 
         playerNameLabelRight.setText(p.getPlayerName());
-        playerSubtitleLabelRight.setText("Opponent Profile");
+        playerSubtitleLabelRight.setText("Teammate Profile");
         setAvatar(avatarViewRight, p.getAvatarId());
 
         List<MatchRecord> history = getHistoryFor(p.getPlayerName());
@@ -333,14 +333,14 @@ public class ProfileController {
         refreshGiftArea(p, giftProgressLabelRight, giftProgressBarRight, openGiftBtnRight, false);
     }
 
-    private void loadMatchesTable(List<MatchRecord> viewerHistory, String opponentName) {
+    private void loadMatchesTable(List<MatchRecord> viewerHistory, String TeammateName) {
         if (viewerHistory == null) {
             matches.setAll(List.of());
             return;
         }
-        if (opponentName != null && !opponentName.isBlank()) {
+        if (TeammateName != null && !TeammateName.isBlank()) {
             List<MatchRecord> filtered = viewerHistory.stream()
-                    .filter(r -> opponentName.equals(r.getOpponent()))
+                    .filter(r -> TeammateName.equals(r.getTeammate()))
                     .collect(java.util.stream.Collectors.toList());
             if (!filtered.isEmpty()) {
                 matches.setAll(filtered);
