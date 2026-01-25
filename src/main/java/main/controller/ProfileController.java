@@ -15,6 +15,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.util.ResourceUtils;
 import model.*;
@@ -22,15 +23,11 @@ import model.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import javafx.stage.Stage;
 
 
 public class ProfileController {
 
-    // LEFT
-    @FXML private ListView<String> profilesList;
-
-    // TOP CARD
+    // LEFT (viewer)
     @FXML private ImageView avatarView;
     @FXML private Label playerNameLabel;
     @FXML private Label playerSubtitleLabel;
@@ -47,6 +44,27 @@ public class ProfileController {
     @FXML private FlowPane avatarsFlow;
     @FXML private Label avatarsHintLabel;
 
+    @FXML private Label giftProgressLabel;
+    @FXML private ProgressBar giftProgressBar;
+    @FXML private Button openGiftBtn;
+    @FXML private ImageView giftImageView;
+
+    // RIGHT (opponent)
+    @FXML private ImageView avatarViewRight;
+    @FXML private Label playerNameLabelRight;
+    @FXML private Label playerSubtitleLabelRight;
+    @FXML private Label coinsLabelRight;
+    @FXML private Label selectedAvatarLabelRight;
+    @FXML private Label totalGamesLabelRight;
+    @FXML private Label winsLossesLabelRight;
+    @FXML private Label winRateLabelRight;
+    @FXML private FlowPane avatarsFlowRight;
+    @FXML private Label avatarsHintLabelRight;
+    @FXML private Label giftProgressLabelRight;
+    @FXML private ProgressBar giftProgressBarRight;
+    @FXML private Button openGiftBtnRight;
+    @FXML private ImageView giftImageViewRight;
+
     // TABLE
     @FXML private TableView<MatchRecord> matchesTable;
     @FXML private TableColumn<MatchRecord, String> playedAtCol;
@@ -56,24 +74,22 @@ public class ProfileController {
     @FXML private TableColumn<MatchRecord, Long> durationCol;
     @FXML private TableColumn<MatchRecord, Integer> boardSizeCol;
     @FXML private TableColumn<MatchRecord, String> difficultyCol;
-    @FXML private Label giftProgressLabel;
-    @FXML private ProgressBar giftProgressBar;
-    @FXML private Button openGiftBtn;
-    @FXML private ImageView giftImageView;
 
 
     private final ObservableList<MatchRecord> matches = FXCollections.observableArrayList();
     private static final DateTimeFormatter DISPLAY_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    private PlayerProfile activeProfile;     // השחקן המחובר (Session)
-    private PlayerProfile selectedProfile;   // השחקן שנבחר מהרשימה
+    private PlayerProfile viewerProfile;     // השחקן המחובר (Session)
+    private PlayerProfile opponentProfile;   // יריב אחרון מהיסטוריה
 
     @FXML
     private void initialize() {
         setupTable();
-        loadActiveProfile();
-        loadProfilesList();
-        loadGiftIcon();
+        javafx.application.Platform.runLater(() -> {
+            loadViewerAndOpponent();
+            loadGiftIcon(giftImageView);
+            loadGiftIcon(giftImageViewRight);
+        });
 
     }
 
@@ -92,64 +108,51 @@ public class ProfileController {
         matchesTable.setItems(matches);
     }
 
-    private void loadActiveProfile() {
-        String playerName = Session.getActivePlayerName();
-        activeProfile = ProfileStore.loadOrCreate(playerName);
-        if (activeProfile != null) {
-            activeProfile.ensureDefaults();
+    private void loadViewerAndOpponent() {
+        String viewerName = Session.getActivePlayerName();
+        viewerProfile = ProfileStore.loadOrCreate(viewerName);
+        if (viewerProfile != null) {
+            viewerProfile.ensureDefaults();
         }
+
+        List<MatchRecord> viewerHistory = getHistoryFor(viewerName);
+        String opponentName = findLastOpponent(viewerHistory);
+
+        opponentProfile = findProfileByName(opponentName);
+        if (opponentProfile != null) {
+            opponentProfile.ensureDefaults();
+        }
+
+        renderViewerPanel(viewerProfile, viewerHistory);
+        renderOpponentPanel(opponentProfile, opponentName);
+        loadMatchesTable(viewerHistory, opponentName);
     }
 
-    private void loadProfilesList() {
-        List<PlayerProfile> profiles = PlayerProfileManager.getProfiles();
-
-        profilesList.getItems().clear();
-        for (PlayerProfile p : profiles) {
-            profilesList.getItems().add(p.getPlayerName());
-        }
-
-        profilesList.getSelectionModel().selectedItemProperty()
-                .addListener((obs, oldV, newV) -> selectProfile(newV));
-
-        // ברירת מחדל: לבחור את השחקן הפעיל אם הוא קיים ברשימה, אחרת הראשון
-        if (activeProfile != null && profilesList.getItems().contains(activeProfile.getPlayerName())) {
-            profilesList.getSelectionModel().select(activeProfile.getPlayerName());
-        } else if (!profilesList.getItems().isEmpty()) {
-            profilesList.getSelectionModel().select(0);
-        }
-    }
-
-    private void selectProfile(String playerName) {
-        if (playerName == null || playerName.isBlank()) return;
-
-        selectedProfile = ProfileStore.loadOrCreate(playerName);
-
-        if (selectedProfile == null) return;
-
-        // כותרת + אווטאר + טבלה + סטטיסטיקות
-        playerNameLabel.setText(selectedProfile.getPlayerName());
-        playerSubtitleLabel.setText("Profile & Match History");
-        setAvatar(selectedProfile.getAvatarId());
-
-        // ✅ ההיסטוריה מגיעה מה-Manager
+    private List<MatchRecord> getHistoryFor(String playerName) {
+        if (playerName == null || playerName.isBlank()) return List.of();
         PlayerProfile historyProfile = PlayerProfileManager.getProfiles().stream()
                 .filter(p -> playerName.equals(p.getPlayerName()))
                 .findFirst()
                 .orElse(null);
-
-        List<MatchRecord> history = (historyProfile != null) ? historyProfile.getMatches() : List.of();
-        matches.setAll(history);
-        updateStats(history);
-
-        renderProfileAreaFor(selectedProfile);
-        refreshGiftArea(selectedProfile);
-
-
-
+        return (historyProfile != null) ? historyProfile.getMatches() : List.of();
     }
 
-    private void renderOwnedAvatars(PlayerProfile profile) {
-        avatarsFlow.getChildren().clear();
+    private String findLastOpponent(List<MatchRecord> history) {
+        if (history == null || history.isEmpty()) return null;
+        String opponent = history.get(0).getOpponent();
+        return (opponent == null || opponent.isBlank()) ? null : opponent;
+    }
+
+    private PlayerProfile findProfileByName(String name) {
+        if (name == null || name.isBlank()) return null;
+        return PlayerProfileManager.getProfiles().stream()
+                .filter(p -> name.equals(p.getPlayerName()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private void renderOwnedAvatars(PlayerProfile profile, FlowPane target, boolean allowSelect) {
+        target.getChildren().clear();
 
         profile.ensureDefaults();
 
@@ -157,11 +160,11 @@ public class ProfileController {
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
                 .sorted(String.CASE_INSENSITIVE_ORDER)
-                .forEach(avatarId -> avatarsFlow.getChildren().add(createAvatarCard(profile, avatarId)));
+                .forEach(avatarId -> target.getChildren().add(createAvatarCard(profile, avatarId, allowSelect)));
     }
 
 
-    private Button createAvatarCard(PlayerProfile profile, String avatarId) {
+    private Button createAvatarCard(PlayerProfile profile, String avatarId, boolean allowSelect) {
         Button btn = new Button();
         btn.setPrefSize(90, 90);
         btn.getStyleClass().add("pf-avatar-card");
@@ -181,19 +184,22 @@ public class ProfileController {
             btn.getStyleClass().add("pf-avatar-selected");
         }
 
-        btn.setOnAction(e -> {
-            if (profile.selectAvatar(avatarId)) {
-                ProfileStore.save(profile);
+        if (allowSelect) {
+            btn.setOnAction(e -> {
+                if (profile.selectAvatar(avatarId)) {
+                    ProfileStore.save(profile);
 
-                // גם לשמור ב-PlayerProfileManager כדי שהאווטאר יוצג נכון במסך עצמו
-                PlayerProfileManager.getOrCreateProfile(profile.getPlayerName(), profile.getSelectedAvatarId());
+                    // גם לשמור ב-PlayerProfileManager כדי שהאווטאר יוצג נכון במסך עצמו
+                    PlayerProfileManager.getOrCreateProfile(profile.getPlayerName(), profile.getSelectedAvatarId());
 
-                selectedProfile = ProfileStore.loadOrCreate(profile.getPlayerName());
-                renderProfileAreaFor(selectedProfile);
-                setAvatar(selectedProfile.getAvatarId());
-
-            }
-        });
+                    viewerProfile = ProfileStore.loadOrCreate(profile.getPlayerName());
+                    renderProfileAreaFor(viewerProfile, coinsLabel, selectedAvatarLabel, avatarsHintLabel, avatarsFlow, shopBtn, true);
+                    setAvatar(avatarView, viewerProfile.getAvatarId());
+                }
+            });
+        } else {
+            btn.setDisable(true);
+        }
 
         return btn;
     }
@@ -212,19 +218,19 @@ public class ProfileController {
         }
     }
 
-    private void setAvatar(String avatarId) {
+    private void setAvatar(ImageView target, String avatarId) {
         Avatar avatar = Avatar.fromId(avatarId, Avatar.SIMBA);
         try (var is = ResourceUtils.stream(getClass(), avatar.resourcePath)) {
             if (is != null) {
-                avatarView.setImage(new Image(is));
-                avatarView.setVisible(true);
+                target.setImage(new Image(is));
+                target.setVisible(true);
             } else {
-                avatarView.setImage(null);
-                avatarView.setVisible(false);
+                target.setImage(null);
+                target.setVisible(false);
             }
         } catch (Exception e) {
-            avatarView.setImage(null);
-            avatarView.setVisible(false);
+            target.setImage(null);
+            target.setVisible(false);
         }
     }
 
@@ -237,7 +243,7 @@ public class ProfileController {
         }
     }
 
-    private void updateStats(List<MatchRecord> records) {
+    private void updateStats(List<MatchRecord> records, Label totalLabel, Label winsLosses, Label winRate) {
         int total = (records != null) ? records.size() : 0;
         int wins = 0, losses = 0;
 
@@ -248,18 +254,18 @@ public class ProfileController {
             }
         }
 
-        totalGamesLabel.setText(String.valueOf(total));
-        winsLossesLabel.setText(wins + " / " + losses);
+        totalLabel.setText(String.valueOf(total));
+        winsLosses.setText(wins + " / " + losses);
         int rate = (total == 0) ? 0 : (int) Math.round((wins * 100.0) / total);
-        winRateLabel.setText(rate + "%");
+        winRate.setText(rate + "%");
     }
 
     // ================= NAV =================
     @FXML
     private void onOpenShop(ActionEvent event) {
         // חשוב: החנות תטען לפי Session, אז מעדכנים אותו לפי השחקן שנבחר
-        if (selectedProfile != null) {
-            Session.setActivePlayerName(selectedProfile.getPlayerName());
+        if (viewerProfile != null) {
+            Session.setActivePlayerName(viewerProfile.getPlayerName());
         }
         switchScene(event, "/view/shopView.fxml");
     }
@@ -270,19 +276,79 @@ public class ProfileController {
         switchScene(event, "/view/home-view.fxml");
     }
 
-    private void renderProfileAreaFor(model.PlayerProfile p) {
+    private void renderProfileAreaFor(PlayerProfile p,
+                                      Label coins,
+                                      Label selectedAvatar,
+                                      Label avatarsHint,
+                                      FlowPane avatarsPane,
+                                      Button shopButton,
+                                      boolean allowSelect) {
         if (p == null) return;
 
         p.ensureDefaults();
 
-        coinsLabel.setText("Coins: " + p.getCoins());
-        selectedAvatarLabel.setText("Selected Avatar: " + p.getSelectedAvatarId());
-        avatarsHintLabel.setText("");
+        coins.setText("Coins: " + p.getCoins());
+        selectedAvatar.setText("Selected Avatar: " + p.getSelectedAvatarId());
+        avatarsHint.setText("");
 
-        renderOwnedAvatars(p);
-        if (shopBtn != null) shopBtn.setDisable(false);
+        renderOwnedAvatars(p, avatarsPane, allowSelect);
+        if (shopButton != null) shopButton.setDisable(!allowSelect);
     }
 
+    private void renderViewerPanel(PlayerProfile p, List<MatchRecord> history) {
+        if (p == null) return;
+        playerNameLabel.setText(p.getPlayerName());
+        playerSubtitleLabel.setText("Your Profile");
+        setAvatar(avatarView, p.getAvatarId());
+
+        updateStats(history, totalGamesLabel, winsLossesLabel, winRateLabel);
+        renderProfileAreaFor(p, coinsLabel, selectedAvatarLabel, avatarsHintLabel, avatarsFlow, shopBtn, true);
+        refreshGiftArea(p, giftProgressLabel, giftProgressBar, openGiftBtn, true);
+    }
+
+    private void renderOpponentPanel(PlayerProfile p, String opponentName) {
+        if (opponentName == null || opponentName.isBlank() || p == null) {
+            playerNameLabelRight.setText("No opponent yet");
+            playerSubtitleLabelRight.setText("Opponent Profile");
+            avatarViewRight.setImage(null);
+            avatarViewRight.setVisible(false);
+            coinsLabelRight.setText("Coins: 0");
+            selectedAvatarLabelRight.setText("Selected Avatar: -");
+            avatarsHintLabelRight.setText("");
+            avatarsFlowRight.getChildren().clear();
+            totalGamesLabelRight.setText("0");
+            winsLossesLabelRight.setText("0 / 0");
+            winRateLabelRight.setText("0%");
+            refreshGiftArea(null, giftProgressLabelRight, giftProgressBarRight, openGiftBtnRight, false);
+            return;
+        }
+
+        playerNameLabelRight.setText(p.getPlayerName());
+        playerSubtitleLabelRight.setText("Opponent Profile");
+        setAvatar(avatarViewRight, p.getAvatarId());
+
+        List<MatchRecord> history = getHistoryFor(p.getPlayerName());
+        updateStats(history, totalGamesLabelRight, winsLossesLabelRight, winRateLabelRight);
+        renderProfileAreaFor(p, coinsLabelRight, selectedAvatarLabelRight, avatarsHintLabelRight, avatarsFlowRight, null, false);
+        refreshGiftArea(p, giftProgressLabelRight, giftProgressBarRight, openGiftBtnRight, false);
+    }
+
+    private void loadMatchesTable(List<MatchRecord> viewerHistory, String opponentName) {
+        if (viewerHistory == null) {
+            matches.setAll(List.of());
+            return;
+        }
+        if (opponentName != null && !opponentName.isBlank()) {
+            List<MatchRecord> filtered = viewerHistory.stream()
+                    .filter(r -> opponentName.equals(r.getOpponent()))
+                    .collect(java.util.stream.Collectors.toList());
+            if (!filtered.isEmpty()) {
+                matches.setAll(filtered);
+                return;
+            }
+        }
+        matches.setAll(viewerHistory);
+    }
 
     private void switchScene(ActionEvent event, String fxml) {
         try {
@@ -299,31 +365,41 @@ public class ProfileController {
             e.printStackTrace();
         }
     }
-    private void refreshGiftArea(PlayerProfile p) {
-        if (p == null) return;
+    private void refreshGiftArea(PlayerProfile p,
+                                 Label progressLabel,
+                                 ProgressBar progressBar,
+                                 Button openGift,
+                                 boolean allowOpen) {
+        if (progressLabel == null || progressBar == null || openGift == null) return;
+        if (p == null) {
+            progressLabel.setText("Wins until gift: 0/3");
+            progressBar.setProgress(0);
+            openGift.setDisable(true);
+            openGift.setText("🔒 Not ready");
+            return;
+        }
 
-        p.ensureDefaults(); // אם יש לך
+        p.ensureDefaults();
 
-        int wins = p.getWinsSinceGift();     // 0..3
-        boolean ready = p.isGiftReady();     // wins >= 3
+        int wins = p.getWinsSinceGift();
+        boolean ready = p.isGiftReady();
 
         int shown = Math.min(3, Math.max(0, wins));
 
-        if (giftProgressLabel != null) {
-            giftProgressLabel.setText("Wins until gift: " + shown + "/3");
-        }
-        if (giftProgressBar != null) {
-            giftProgressBar.setProgress(shown / 3.0);
-        }
-        if (openGiftBtn != null) {
-            openGiftBtn.setDisable(!ready);
-            openGiftBtn.setText(ready ? "🎁 Open Gift" : "🔒 Not ready");
+        progressLabel.setText("Wins until gift: " + shown + "/3");
+        progressBar.setProgress(shown / 3.0);
+        if (allowOpen) {
+            openGift.setDisable(!ready);
+            openGift.setText(ready ? "🎁 Open Gift" : "🔒 Not ready");
+        } else {
+            openGift.setDisable(true);
+            openGift.setText("🔒 Not ready");
         }
     }
 
     @FXML
     private void onOpenGiftInProfile() {
-        PlayerProfile p = selectedProfile;
+        PlayerProfile p = viewerProfile;
         if (p == null) return;
 
         p.ensureDefaults();
@@ -333,9 +409,8 @@ public class ProfileController {
 
         p.consumeGift();     // מאפס winsSinceGift ל-0
         ProfileStore.save(p);
-        renderProfileAreaFor(p);
-
-        refreshGiftArea(p);
+        renderProfileAreaFor(p, coinsLabel, selectedAvatarLabel, avatarsHintLabel, avatarsFlow, shopBtn, true);
+        refreshGiftArea(p, giftProgressLabel, giftProgressBar, openGiftBtn, true);
     }
     private void giveRandomGiftTo(PlayerProfile p) {
         int roll = java.util.concurrent.ThreadLocalRandom.current().nextInt(100);
@@ -394,16 +469,16 @@ public class ProfileController {
             ex.printStackTrace();
         }
     }
-    private void loadGiftIcon() {
+    private void loadGiftIcon(ImageView target) {
         try (var is = ResourceUtils.stream(getClass(), "/images/gift.png")) {
             if (is != null) {
-                giftImageView.setImage(new Image(is));
-                giftImageView.setVisible(true);
+                target.setImage(new Image(is));
+                target.setVisible(true);
             } else {
-                giftImageView.setVisible(false);
+                target.setVisible(false);
             }
         } catch (Exception e) {
-            giftImageView.setVisible(false);
+            target.setVisible(false);
         }
     }
 

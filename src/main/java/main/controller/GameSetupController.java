@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.util.ResourceUtils;
 import model.Avatar;
+import model.PlayerProfileManager;
 import model.Theme;
 import model.ThemeColors;
 import model.Session;
@@ -42,6 +43,7 @@ public class GameSetupController {
     public static boolean playerBIsAI = false;
     public static boolean skipResumePrompt = false;
 
+    private static final String USERNAME_REGEX = "^[a-zA-Z][a-zA-Z0-9._-]{2,19}$";
 
     @FXML private ToggleButton easyBtn, mediumBtn, hardBtn;
     @FXML private TextField playerAName, playerBName;
@@ -179,14 +181,26 @@ public class GameSetupController {
                 : (playerBName.getText() == null ? "" : playerBName.getText().trim());
 
         if (a.isEmpty()) { showAlert("Please enter a name for Player A."); return; }
-        if (!isValidName(a)) { showAlert("Names must contain only letters and numbers."); return; }
-        if (!isValidLen(a)) { showAlert("Names must be 2 to 12 characters long."); return; }
+        if (isNameTakenWithDifferentCase(a)) {
+            showAlert("Username already taken. Choose a different name.");
+            return;
+        }
+        if (!isExistingProfileName(a) && !isValidUsernameFormat(a)) {
+            showAlert("Invalid username. Use 3-20 characters, start with a letter, and only letters, numbers, dot, underscore, or dash.");
+            return;
+        }
 
         if (!playerBIsAI) {
             if (b.isEmpty()) { showAlert("Please enter a name for Player B."); return; }
             if (a.equalsIgnoreCase(b)) { showAlert("Player names must be different."); return; }
-            if (!isValidName(b)) { showAlert("Names must contain only letters and numbers."); return; }
-            if (!isValidLen(b)) { showAlert("Names must be 2 to 12 characters long."); return; }
+            if (isNameTakenWithDifferentCase(b)) {
+                showAlert("Username already taken. Choose a different name.");
+                return;
+            }
+            if (!isExistingProfileName(b) && !isValidUsernameFormat(b)) {
+                showAlert("Invalid username. Use 3-20 characters, start with a letter, and only letters, numbers, dot, underscore, or dash.");
+                return;
+            }
         }
         Session.setActivePlayerName(a);
 
@@ -201,12 +215,29 @@ public class GameSetupController {
         switchSceneWithFade(event, "/view/game.fxml");
     }
 
-    private boolean isValidName(String s) {
-        return s.matches("[A-Za-z0-9א-ת\u0621-\u064A ]+");
+    private boolean isValidUsernameFormat(String s) {
+        return s != null && s.matches(USERNAME_REGEX);
     }
 
-    private boolean isValidLen(String s) {
-        return s.length() >= 2 && s.length() <= 12;
+    private boolean isExistingProfileName(String s) {
+        return findExistingProfileName(s) != null;
+    }
+
+    private boolean isNameTakenWithDifferentCase(String s) {
+        String existing = findExistingProfileName(s);
+        return existing != null && !existing.equals(s);
+    }
+
+    private String findExistingProfileName(String s) {
+        if (s == null || s.isBlank()) return null;
+        String target = s.trim();
+        for (var profile : PlayerProfileManager.getProfiles()) {
+            if (profile == null || profile.getPlayerName() == null) continue;
+            if (profile.getPlayerName().equalsIgnoreCase(target)) {
+                return profile.getPlayerName();
+            }
+        }
+        return null;
     }
 
     @FXML
