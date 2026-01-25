@@ -52,121 +52,123 @@
 
                         <!-- Objective -->
                         <VBox spacing="10.0" styleClass="objective-box">
-                            <Label fx:id="objectiveTitleLabel"
-                                   text="🎯  Objective"
-                                   styleClass="how-section-title"/>
-                            <Label fx:id="objectiveTextLabel"
-                                   wrapText="true"
-                                   styleClass="how-box-text"
-                                   text="• Reveal safe cells and avoid mines.\n• Each player has their own board and takes turns.\n• Protect your hearts and aim for the highest score."/>
+                            <Label text="🎯  Objective" styleClass="how-section-title"/>
+                            <Label wrapText="true" styleClass="how-box-text">
+                                <text>
+                                    • Reveal safe cells and avoid mines.
+                                    • Each player has their own board and takes turns.
+                                    • Protect your hearts and aim for the highest score.
+                                </text>
+                            </Label>
                         </VBox>
 
                         <!-- Controls -->
                         <VBox spacing="8.0" styleClass="bomb-box">
-                            <Label fx:id="controlsTitleLabel"
-                                   text="🕹  Controls"
-                                   styleClass="how-box-title"/>
-                            <Label fx:id="controlsTextLabel"
-                                   wrapText="true"
-                                   styleClass="how-box-text"
-                                   text="• Left click = reveal a cell.\n• Right click = place or remove Simba's Mark/flag (paw mark) on suspected mines."/>
+                            <Label text="🕹  Controls" styleClass="how-box-title"/>
+                            <Label wrapText="true" styleClass="how-box-text">
+                                <text>
+                                    • Left click = reveal a cell.
+                                    • Right click = place or remove Simba's Mark / flag (paw mark) on suspected mines.
+                                </text>
+                            </Label>
                         </VBox>
 
                         <!-- Numbers -->
                         <VBox spacing="8.0" styleClass="numbers-box">
-                            <Label fx:id="numbersTitleLabel"
-                                   text="🔢  Numbers"
-                                   styleClass="how-box-title"/>
-                            <Label fx:id="numbersTextLabel"
-                                   wrapText="true"
-                                   styleClass="how-box-text"
-                                   text="• A number shows how many mines are adjacent to that cell."/>
+                            <Label text="🔢  Numbers" styleClass="how-box-title"/>
+                            <Label wrapText="true" styleClass="how-box-text">
+                                <text>
+                                    • A number shows how many mines are adjacent to that cell.
+                                </text>
+                            </Label>
                         </VBox>
 
                         <!-- Lives -->
                         <VBox spacing="8.0" styleClass="trivia-box">
-                            <Label fx:id="livesTitleLabel"
-                                   text="❤️  Lives"
-                                   styleClass="how-box-title"/>
-                            <Label fx:id="livesTextLabel"
-                                   wrapText="true"
-                                   styleClass="how-box-text"
-                                   text="• You start with hearts; hitting a mine removes 1 heart.\n• When your hearts run out, you lose."/>
+                            <Label text="❤️  Lives" styleClass="how-box-title"/>
+                            <Label wrapText="true" styleClass="how-box-text">
+                                <text>
+                                    • You start with hearts; hitting a mine removes 1 heart.
+                                    • When your hearts run out, you lose.
+                                </text>
+                            </Label>
                         </VBox>
 
                         <!-- Score / Points -->
                         <VBox spacing="10.0" styleClass="how-howplay-box">
-                            <Label fx:id="scoreTitleLabel"
-                                   text="🏆  Score / Points"
-                                   styleClass="how-section-title"/>
-                            <Label fx:id="scoreTextLabel"
-                                   wrapText="true"
-                                   styleClass="how-box-text"
-                                   text="• Safe reveals and steady progress add points.\n• Correct flags add points; wrong flags reduce points.\n• Trivia Questions can add or subtract points (impact scales with difficulty).\n• Mines, Risky Surprises, and using a hint reduce points."/>
+                            <Label text="🏆  Score / Points" styleClass="how-section-title"/>
+                            <Label wrapText="true" styleClass="how-box-text">
+                                <text>
+                                    • Safe reveals and steady progress add points.
+                                    • Correct flags add points; wrong flags reduce points.
+                                    • Trivia questions can add or subtract points (impact scales with difficulty).
+                                    • Mines, risky surprises, and using a hint reduce points.
+                                </text>
+                            </Label>
                         </VBox>
 
                         <!-- Hints -->
                         <VBox spacing="8.0" styleClass="objective-box">
-                            <Label fx:id="hintsTitleLabel"
-                                   text="💡  Hints"
-                                   styleClass="how-box-title"/>
-                            <Label fx:id="hintsTextLabel"
-                                   wrapText="true"
-                                   styleClass="how-box-text"
-                                   text="• Each player has exactly 2 hints per game.\n• Use the Hint button to highlight a safe cell; hints are limited and cost points."/>
+                            <Label text="💡  Hints" styleClass="how-box-title"/>
+                            <Label wrapText="true" styleClass="how-box-text">
+                                <text>
+                                    • Each player has exactly 2 hints per game.
+                                    • Use the Hint button to highlight a safe cell; hints are limited and cost points.
+                                </text>
+                            </Label>
                         </VBox>
 
                         <!-- Gift / Surprise system -->
                         <VBox spacing="8.0" styleClass="surprise-box">
-                            <Label fx:id="surpriseTitleLabel"
-                                   text="🎁  Gift / Surprise System"
-                                   styleClass="how-box-title"/>
-                            <Label fx:id="surpriseTextLabel"
-                                   wrapText="true"
-                                   styleClass="how-box-text"
-                                   text="• Lucky Surprise can give +Lives and/or +Points.\n• Risky Surprise can subtract Lives/Points."/>
+                            <Label text="🎁  Gift / Surprise System" styleClass="how-box-title"/>
+                            <Label wrapText="true" styleClass="how-box-text">
+                                <text>
+                                    • Lucky Surprise can give +Lives and/or +Points.
+                                    • Risky Surprise can subtract Lives / Points.
+                                </text>
+                            </Label>
                         </VBox>
 
                         <!-- Difficulty -->
                         <VBox spacing="8.0" styleClass="numbers-box">
-                            <Label fx:id="difficultyTitleLabel"
-                                   text="🧭  Difficulty"
-                                   styleClass="how-box-title"/>
-                            <Label fx:id="difficultyTextLabel"
-                                   wrapText="true"
-                                   styleClass="how-box-text"
-                                   text="• Easy / Medium / Hard — more mines means a harder game."/>
+                            <Label text="🧭  Difficulty" styleClass="how-box-title"/>
+                            <Label wrapText="true" styleClass="how-box-text">
+                                <text>
+                                    • Easy / Medium / Hard — more mines means a harder game.
+                                </text>
+                            </Label>
                         </VBox>
 
                         <!-- Profiles -->
                         <VBox spacing="8.0" styleClass="trivia-box">
-                            <Label fx:id="profilesTitleLabel"
-                                   text="👤  Profiles"
-                                   styleClass="how-box-title"/>
-                            <Label fx:id="profilesTextLabel"
-                                   wrapText="true"
-                                   styleClass="how-box-text"
-                                   text="• Enter your profile from the Home screen.\n• Change your avatar inside the Profile page.\n• Profiles show match history and stats."/>
+                            <Label text="👤  Profiles" styleClass="how-box-title"/>
+                            <Label wrapText="true" styleClass="how-box-text">
+                                <text>
+                                    • Enter your profile from the Home screen.
+                                    • Change your avatar inside the Profile page.
+                                    • Profiles show match history and stats.
+                                </text>
+                            </Label>
                         </VBox>
 
                         <!-- Quick tips -->
                         <VBox spacing="10.0" styleClass="how-tips-box">
-                            <Label fx:id="tipsTitleLabel"
-                                   text="🏁  Quick Tips"
-                                   styleClass="how-section-title"/>
-                            <Label fx:id="tipsTextLabel"
-                                   wrapText="true"
-                                   styleClass="how-box-text"
-                                   text="• Use flags to track suspected mines.\n• Don't rush—clear safe areas step by step.\n• Save hints for tough moments."/>
+                            <Label text="🏁  Quick Tips" styleClass="how-section-title"/>
+                            <Label wrapText="true" styleClass="how-box-text">
+                                <text>
+                                    • Use flags to track suspected mines.
+                                    • Don't rush — clear safe areas step by step.
+                                    • Save hints for tough moments.
+                                </text>
+                            </Label>
                         </VBox>
 
                         <!-- Bottom button -->
-                        <HBox alignment="CENTER" fx:id="actionsRow">
+                        <HBox alignment="CENTER">
                             <padding>
                                 <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
                             </padding>
-                            <Button fx:id="startButton"
-                                    text="Got it, let's start! 🦁"
+                            <Button text="Got it, let's start! 🦁"
                                     styleClass="how-start-btn"
                                     onAction="#onStartGame"/>
                         </HBox>
