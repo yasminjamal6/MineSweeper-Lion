@@ -1,27 +1,31 @@
-=== Running the MineSweeper-Lion Game (Windows) ===
+# MineSweeper-Lion (Windows)
 
-1. Download the JAR file:
+## Download
+Download and extract the project from:
 https://drive.google.com/file/d/1t4S6BI7-M7AtyZHTD5AjbYc6uefRfiYI/view?usp=sharing
 
-2. Place the JAR file in the correct directory:
-Copy MineSweeper-Lion.jar into the Submission_jars directory,
-next to the lib_win folder that contains the JavaFX libraries.
-
-The folder structure should look like this:
-
+## Folder Structure
+After extraction, the directory must look like this:
 
 Submission_jars/
 ├── MineSweeper-Lion.jar
-└── lib_win/
-    ├── javafx-controls-xx-win.jar
-    ├── javafx-fxml-xx-win.jar
-    ├── javafx-graphics-xx-win.jar
-    └── javafx-media-xx-win.jar
+├── lib_win/
+│   └── JavaFX libraries (win)
+└── data/
+    └── Questions.csv
+
+Do not change the folder structure.
+
+## Run Instructions
+1. Open PowerShell.
+2. Navigate to the Submission_jars folder:
+
+   cd Submission_jars
 
 3. Run the game:
-Open a PowerShell terminal and run the following commands:
 
-cd "C:\Users\NS TECH\IdeaProjects\MineSweeper-Lion\Submission_jars"
-java --module-path lib_win --add-modules javafx.controls,javafx.fxml,javafx.media -jar MineSweeper-Lion.jar
+   java --module-path .\lib_win --add-modules javafx.controls,javafx.fxml,javafx.media -jar MineSweeper-Lion.jar
 
-If everything is set up correctly, the MineSweeper-Lion game window will open.
+## Requirements
+- Windows
+- Java 17 or higher
