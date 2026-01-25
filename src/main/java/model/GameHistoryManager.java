@@ -16,7 +16,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class GameHistoryManager {
 
     private static final List<GameHistory> history = new ArrayList<>();
-    private static final Path HISTORY_PATH = Paths.get("data", "game-history.csv");
+    private static final Path DATA_DIR = Paths.get(System.getProperty("user.home"), ".minesweeper-lion");
+    private static final Path HISTORY_PATH = DATA_DIR.resolve("game-history.csv");
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     private static final CopyOnWriteArrayList<GameHistoryObserver> observers = new CopyOnWriteArrayList<>();
 
@@ -167,8 +168,8 @@ public class GameHistoryManager {
     }
 
     private static void ensureFileExists() throws Exception {
-        if (Files.notExists(HISTORY_PATH.getParent())) {
-            Files.createDirectories(HISTORY_PATH.getParent());
+        if (Files.notExists(DATA_DIR)) {
+            Files.createDirectories(DATA_DIR);
         }
         if (Files.notExists(HISTORY_PATH)) {
             Files.createFile(HISTORY_PATH);

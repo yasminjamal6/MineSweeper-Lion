@@ -269,7 +269,7 @@ public class ProfileController {
             Session.setActivePlayerName(viewerProfile.getPlayerName());
         }
         try {
-            var url = ResourceUtils.url(getClass(), "/view/shopView.fxml");
+            var url = ResourceUtils.url(getClass(), "/view/ShopView.fxml");
             if (url == null) return;
 
             FXMLLoader loader = new FXMLLoader(url);

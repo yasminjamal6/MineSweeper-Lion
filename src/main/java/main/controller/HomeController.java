@@ -1,7 +1,11 @@
 package main.controller;
 
 import javafx.geometry.Insets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
+import com.google.gson.Gson;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -21,9 +25,12 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.util.ResourceUtils;
 import javafx.scene.control.*;
+import model.Avatar;
 import main.controller.ShopController;
 import model.PlayerProfileManager;
 import model.Session;
+import model.Theme;
+import model.ThemeColors;
 
 /**
  * Controller for the Home screen.
@@ -35,6 +42,7 @@ import model.Session;
  */
 public class HomeController {
     private static final String ADMIN_PASSWORD = "lionking"; // תשני למה שאת רוצה
+    private static boolean resumePromptShown = false;
     @FXML private VBox heroSection;
     @FXML private VBox buttonsSection;
     @FXML private HBox featuresRow;
@@ -52,6 +60,7 @@ public class HomeController {
         SettingsController.refreshLanguageOnAllWindows();
         playEntranceAnimations();
         javafx.application.Platform.runLater(this::startTicker);
+        javafx.application.Platform.runLater(this::maybeShowResumePrompt);
 
     }
 
@@ -85,6 +94,177 @@ public class HomeController {
         // Infinite loop
         tt.setCycleCount(javafx.animation.Animation.INDEFINITE);
         tt.play();
+    }
+
+    private void maybeShowResumePrompt() {
+        if (resumePromptShown) {
+            return;
+        }
+
+        ResumeInfo resumeInfo = findResumeInfo();
+        if (resumeInfo == null) {
+            return;
+        }
+        resumePromptShown = true;
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Resume Game");
+        alert.setHeaderText("A previous game is still in progress");
+        alert.setGraphic(null);
+
+        String diffLabel = resumeInfo.difficultyEnum != null ? resumeInfo.difficultyEnum.name() : "Unknown";
+        alert.setContentText("Continue " + resumeInfo.playerAName + " vs " + resumeInfo.playerBName
+                + " (" + diffLabel + ") or stay on the home screen?");
+
+        ButtonType continueBtn = new ButtonType("Continue");
+        ButtonType stayBtn = new ButtonType("Not Now", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(stayBtn, continueBtn);
+
+        DialogPane dialogPane = alert.getDialogPane();
+        String alertCss = ResourceUtils.externalForm(getClass(), "/css/alert.css");
+        if (alertCss != null) {
+            dialogPane.getStylesheets().add(alertCss);
+        }
+        dialogPane.getStyleClass().add("resume-alert");
+
+        if (rootPane != null && rootPane.getScene() != null) {
+            alert.initOwner(rootPane.getScene().getWindow());
+        }
+        alert.initModality(Modality.APPLICATION_MODAL);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == continueBtn) {
+            applyResumeToSetup(resumeInfo);
+            openGameForResume();
+        }
+    }
+
+    private void applyResumeToSetup(ResumeInfo resumeInfo) {
+        GameSetupController.selectedPlayerAName = resumeInfo.playerAName;
+        GameSetupController.selectedPlayerBName = resumeInfo.playerBName;
+        GameSetupController.selectedDifficulty = resumeInfo.difficultyEnum;
+        GameSetupController.selectedThemeA = findThemeById(resumeInfo.playerAThemeId, GameSetupController.selectedThemeA);
+        GameSetupController.selectedThemeB = findThemeById(resumeInfo.playerBThemeId, GameSetupController.selectedThemeB);
+        GameSetupController.selectedAvatarA = Avatar.fromId(resumeInfo.playerAAvatarId, GameSetupController.selectedAvatarA);
+        GameSetupController.selectedAvatarB = Avatar.fromId(resumeInfo.playerBAvatarId, GameSetupController.selectedAvatarB);
+        GameSetupController.skipResumePrompt = true;
+        GameSetupController.pendingResumePath = resumeInfo.sourcePath;
+    }
+
+    private void openGameForResume() {
+        try {
+            var url = ResourceUtils.url(getClass(), "/view/game.fxml");
+            if (url == null || rootPane == null || rootPane.getScene() == null) {
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent newRoot = loader.load();
+
+            SettingsController.applyThemeToRoot(newRoot);
+            SettingsController.refreshLanguageOnAllWindows();
+
+            Scene scene = rootPane.getScene();
+            newRoot.setOpacity(0);
+            scene.setRoot(newRoot);
+
+            FadeTransition ft = new FadeTransition(Duration.millis(250), newRoot);
+            ft.setFromValue(0);
+            ft.setToValue(1);
+            ft.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private ResumeInfo findResumeInfo() {
+        try {
+            Path dir = Paths.get(System.getProperty("user.home"), ".minesweeper-lion");
+            if (!Files.exists(dir)) {
+                return null;
+            }
+            try (var stream = Files.list(dir)) {
+                Optional<ResumeInfo> latest = stream
+                        .filter(p -> p.getFileName().toString().endsWith(".json"))
+                        .map(this::readResumeInfo)
+                        .filter(r -> r != null)
+                        .max((a, b) -> Long.compare(a.lastUpdatedMillis, b.lastUpdatedMillis));
+                return latest.orElse(null);
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private ResumeInfo readResumeInfo(Path path) {
+        try (var reader = Files.newBufferedReader(path)) {
+            Gson gson = new Gson();
+            ResumeInfo info = gson.fromJson(reader, ResumeInfo.class);
+            if (info == null || info.status == null || !"IN_PROGRESS".equalsIgnoreCase(info.status)) {
+                return null;
+            }
+            info.difficultyEnum = info.parseDifficulty();
+            if (info.playerAName == null || info.playerBName == null || info.difficultyEnum == null) {
+                return null;
+            }
+            if (isPlaceholderName(info.playerAName) || isPlaceholderName(info.playerBName)) {
+                return null;
+            }
+            long lastUpdated = info.lastUpdatedEpochMillis;
+            try {
+                long fileUpdated = Files.getLastModifiedTime(path).toMillis();
+                lastUpdated = Math.max(lastUpdated, fileUpdated);
+            } catch (Exception ignored) {
+                // keep lastUpdatedEpochMillis if available
+            }
+            info.lastUpdatedMillis = lastUpdated;
+            info.sourcePath = path;
+            return info;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private Theme findThemeById(String id, Theme fallback) {
+        if (id != null) {
+            for (var theme : ThemeColors.themes) {
+                if (id.equals(theme.id)) {
+                    return theme;
+                }
+            }
+        }
+        return fallback;
+    }
+
+    private boolean isPlaceholderName(String name) {
+        if (name == null || name.isBlank()) {
+            return true;
+        }
+        String lower = name.trim().toLowerCase();
+        return lower.equals("player name") || lower.equals("player a") || lower.equals("player b");
+    }
+
+    private static class ResumeInfo {
+        String status;
+        String playerAName;
+        String playerBName;
+        String difficulty;
+        String playerAThemeId;
+        String playerBThemeId;
+        String playerAAvatarId;
+        String playerBAvatarId;
+        long lastUpdatedEpochMillis;
+
+        transient GameSetupController.Difficulty difficultyEnum;
+        transient long lastUpdatedMillis;
+        transient Path sourcePath;
+
+        GameSetupController.Difficulty parseDifficulty() {
+            try {
+                return GameSetupController.Difficulty.valueOf(difficulty);
+            } catch (Exception e) {
+                return null;
+            }
+        }
     }
 
     /**
@@ -248,7 +428,7 @@ public class HomeController {
     @FXML
     private void onOpenShop(ActionEvent event) {
         try {
-            var url = ResourceUtils.url(getClass(), "/view/shopView.fxml");
+            var url = ResourceUtils.url(getClass(), "/view/ShopView.fxml");
             if (url == null) return;
 
             FXMLLoader loader = new FXMLLoader(url);
@@ -502,12 +682,6 @@ public class HomeController {
                 error.setVisible(false);
                 error.setManaged(false);
                 tf.setText(existing);
-                return;
-            }
-            if (PlayerProfileManager.appearedInHistory(actual)) {
-                error.setVisible(false);
-                error.setManaged(false);
-                tf.setText(actual == null ? "" : actual.trim());
                 return;
             }
             error.setVisible(true);

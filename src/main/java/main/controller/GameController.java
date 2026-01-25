@@ -985,18 +985,21 @@ public class GameController {
         }
 
         if (historySaved || status == SaveStatus.COMPLETED || boardA == null || boardB == null || lives <= 0) {
-            SavedGameRepository.delete(key);
+            SavedGameRepository.deleteAll();
             return;
         }
 
         pauseTimer();
 
+        // Only keep one in-progress game at a time - delete any existing saves first
+        SavedGameRepository.deleteAll();
+
         GameSaveData data = new GameSaveData();
         data.status = status;
         data.difficulty = GameSetupController.selectedDifficulty.name();
         data.boardSize = boardA.getRows();
-        data.playerAName = playerANameLabel.getText();
-        data.playerBName = playerBNameLabel.getText();
+        data.playerAName = GameSetupController.selectedPlayerAName;
+        data.playerBName = GameSetupController.selectedPlayerBName;
         data.playerAThemeId = playerATheme != null ? playerATheme.id : null;
         data.playerBThemeId = playerBTheme != null ? playerBTheme.id : null;
         data.playerAAvatarId = playerAAvatar != null ? playerAAvatar.id : null;
@@ -1049,6 +1052,24 @@ public class GameController {
     }
 
     private GameSaveData loadGameState() {
+        if (GameSetupController.pendingResumePath != null) {
+            GameSaveData pending = SavedGameRepository.load(GameSetupController.pendingResumePath);
+            GameSetupController.pendingResumePath = null;
+            if (pending == null) {
+                return null;
+            }
+            if (pending.status == null || pending.boardSize <= 0 || pending.difficulty == null) {
+                return null;
+            }
+            if (pending.status == SaveStatus.COMPLETED) {
+                return null;
+            }
+            if (isPlaceholderName(pending.playerAName) || isPlaceholderName(pending.playerBName)) {
+                return null;
+            }
+            return pending;
+        }
+
         String key = currentSaveKey();
         if (key == null) return null;
         GameSaveData data = SavedGameRepository.loadLatest(key);
@@ -1131,6 +1152,13 @@ public class GameController {
         return name == null ? "" : name.trim().toLowerCase();
     }
 
+    private boolean isPlaceholderName(String name) {
+        if (name == null || name.isBlank()) {
+            return true;
+        }
+        String lower = name.trim().toLowerCase();
+        return lower.equals("player name") || lower.equals("player a") || lower.equals("player b");
+    }
 
     // -------------------------------------------------------------------------
     // INITIALIZE
@@ -3128,11 +3156,38 @@ public class GameController {
             }
         }
 
+        static GameSaveData load(Path path) {
+            if (path == null) {
+                return null;
+            }
+            try (BufferedReader reader = Files.newBufferedReader(path)) {
+                return GSON.fromJson(reader, GameSaveData.class);
+            } catch (IOException | JsonSyntaxException e) {
+                return null;
+            }
+        }
+
         static void delete(String key) {
             try {
                 Files.deleteIfExists(pathForKey(key));
             } catch (IOException e) {
                 System.err.println("Failed to clear saved game: " + e.getMessage());
+            }
+        }
+
+        static void deleteAll() {
+            try {
+                Path d = dir();
+                if (Files.exists(d)) {
+                    try (var stream = Files.list(d)) {
+                        stream.filter(p -> p.getFileName().toString().endsWith(".json"))
+                              .forEach(p -> {
+                                  try { Files.deleteIfExists(p); } catch (IOException ignored) {}
+                              });
+                    }
+                }
+            } catch (IOException e) {
+                System.err.println("Failed to clear all saved games: " + e.getMessage());
             }
         }
     }
