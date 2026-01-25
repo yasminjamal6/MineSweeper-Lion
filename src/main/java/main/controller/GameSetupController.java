@@ -7,7 +7,6 @@ import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -15,9 +14,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -29,9 +28,7 @@ import model.Theme;
 import model.ThemeColors;
 import model.Session;
 
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 
 public class GameSetupController {
 
@@ -52,13 +49,49 @@ public class GameSetupController {
 
     private static final String USERNAME_REGEX = "^[a-zA-Z][a-zA-Z0-9._-]{2,19}$";
 
-    private static final List<LevelRuleSpec> LEVEL_RULES = List.of(
-            new LevelRuleSpec(Difficulty.EASY, "Easy", "🟢",
-                    9, 9, 10, 6, 2, 10, 5, 8, -8),
-            new LevelRuleSpec(Difficulty.MEDIUM, "Medium", "🟠",
-                    13, 13, 26, 7, 3, 8, 8, 12, -12),
-            new LevelRuleSpec(Difficulty.HARD, "Hard", "🔴",
-                    16, 16, 44, 11, 4, 6, 12, 16, -16)
+    private static final List<LevelQuestionRules> LEVEL_QUESTION_RULES = List.of(
+            new LevelQuestionRules(Difficulty.EASY, "Easy", List.of(
+                    new QuestionTypeRule(QuestionType.EASY,
+                            new OutcomeSpec("Correct", "⭐ +3 points  •  ❤️ +1 heart  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -3 points or no change  •  ❤️ no change  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.MEDIUM,
+                            new OutcomeSpec("Correct", "⭐ +6 points  •  ❤️ no change  •  🧩 Reveal tiles"),
+                            new OutcomeSpec("Wrong", "⭐ -6 points or no change  •  ❤️ no change  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.HARD,
+                            new OutcomeSpec("Correct", "⭐ +10 points  •  ❤️ no change  •  🧩 Random 3x3 reveal"),
+                            new OutcomeSpec("Wrong", "⭐ -10 points  •  ❤️ no change  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.EXPERT,
+                            new OutcomeSpec("Correct", "⭐ +15 points  •  ❤️ +2 hearts  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -15 points  •  ❤️ -1 heart  •  🧩 No special effect"))
+            )),
+            new LevelQuestionRules(Difficulty.MEDIUM, "Medium", List.of(
+                    new QuestionTypeRule(QuestionType.EASY,
+                            new OutcomeSpec("Correct", "⭐ +8 points  •  ❤️ +1 heart  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -8 points  •  ❤️ no change  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.MEDIUM,
+                            new OutcomeSpec("Correct", "⭐ +10 points  •  ❤️ +1 heart  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -10 points and ❤️ -1 heart, or no change  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.HARD,
+                            new OutcomeSpec("Correct", "⭐ +15 points  •  ❤️ +1 heart  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -15 points  •  ❤️ -1 heart  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.EXPERT,
+                            new OutcomeSpec("Correct", "⭐ +20 points  •  ❤️ +2 hearts  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -20 points  •  ❤️ -1 or -2 hearts  •  🧩 No special effect"))
+            )),
+            new LevelQuestionRules(Difficulty.HARD, "Hard", List.of(
+                    new QuestionTypeRule(QuestionType.EASY,
+                            new OutcomeSpec("Correct", "⭐ +10 points  •  ❤️ +1 heart  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -10 points  •  ❤️ -1 heart  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.MEDIUM,
+                            new OutcomeSpec("Correct", "⭐ +15 points  •  ❤️ +1 or +2 hearts  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -15 points  •  ❤️ -1 or -2 hearts  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.HARD,
+                            new OutcomeSpec("Correct", "⭐ +20 points  •  ❤️ +2 hearts  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -20 points  •  ❤️ -2 hearts  •  🧩 No special effect")),
+                    new QuestionTypeRule(QuestionType.EXPERT,
+                            new OutcomeSpec("Correct", "⭐ +40 points  •  ❤️ +3 hearts  •  🧩 No special effect"),
+                            new OutcomeSpec("Wrong", "⭐ -40 points  •  ❤️ -3 hearts  •  🧩 No special effect"))
+            ))
     );
 
     @FXML private ToggleButton easyBtn, mediumBtn, hardBtn;
@@ -71,17 +104,15 @@ public class GameSetupController {
     @FXML private VBox mainCard;
     @FXML private HBox playersRow;
     @FXML private VBox difficultyBox;
-    @FXML private VBox levelRulesBox;
-    @FXML private Accordion levelRulesAccordion;
-
     // אם אין fx:id="startRow" ב-FXML אז זה יהיה null וזה בסדר
     @FXML private HBox startRow;
 
     @FXML private CheckBox playerBAICheckbox;
     @FXML private StackPane root;
-
-    /** Mapping between difficulty and its accordion pane for fast lookup/highlight. */
-    private final Map<Difficulty, TitledPane> rulePanes = new EnumMap<>(Difficulty.class);
+    @FXML private StackPane helpPopupRoot;
+    @FXML private VBox helpPopupCard;
+    @FXML private Label helpPopupTitle;
+    @FXML private VBox helpPopupContent;
 
     @FXML
     private void initialize() {
@@ -98,7 +129,7 @@ public class GameSetupController {
         rebuildAvatarPicker(avatarPickerB, selectedAvatarB, false);
 
         setupDifficultySync();
-        buildLevelRulesAccordion();
+        setupHelpPopup();
 
         // If AI checkbox is already selected when screen opens
         onTogglePlayerBAI();
@@ -142,13 +173,11 @@ public class GameSetupController {
         mainCard.setOpacity(0);
         playersRow.setOpacity(0);
         difficultyBox.setOpacity(0);
-        if (levelRulesBox != null) levelRulesBox.setOpacity(0);
         if (startRow != null) startRow.setOpacity(0);
 
         mainCard.setTranslateY(-30);
         playersRow.setTranslateY(20);
         difficultyBox.setTranslateY(30);
-        if (levelRulesBox != null) levelRulesBox.setTranslateY(32);
         if (startRow != null) startRow.setTranslateY(40);
 
         FadeTransition mainFade = new FadeTransition(Duration.millis(520), mainCard);
@@ -183,21 +212,6 @@ public class GameSetupController {
         diffSlide.setDelay(Duration.millis(240));
 
         ParallelTransition pt = new ParallelTransition(mainFade, mainSlide, playersFade, playersSlide, diffFade, diffSlide);
-
-        if (levelRulesBox != null) {
-            FadeTransition rulesFade = new FadeTransition(Duration.millis(580), levelRulesBox);
-            rulesFade.setFromValue(0);
-            rulesFade.setToValue(1);
-            rulesFade.setDelay(Duration.millis(300));
-
-            TranslateTransition rulesSlide = new TranslateTransition(Duration.millis(580), levelRulesBox);
-            rulesSlide.setFromY(32);
-            rulesSlide.setToY(0);
-            rulesSlide.setInterpolator(Interpolator.EASE_OUT);
-            rulesSlide.setDelay(Duration.millis(300));
-
-            pt.getChildren().addAll(rulesFade, rulesSlide);
-        }
 
         if (startRow != null) {
             FadeTransition startFade = new FadeTransition(Duration.millis(580), startRow);
@@ -510,166 +524,194 @@ public class GameSetupController {
             if (newToggle == mediumBtn) diff = Difficulty.MEDIUM;
             if (newToggle == hardBtn) diff = Difficulty.HARD;
             selectedDifficulty = diff;
-            expandRuleFor(diff);
         });
     }
 
-    private void buildLevelRulesAccordion() {
-        if (levelRulesAccordion == null) return;
-
-        levelRulesAccordion.getPanes().clear();
-        rulePanes.clear();
-
-        for (LevelRuleSpec spec : LEVEL_RULES) {
-            TitledPane pane = createRulePane(spec);
-            rulePanes.put(spec.difficulty, pane);
-            levelRulesAccordion.getPanes().add(pane);
-        }
-
-        levelRulesAccordion.expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
-            updateRuleHighlight(newPane);
-            if (newPane != null) {
-                Difficulty match = findDifficultyForPane(newPane);
-                if (match != null) selectDifficultyButton(match);
+    private void setupHelpPopup() {
+        if (helpPopupRoot == null) return;
+        helpPopupRoot.setVisible(false);
+        helpPopupRoot.setManaged(false);
+        helpPopupRoot.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            if (event.getTarget() == helpPopupRoot) {
+                hideHelpPopup();
             }
         });
-
-        expandRuleFor(selectedDifficulty != null ? selectedDifficulty : Difficulty.EASY);
     }
 
-    /**
-     * Expands the rule pane that matches the given difficulty and updates highlight styling.
-     */
-    private void expandRuleFor(Difficulty difficulty) {
-        if (levelRulesAccordion == null || difficulty == null) return;
-        TitledPane pane = rulePanes.get(difficulty);
-        if (pane != null) {
-            levelRulesAccordion.setExpandedPane(pane);
-        }
-        updateRuleHighlight(levelRulesAccordion.getExpandedPane());
+    @FXML
+    private void onShowHelpPopup(ActionEvent event) {
+        if (!(event.getSource() instanceof Node)) return;
+        Object data = ((Node) event.getSource()).getUserData();
+        Difficulty difficulty = parseDifficulty(data);
+        if (difficulty == null) return;
+        showLevelRulesPopup(difficulty);
     }
 
-    /**
-     * Adds/removes a CSS style class to visually highlight the currently expanded rule pane.
-     */
-    private void updateRuleHighlight(TitledPane expandedPane) {
-        for (TitledPane pane : rulePanes.values()) {
-            pane.getStyleClass().remove("level-rule-card-selected");
-        }
-        if (expandedPane != null) {
-            expandedPane.getStyleClass().add("level-rule-card-selected");
-        }
+    @FXML
+    private void onCloseHelpPopup(ActionEvent event) {
+        hideHelpPopup();
     }
 
-    /**
-     * Finds the difficulty enum that corresponds to a given accordion pane.
-     */
-    private Difficulty findDifficultyForPane(TitledPane pane) {
-        for (Map.Entry<Difficulty, TitledPane> entry : rulePanes.entrySet()) {
-            if (entry.getValue() == pane) return entry.getKey();
+    private void hideHelpPopup() {
+        if (helpPopupRoot == null) return;
+        helpPopupRoot.setVisible(false);
+        helpPopupRoot.setManaged(false);
+    }
+
+    private Difficulty parseDifficulty(Object data) {
+        if (data instanceof Difficulty) return (Difficulty) data;
+        if (data instanceof String) {
+            try {
+                return Difficulty.valueOf(((String) data).toUpperCase());
+            } catch (IllegalArgumentException ignored) {
+                return null;
+            }
         }
         return null;
     }
 
-    /**
-     * Selects the correct difficulty ToggleButton programmatically
-     * (used when the user expands a rule pane directly).
-     */
-    private void selectDifficultyButton(Difficulty difficulty) {
-        if (difficulty == null) return;
-        if (difficulty == Difficulty.EASY && easyBtn != null) easyBtn.setSelected(true);
-        if (difficulty == Difficulty.MEDIUM && mediumBtn != null) mediumBtn.setSelected(true);
-        if (difficulty == Difficulty.HARD && hardBtn != null) hardBtn.setSelected(true);
-        selectedDifficulty = difficulty;
+    private void showLevelRulesPopup(Difficulty level) {
+        LevelQuestionRules rules = findQuestionRules(level);
+        if (rules == null || helpPopupRoot == null || helpPopupContent == null || helpPopupTitle == null) return;
+        showRulesPopup("Level Rules - " + rules.title, rules);
     }
 
-    /**
-     * Creates a styled accordion pane describing a difficulty's rules.
-     * Includes keyboard accessibility (Enter/Space toggles expand/collapse)
-     * and a fade animation for the content when expanding.
-     */
-    private TitledPane createRulePane(LevelRuleSpec spec) {
-        TitledPane pane = new TitledPane();
-        pane.setAnimated(true);
-        pane.setCollapsible(true);
-        pane.setFocusTraversable(true);
-        pane.getStyleClass().add("level-rule-card");
+    private void showRulesPopup(String title, LevelQuestionRules rules) {
+        helpPopupTitle.setText(title);
+        helpPopupContent.getChildren().clear();
+        helpPopupContent.getChildren().addAll(
+                createSectionTitle("Level Overview"),
+                createLevelOverview(rules.difficulty),
+                createSectionDivider(),
+                createSectionTitle("Question Types Effects")
+        );
+        for (QuestionTypeRule rule : rules.rules) {
+            helpPopupContent.getChildren().add(createQuestionRuleCard(rule));
+        }
+        helpPopupRoot.setVisible(true);
+        helpPopupRoot.setManaged(true);
+        helpPopupRoot.toFront();
+    }
 
-        HBox header = new HBox(8);
-        header.setAlignment(Pos.CENTER_LEFT);
-        header.getStyleClass().add("level-rule-header");
+    private LevelQuestionRules findQuestionRules(Difficulty difficulty) {
+        if (difficulty == null) return null;
+        for (LevelQuestionRules rules : LEVEL_QUESTION_RULES) {
+            if (rules.difficulty == difficulty) return rules;
+        }
+        return null;
+    }
 
-        Label icon = new Label(spec.icon);
-        icon.getStyleClass().add("level-rule-header-icon");
-        Label title = new Label(spec.title);
-        title.getStyleClass().add("level-rule-header-title");
+    private VBox createQuestionRuleCard(QuestionTypeRule rule) {
+        VBox card = new VBox(5);
+        card.getStyleClass().add("question-rule-card");
 
-        header.getChildren().addAll(icon, title);
-        pane.setText("");
-        pane.setGraphic(header);
+        Label title = new Label(rule.type.displayName);
+        title.getStyleClass().add("question-rule-title");
 
-        VBox content = new VBox(6);
-        content.setPadding(new Insets(10, 12, 12, 12));
-        content.getStyleClass().add("level-rule-content");
-
-        content.getChildren().addAll(
-                createRuleRow("🧩", "Board", spec.rows + "x" + spec.cols),
-                createRuleRow("💣", "Mines", String.valueOf(spec.mines)),
-                createRuleRow("❓", "Question", String.valueOf(spec.questions)),
-                createRuleRow("🎁", "Surprise", String.valueOf(spec.surprises)),
-                createRuleRow("❤️", "Hearts", String.valueOf(spec.hearts)),
-                createRuleRow("💰", "Cost", spec.activationCost + " points"),
-                createRuleRow("🎲", "Surprise effect",
-                        "Good: +1 heart, +" + spec.surpriseGood + " points\nBad: -1 heart, " + spec.surpriseBad + " points")
+        VBox rows = new VBox(5);
+        rows.getChildren().addAll(
+                createOutcomeRow(rule.correct),
+                createOutcomeRow(rule.wrong)
         );
 
-        pane.setContent(content);
-        pane.expandedProperty().addListener((obs, wasExpanded, isExpanded) -> {
-            if (isExpanded) {
-                content.setOpacity(0);
-                FadeTransition ft = new FadeTransition(Duration.millis(220), content);
-                ft.setFromValue(0);
-                ft.setToValue(1);
-                ft.play();
-            } else {
-                content.setOpacity(0);
-            }
-        });
-
-        pane.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.SPACE) {
-                if (pane.isExpanded()) {
-                    pane.setExpanded(false);
-                } else if (levelRulesAccordion != null) {
-                    levelRulesAccordion.setExpandedPane(pane);
-                } else {
-                    pane.setExpanded(true);
-                }
-                event.consume();
-            }
-        });
-
-        return pane;
+        card.getChildren().addAll(title, rows);
+        return card;
     }
 
-
-    /**
-     * Creates a single "rule row" line in the accordion content (icon + label/value text).
-     */
-    private HBox createRuleRow(String iconText, String labelText, String valueText) {
-        HBox row = new HBox(8);
+    private HBox createOutcomeRow(OutcomeSpec outcome) {
+        HBox row = new HBox(10);
         row.setAlignment(Pos.CENTER_LEFT);
-        row.getStyleClass().add("level-rule-row");
+        row.getStyleClass().addAll("question-rule-row", outcome.styleClass);
+
+        Label tag = new Label(outcome.label);
+        tag.getStyleClass().add("question-rule-tag");
+
+        Label text = new Label(outcome.detailText);
+        text.setWrapText(true);
+        text.setMaxWidth(Double.MAX_VALUE);
+        text.getStyleClass().add("question-rule-detail");
+        HBox.setHgrow(text, Priority.ALWAYS);
+
+        row.getChildren().addAll(tag, text);
+        return row;
+    }
+
+    private Label createSectionTitle(String text) {
+        Label label = new Label(text);
+        label.getStyleClass().add("help-popup-subtitle");
+        return label;
+    }
+
+    private Separator createSectionDivider() {
+        Separator separator = new Separator();
+        separator.getStyleClass().add("help-popup-divider");
+        return separator;
+    }
+
+    private VBox createLevelOverview(Difficulty difficulty) {
+        VBox box = new VBox(4);
+        box.getStyleClass().add("help-popup-overview");
+
+        model.Difficulty modelDifficulty = toModelDifficulty(difficulty);
+        String board = "—";
+        String mines = "—";
+        String questions = "—";
+        String surprises = "—";
+        String hearts = "—";
+        String cost = "—";
+        String surpriseEffect = "—";
+
+        if (modelDifficulty != null) {
+            board = modelDifficulty.getRows() + "x" + modelDifficulty.getCols();
+            mines = String.valueOf(modelDifficulty.getMines());
+            questions = String.valueOf(modelDifficulty.getQuestionCells());
+            surprises = String.valueOf(modelDifficulty.getSurpriseCells());
+            hearts = String.valueOf(modelDifficulty.getInitialLives());
+            cost = modelDifficulty.getActivationCostPoints() + " points";
+            int goodPoints = modelDifficulty.getSurpriseGoodPoints();
+            int badPoints = Math.abs(modelDifficulty.getSurpriseBadPoints());
+            surpriseEffect = "+1 heart & +" + goodPoints + " points, or -1 heart & -" + badPoints + " points";
+        } else {
+            // TODO: Fill missing overview values if model difficulty cannot be resolved.
+        }
+
+        box.getChildren().addAll(
+                createOverviewRow("🧩", "Board: " + board),
+                createOverviewRow("💣", "Mines: " + mines),
+                createOverviewRow("❓", "Questions: " + questions),
+                createOverviewRow("🎁", "Surprise: " + surprises),
+                createOverviewRow("❤️", "Hearts: " + hearts),
+                createOverviewRow("💰", "Cost: " + cost),
+                createOverviewRow("✨", "Surprise effect: " + surpriseEffect)
+        );
+        return box;
+    }
+
+    private HBox createOverviewRow(String iconText, String valueText) {
+        HBox row = new HBox(10);
+        row.getStyleClass().add("help-popup-row");
+        row.setAlignment(Pos.CENTER_LEFT);
 
         Label icon = new Label(iconText);
-        icon.getStyleClass().add("level-rule-row-icon");
+        icon.getStyleClass().add("help-popup-row-icon");
 
-        Label text = new Label(labelText + ": " + valueText);
+        Label text = new Label(valueText);
+        text.getStyleClass().add("help-popup-row-text");
         text.setWrapText(true);
-        text.getStyleClass().add("level-rule-row-text");
+        text.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(text, Priority.ALWAYS);
 
         row.getChildren().addAll(icon, text);
         return row;
+    }
+
+    private model.Difficulty toModelDifficulty(Difficulty difficulty) {
+        if (difficulty == null) return null;
+        try {
+            return model.Difficulty.valueOf(difficulty.name());
+        } catch (IllegalArgumentException ignored) {
+            return null;
+        }
     }
 
 
@@ -677,44 +719,54 @@ public class GameSetupController {
      * Immutable rule specification for a difficulty level.
      * Holds both UI metadata (title/icon) and gameplay parameters (board size, mines, etc.).
      */
-    private static final class LevelRuleSpec {
+    private enum QuestionType {
+        EASY("Easy Question"),
+        MEDIUM("Medium Question"),
+        HARD("Hard Question"),
+        EXPERT("Expert Question");
+
+        private final String displayName;
+
+        QuestionType(String displayName) {
+            this.displayName = displayName;
+        }
+    }
+
+    private static final class LevelQuestionRules {
         private final Difficulty difficulty;
         private final String title;
-        private final String icon;
-        private final int rows;
-        private final int cols;
-        private final int mines;
-        private final int questions;
-        private final int surprises;
-        private final int hearts;
-        private final int activationCost;
-        private final int surpriseGood;
-        private final int surpriseBad;
+        private final List<QuestionTypeRule> rules;
 
-        private LevelRuleSpec(Difficulty difficulty,
-                              String title,
-                              String icon,
-                              int rows,
-                              int cols,
-                              int mines,
-                              int questions,
-                              int surprises,
-                              int hearts,
-                              int activationCost,
-                              int surpriseGood,
-                              int surpriseBad) {
+        private LevelQuestionRules(Difficulty difficulty, String title, List<QuestionTypeRule> rules) {
             this.difficulty = difficulty;
             this.title = title;
-            this.icon = icon;
-            this.rows = rows;
-            this.cols = cols;
-            this.mines = mines;
-            this.questions = questions;
-            this.surprises = surprises;
-            this.hearts = hearts;
-            this.activationCost = activationCost;
-            this.surpriseGood = surpriseGood;
-            this.surpriseBad = surpriseBad;
+            this.rules = rules;
+        }
+    }
+
+    private static final class QuestionTypeRule {
+        private final QuestionType type;
+        private final OutcomeSpec correct;
+        private final OutcomeSpec wrong;
+
+        private QuestionTypeRule(QuestionType type, OutcomeSpec correct, OutcomeSpec wrong) {
+            this.type = type;
+            this.correct = correct;
+            this.wrong = wrong;
+        }
+    }
+
+    private static final class OutcomeSpec {
+        private final String label;
+        private final String detailText;
+        private final String styleClass;
+
+        private OutcomeSpec(String label, String detailText) {
+            this.label = label;
+            this.detailText = detailText;
+            this.styleClass = label.toLowerCase().contains("correct")
+                    ? "question-rule-row-correct"
+                    : "question-rule-row-wrong";
         }
     }
 }

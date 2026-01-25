@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.util.ResourceUtils;
 import javafx.scene.control.*;
+import main.controller.ShopController;
 import model.PlayerProfileManager;
 import model.Session;
 
@@ -252,6 +253,10 @@ public class HomeController {
 
             FXMLLoader loader = new FXMLLoader(url);
             Parent newRoot = loader.load();
+            ShopController controller = loader.getController();
+            if (controller != null) {
+                controller.setStoreSource(ShopController.StoreSource.HOME);
+            }
 
             SettingsController.applyThemeToRoot(newRoot);
             SettingsController.refreshLanguageOnAllWindows();

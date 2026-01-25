@@ -18,6 +18,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.util.ResourceUtils;
+import main.controller.ShopController;
 import model.*;
 
 import java.time.LocalDateTime;
@@ -267,7 +268,28 @@ public class ProfileController {
         if (viewerProfile != null) {
             Session.setActivePlayerName(viewerProfile.getPlayerName());
         }
-        switchScene(event, "/view/shopView.fxml");
+        try {
+            var url = ResourceUtils.url(getClass(), "/view/shopView.fxml");
+            if (url == null) return;
+
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent root = loader.load();
+            ShopController controller = loader.getController();
+            if (controller != null) {
+                controller.setStoreSource(ShopController.StoreSource.PROFILE);
+            }
+
+            Scene scene = ((Node) event.getSource()).getScene();
+            root.setOpacity(0);
+            scene.setRoot(root);
+
+            FadeTransition ft = new FadeTransition(Duration.millis(250), root);
+            ft.setFromValue(0);
+            ft.setToValue(1);
+            ft.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
