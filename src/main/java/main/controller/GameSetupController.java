@@ -17,7 +17,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -29,9 +28,7 @@ import model.Theme;
 import model.ThemeColors;
 import model.Session;
 
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 
 public class GameSetupController {
 
@@ -71,9 +68,6 @@ public class GameSetupController {
     @FXML private VBox mainCard;
     @FXML private HBox playersRow;
     @FXML private VBox difficultyBox;
-    @FXML private VBox levelRulesBox;
-    @FXML private Accordion levelRulesAccordion;
-
     // אם אין fx:id="startRow" ב-FXML אז זה יהיה null וזה בסדר
     @FXML private HBox startRow;
 
@@ -83,9 +77,6 @@ public class GameSetupController {
     @FXML private VBox helpPopupCard;
     @FXML private Label helpPopupTitle;
     @FXML private VBox helpPopupContent;
-
-    /** Mapping between difficulty and its accordion pane for fast lookup/highlight. */
-    private final Map<Difficulty, TitledPane> rulePanes = new EnumMap<>(Difficulty.class);
 
     @FXML
     private void initialize() {
@@ -102,7 +93,6 @@ public class GameSetupController {
         rebuildAvatarPicker(avatarPickerB, selectedAvatarB, false);
 
         setupDifficultySync();
-        buildLevelRulesAccordion();
         setupHelpPopup();
 
         // If AI checkbox is already selected when screen opens
@@ -147,13 +137,11 @@ public class GameSetupController {
         mainCard.setOpacity(0);
         playersRow.setOpacity(0);
         difficultyBox.setOpacity(0);
-        if (levelRulesBox != null) levelRulesBox.setOpacity(0);
         if (startRow != null) startRow.setOpacity(0);
 
         mainCard.setTranslateY(-30);
         playersRow.setTranslateY(20);
         difficultyBox.setTranslateY(30);
-        if (levelRulesBox != null) levelRulesBox.setTranslateY(32);
         if (startRow != null) startRow.setTranslateY(40);
 
         FadeTransition mainFade = new FadeTransition(Duration.millis(520), mainCard);
@@ -188,21 +176,6 @@ public class GameSetupController {
         diffSlide.setDelay(Duration.millis(240));
 
         ParallelTransition pt = new ParallelTransition(mainFade, mainSlide, playersFade, playersSlide, diffFade, diffSlide);
-
-        if (levelRulesBox != null) {
-            FadeTransition rulesFade = new FadeTransition(Duration.millis(580), levelRulesBox);
-            rulesFade.setFromValue(0);
-            rulesFade.setToValue(1);
-            rulesFade.setDelay(Duration.millis(300));
-
-            TranslateTransition rulesSlide = new TranslateTransition(Duration.millis(580), levelRulesBox);
-            rulesSlide.setFromY(32);
-            rulesSlide.setToY(0);
-            rulesSlide.setInterpolator(Interpolator.EASE_OUT);
-            rulesSlide.setDelay(Duration.millis(300));
-
-            pt.getChildren().addAll(rulesFade, rulesSlide);
-        }
 
         if (startRow != null) {
             FadeTransition startFade = new FadeTransition(Duration.millis(580), startRow);
@@ -515,31 +488,7 @@ public class GameSetupController {
             if (newToggle == mediumBtn) diff = Difficulty.MEDIUM;
             if (newToggle == hardBtn) diff = Difficulty.HARD;
             selectedDifficulty = diff;
-            expandRuleFor(diff);
         });
-    }
-
-    private void buildLevelRulesAccordion() {
-        if (levelRulesAccordion == null) return;
-
-        levelRulesAccordion.getPanes().clear();
-        rulePanes.clear();
-
-        for (LevelRuleSpec spec : LEVEL_RULES) {
-            TitledPane pane = createRulePane(spec);
-            rulePanes.put(spec.difficulty, pane);
-            levelRulesAccordion.getPanes().add(pane);
-        }
-
-        levelRulesAccordion.expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
-            updateRuleHighlight(newPane);
-            if (newPane != null) {
-                Difficulty match = findDifficultyForPane(newPane);
-                if (match != null) selectDifficultyButton(match);
-            }
-        });
-
-        expandRuleFor(selectedDifficulty != null ? selectedDifficulty : Difficulty.EASY);
     }
 
     private void setupHelpPopup() {
@@ -617,122 +566,6 @@ public class GameSetupController {
         return null;
     }
 
-    /**
-     * Expands the rule pane that matches the given difficulty and updates highlight styling.
-     */
-    private void expandRuleFor(Difficulty difficulty) {
-        if (levelRulesAccordion == null || difficulty == null) return;
-        TitledPane pane = rulePanes.get(difficulty);
-        if (pane != null) {
-            updateRuleHighlight(pane);
-        } else {
-            updateRuleHighlight(null);
-        }
-    }
-
-    /**
-     * Adds/removes a CSS style class to visually highlight the currently expanded rule pane.
-     */
-    private void updateRuleHighlight(TitledPane expandedPane) {
-        for (TitledPane pane : rulePanes.values()) {
-            pane.getStyleClass().remove("level-rule-card-selected");
-        }
-        if (expandedPane != null) {
-            expandedPane.getStyleClass().add("level-rule-card-selected");
-        }
-    }
-
-    /**
-     * Finds the difficulty enum that corresponds to a given accordion pane.
-     */
-    private Difficulty findDifficultyForPane(TitledPane pane) {
-        for (Map.Entry<Difficulty, TitledPane> entry : rulePanes.entrySet()) {
-            if (entry.getValue() == pane) return entry.getKey();
-        }
-        return null;
-    }
-
-    /**
-     * Selects the correct difficulty ToggleButton programmatically
-     * (used when the user expands a rule pane directly).
-     */
-    private void selectDifficultyButton(Difficulty difficulty) {
-        if (difficulty == null) return;
-        if (difficulty == Difficulty.EASY && easyBtn != null) easyBtn.setSelected(true);
-        if (difficulty == Difficulty.MEDIUM && mediumBtn != null) mediumBtn.setSelected(true);
-        if (difficulty == Difficulty.HARD && hardBtn != null) hardBtn.setSelected(true);
-        selectedDifficulty = difficulty;
-    }
-
-    /**
-     * Creates a styled accordion pane describing a difficulty's rules.
-     * Includes keyboard accessibility (Enter/Space toggles expand/collapse)
-     * and a fade animation for the content when expanding.
-     */
-    private TitledPane createRulePane(LevelRuleSpec spec) {
-        TitledPane pane = new TitledPane();
-        pane.setAnimated(true);
-        pane.setCollapsible(true);
-        pane.setFocusTraversable(true);
-        pane.getStyleClass().add("level-rule-card");
-        pane.getStyleClass().add("level-row");
-
-        HBox header = new HBox(8);
-        header.setAlignment(Pos.CENTER_LEFT);
-        header.getStyleClass().add("level-rule-header");
-
-        Label icon = new Label(spec.icon);
-        icon.getStyleClass().addAll("level-rule-header-icon", "level-dot");
-        Label title = new Label(spec.title);
-        title.getStyleClass().add("level-rule-header-title");
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        Label arrow = new Label("▾");
-        arrow.getStyleClass().add("level-arrow");
-        arrow.setMinSize(18, 18);
-        arrow.setMaxSize(18, 18);
-        arrow.setAlignment(Pos.CENTER);
-
-        header.getChildren().addAll(icon, title, spacer, arrow);
-        pane.setText("");
-        pane.setGraphic(header);
-
-        Region contentPlaceholder = new Region();
-        contentPlaceholder.getStyleClass().add("level-content");
-        contentPlaceholder.setMinHeight(0);
-        contentPlaceholder.setPrefHeight(0);
-        contentPlaceholder.setMaxHeight(0);
-        contentPlaceholder.setVisible(false);
-        contentPlaceholder.setManaged(false);
-        pane.setContent(contentPlaceholder);
-        pane.expandedProperty().addListener((obs, wasExpanded, isExpanded) -> {
-            if (isExpanded) {
-                pane.setExpanded(false);
-            }
-        });
-
-        return pane;
-    }
-
-
-    /**
-     * Creates a single "rule row" line in the accordion content (icon + label/value text).
-     */
-    private HBox createRuleRow(String iconText, String labelText, String valueText) {
-        HBox row = new HBox(8);
-        row.setAlignment(Pos.CENTER_LEFT);
-        row.getStyleClass().add("level-rule-row");
-
-        Label icon = new Label(iconText);
-        icon.getStyleClass().add("level-rule-row-icon");
-
-        Label text = new Label(labelText + ": " + valueText);
-        text.setWrapText(true);
-        text.getStyleClass().add("level-rule-row-text");
-
-        row.getChildren().addAll(icon, text);
-        return row;
-    }
 
     private HBox createHelpRow(String iconText, String labelText, String valueText) {
         HBox row = new HBox(10);
