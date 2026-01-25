@@ -21,6 +21,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.util.ResourceUtils;
 import javafx.scene.control.*;
+import model.PlayerProfileManager;
+import model.Session;
 
 /**
  * Controller for the Home screen.
@@ -266,7 +268,13 @@ public class HomeController {
     }
     @FXML
     private void onProfile(ActionEvent event) {
+        String viewerName = requestPlayerAccess();
+        if (viewerName == null || viewerName.isBlank()) {
+            return;
+        }
+
         try {
+            Session.setActivePlayerName(viewerName);
             var url = ResourceUtils.url(getClass(), "/view/profile-view.fxml");
             if (url == null) return;
 
@@ -443,9 +451,73 @@ public class HomeController {
                 : AccessResult.DENIED;
     }
 
+    private String requestPlayerAccess() {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Pride Rock — Player Profile Access");
+        dialog.setHeaderText(null);
+
+        DialogPane dp = dialog.getDialogPane();
+        String alertCss = ResourceUtils.externalForm(getClass(), "/css/alert.css");
+        if (alertCss != null) {
+            dp.getStylesheets().add(alertCss);
+        }
+        dp.getStyleClass().add("admin-dialog");
+
+        ButtonType enterBtn  = new ButtonType("Enter", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelBtn = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dp.getButtonTypes().setAll(cancelBtn, enterBtn);
+
+        Label msg = new Label("Enter your username to view your profile:");
+        TextField tf = new TextField();
+        tf.setPromptText("Username");
+
+        Label error = new Label("Username not found");
+        error.getStyleClass().add("access-error");
+        error.setVisible(false);
+        error.setManaged(false);
+
+        VBox box = new VBox(10, msg, tf, error);
+        box.setPadding(new Insets(10, 10, 10, 10));
+        dp.setContent(box);
+
+        Button enterButtonNode = (Button) dp.lookupButton(enterBtn);
+        enterButtonNode.addEventFilter(ActionEvent.ACTION, e -> {
+            String actual = tf.getText();
+            String existing = findExistingProfileName(actual);
+            if (existing != null) {
+                error.setVisible(false);
+                error.setManaged(false);
+                tf.setText(existing);
+                return;
+            }
+            error.setVisible(true);
+            error.setManaged(true);
+            e.consume();
+        });
+
+        dialog.setResultConverter(bt -> bt == enterBtn ? tf.getText() : null);
+
+        Optional<String> result = dialog.showAndWait();
+        if (result.isEmpty() || result.get() == null || result.get().isBlank()) {
+            return null;
+        }
+        return result.get().trim();
+    }
+
     private enum AccessResult {
         GRANTED, DENIED, CANCELED
     }
 
+    private String findExistingProfileName(String name) {
+        if (name == null || name.isBlank()) return null;
+        String target = name.trim();
+        for (var profile : PlayerProfileManager.getProfiles()) {
+            if (profile == null || profile.getPlayerName() == null) continue;
+            if (profile.getPlayerName().equalsIgnoreCase(target)) {
+                return profile.getPlayerName();
+            }
+        }
+        return null;
+    }
 
 }

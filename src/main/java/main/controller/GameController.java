@@ -1327,6 +1327,10 @@ public class GameController {
         }
         startTimer();
     }
+
+    private boolean isTutorialEnabled() {
+        return GameSetupController.selectedDifficulty == GameSetupController.Difficulty.EASY;
+    }
     private void stopCountdown() {
         if (countdownTimeline != null) {
             countdownTimeline.stop();
@@ -2806,7 +2810,11 @@ public class GameController {
         }
 
         boolean shouldStartTutorial() {
-            return !tutorialUsed && tutorialOverlay != null && boardAGrid != null && boardBGrid != null;
+            return isTutorialEnabled()
+                    && !tutorialUsed
+                    && tutorialOverlay != null
+                    && boardAGrid != null
+                    && boardBGrid != null;
         }
 
         void startTutorial() {
