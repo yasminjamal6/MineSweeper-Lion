@@ -58,6 +58,11 @@ public class HowToPlayController {
     @FXML private Label tip3Label;
     @FXML private Label tip4Label;
 
+
+    /**
+     * Called automatically by JavaFX after the FXML is loaded.
+     * Initializes the screen by applying theme, language, and entrance animations.
+     */
     @FXML
     private void initialize() {
         SettingsController.applyThemeToRoot(rootPane);
@@ -112,7 +117,7 @@ public class HowToPlayController {
             if (tip3Label != null) tip3Label.setText("• התכוננו לשאלות טריוויה כדי להרוויח נקודות נוספות.");
             if (tip4Label != null) tip4Label.setText("• הפתעות יכולות להפוך את המשחק – תהיו מוכנים!");
 
-            // RTL
+            // RTL layout
             if (rootPane != null)
                 rootPane.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
             if (contentCard != null) {
@@ -127,6 +132,7 @@ public class HowToPlayController {
             if (closeButton != null) closeButton.setText("✕");
             if (startButton != null) startButton.setText("Got it, let's start! 🦁");
 
+            // LTR layout
             if (rootPane != null)
                 rootPane.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
             if (contentCard != null) {
