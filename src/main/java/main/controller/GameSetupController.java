@@ -7,7 +7,6 @@ import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -15,8 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -627,9 +624,10 @@ public class GameSetupController {
         if (levelRulesAccordion == null || difficulty == null) return;
         TitledPane pane = rulePanes.get(difficulty);
         if (pane != null) {
-            levelRulesAccordion.setExpandedPane(pane);
+            updateRuleHighlight(pane);
+        } else {
+            updateRuleHighlight(null);
         }
-        updateRuleHighlight(levelRulesAccordion.getExpandedPane());
     }
 
     /**
@@ -699,52 +697,17 @@ public class GameSetupController {
         pane.setText("");
         pane.setGraphic(header);
 
-        VBox content = new VBox(6);
-        content.setPadding(new Insets(10, 12, 12, 12));
-        content.getStyleClass().add("level-rule-content");
-
-        content.getChildren().addAll(
-                createRuleRow("🧩", "Board", spec.rows + "x" + spec.cols),
-                createRuleRow("💣", "Mines", String.valueOf(spec.mines)),
-                createRuleRow("❓", "Question", String.valueOf(spec.questions)),
-                createRuleRow("🎁", "Surprise", String.valueOf(spec.surprises)),
-                createRuleRow("❤️", "Hearts", String.valueOf(spec.hearts)),
-                createRuleRow("💰", "Cost", spec.activationCost + " points"),
-                createRuleRow("🎲", "Surprise effect",
-                        "Good: +1 heart, +" + spec.surpriseGood + " points\nBad: -1 heart, " + spec.surpriseBad + " points")
-        );
-
-        ScrollPane contentScroll = new ScrollPane(content);
-        contentScroll.setFitToWidth(true);
-        contentScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        contentScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        contentScroll.setMaxHeight(220);
-        contentScroll.getStyleClass().add("level-content");
-
-        pane.setContent(contentScroll);
+        Region contentPlaceholder = new Region();
+        contentPlaceholder.getStyleClass().add("level-content");
+        contentPlaceholder.setMinHeight(0);
+        contentPlaceholder.setPrefHeight(0);
+        contentPlaceholder.setMaxHeight(0);
+        contentPlaceholder.setVisible(false);
+        contentPlaceholder.setManaged(false);
+        pane.setContent(contentPlaceholder);
         pane.expandedProperty().addListener((obs, wasExpanded, isExpanded) -> {
-            arrow.setRotate(isExpanded ? 180 : 0);
             if (isExpanded) {
-                content.setOpacity(0);
-                FadeTransition ft = new FadeTransition(Duration.millis(220), content);
-                ft.setFromValue(0);
-                ft.setToValue(1);
-                ft.play();
-            } else {
-                content.setOpacity(0);
-            }
-        });
-
-        pane.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.SPACE) {
-                if (pane.isExpanded()) {
-                    pane.setExpanded(false);
-                } else if (levelRulesAccordion != null) {
-                    levelRulesAccordion.setExpandedPane(pane);
-                } else {
-                    pane.setExpanded(true);
-                }
-                event.consume();
+                pane.setExpanded(false);
             }
         });
 

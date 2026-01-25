@@ -363,7 +363,7 @@ GLOBAL FONT
 
 .level-row > .title {
     -fx-padding: 7 14;
-    -fx-min-height: 34;
+    -fx-min-height: 36;
     -fx-cursor: hand;
     -fx-alignment: center-left;
 }
@@ -378,6 +378,11 @@ GLOBAL FONT
 .level-row:hover > .title {
     -fx-border-color: rgba(219, 150, 48, 0.95);
     -fx-effect: dropshadow(gaussian, rgba(255, 201, 107, 0.45), 10, 0.4, 0, 1);
+}
+
+.level-row > .title:pressed {
+    -fx-background-color: rgba(255, 233, 186, 0.98);
+    -fx-effect: dropshadow(gaussian, rgba(255, 191, 94, 0.4), 8, 0.4, 0, 1);
 }
 
 .level-row:focused > .title {
@@ -434,14 +439,10 @@ GLOBAL FONT
 
 .level-content {
     -fx-background-color: transparent;
-    -fx-padding: 0 2 4 2;
-    -fx-max-height: 220;
+    -fx-padding: 0;
+    -fx-max-height: 0;
     -fx-background-insets: 0;
     -fx-border-color: transparent;
-}
-
-.level-content .viewport {
-    -fx-background-color: transparent;
 }
 
 .level-rule-row-icon {
@@ -743,6 +744,11 @@ GLOBAL FONT
 .dark-mode .level-row:hover > .title {
     -fx-border-color: rgba(250, 204, 21, 0.7);
     -fx-effect: dropshadow(gaussian, rgba(250, 204, 21, 0.3), 12, 0.5, 0, 2);
+}
+
+.dark-mode .level-row > .title:pressed {
+    -fx-background-color: rgba(28, 18, 8, 0.95);
+    -fx-effect: dropshadow(gaussian, rgba(250, 204, 21, 0.35), 10, 0.5, 0, 2);
 }
 
 .dark-mode .level-row:focused > .title {
