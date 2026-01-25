@@ -112,7 +112,7 @@
                     </VBox>
                 </VBox>
 
-                <!-- RIGHT PANEL (opponent) -->
+                <!-- RIGHT PANEL (Teammate) -->
                 <VBox spacing="14" HBox.hgrow="ALWAYS">
 
                     <HBox alignment="CENTER_LEFT" spacing="14" styleClass="profile-card">
@@ -123,10 +123,10 @@
                                    styleClass="profile-avatar"/>
                         <VBox spacing="6">
                             <Label fx:id="playerNameLabelRight"
-                                   text="No opponent yet"
+                                   text="No Teammate yet"
                                    styleClass="profile-name"/>
                             <Label fx:id="playerSubtitleLabelRight"
-                                   text="Opponent Profile"
+                                   text="Teammate Profile"
                                    styleClass="profile-subtitle"/>
                         </VBox>
 
@@ -195,7 +195,7 @@
             <TableView fx:id="matchesTable" styleClass="profile-table" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="playedAtCol" text="Played At" prefWidth="160"/>
-                    <TableColumn fx:id="opponentCol" text="Opponent" prefWidth="140"/>
+                    <TableColumn fx:id="TeammateCol" text="Teammate" prefWidth="140"/>
                     <TableColumn fx:id="resultCol" text="Result" prefWidth="90"/>
                     <TableColumn fx:id="scoreCol" text="Score" prefWidth="90"/>
                     <TableColumn fx:id="durationCol" text="Duration (s)" prefWidth="120"/>

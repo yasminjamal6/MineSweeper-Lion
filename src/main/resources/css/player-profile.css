@@ -121,10 +121,11 @@
     -fx-border-color: rgba(251, 191, 36, 0.35);
 }
 
-.table-view .column-header .label {
-    -fx-text-fill: #fef3c7;
-    -fx-font-weight: 700;
-}
+..table-view .column-header .label {
+     -fx-text-fill: #facc15;
+     -fx-font-weight: 700;
+ }
+
 
 .table-row-cell {
     -fx-background-color: transparent;

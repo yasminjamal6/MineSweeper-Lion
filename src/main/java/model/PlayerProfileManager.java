@@ -179,7 +179,7 @@ public class PlayerProfileManager {
 
     private static String matchKey(MatchRecord record) {
         return safe(record.getPlayedAtIso()) + "|" +
-                safe(record.getOpponent()) + "|" +
+                safe(record.getTeammate()) + "|" +
                 safe(record.getResult()) + "|" +
                 record.getScore() + "|" +
                 safe(record.getDifficulty());
@@ -235,7 +235,7 @@ public class PlayerProfileManager {
         stored.setCoins(updated.getCoins());
         stored.setNextGiftEpochMillis(updated.getNextGiftEpochMillis());
 
-        // ✅ COPY לפני שמנקים (כי stored ו-updated יכולים להיות אותו אובייקט)
+
         var ownedCopy = (updated.getOwnedAvatars() == null) ? null : new java.util.HashSet<>(updated.getOwnedAvatars());
         var emojiCopy = (updated.getEmojiCounts() == null) ? null : new java.util.HashMap<>(updated.getEmojiCounts());
         String selectedCopy = updated.getSelectedAvatarId();
