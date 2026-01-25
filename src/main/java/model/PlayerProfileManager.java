@@ -22,17 +22,16 @@ import java.util.Map;
 public class PlayerProfileManager {
 
     private static final Path PROFILE_PATH = Paths.get("data", "player-profiles.json");
+    private static final Path HISTORY_PATH = Paths.get("data", "game-history.csv");
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Map<String, PlayerProfile> PROFILES = new LinkedHashMap<>();
 
     static {
         loadFromFile();
-        syncProfilesWithHistory();
     }
 
     public static List<PlayerProfile> getProfiles() {
-        syncProfilesWithHistory();
         return new ArrayList<>(PROFILES.values());
     }
 
@@ -49,6 +48,41 @@ public class PlayerProfileManager {
             profile.setAvatarId(avatarId);
         }
         return profile;
+    }
+
+    public static boolean appearedInHistory(String playerName) {
+        if (playerName == null || playerName.isBlank()) {
+            return false;
+        }
+        String target = playerName.trim();
+        if (target.isEmpty()) {
+            return false;
+        }
+        if (!Files.exists(HISTORY_PATH)) {
+            return false;
+        }
+        try (BufferedReader reader = Files.newBufferedReader(HISTORY_PATH, StandardCharsets.UTF_8)) {
+            String line;
+            boolean first = true;
+            while ((line = reader.readLine()) != null) {
+                if (first) {
+                    first = false;
+                    continue;
+                }
+                if (line.isBlank()) {
+                    continue;
+                }
+                String[] cols = parseCsvLine(line);
+                if (cols.length < 2) {
+                    continue;
+                }
+                if (nameMatches(cols[0], target) || nameMatches(cols[1], target)) {
+                    return true;
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return false;
     }
 
     public static void addMatchForPlayers(String playerA, String avatarA,
@@ -140,6 +174,14 @@ public class PlayerProfileManager {
         }
     }
 
+    /**
+     * Explicitly sync profiles from game history (CSV) when needed.
+     * Not automatic to avoid wiping JSON profiles on access.
+     */
+    public static void syncFromHistory() {
+        syncProfilesWithHistory();
+    }
+
     private static PlayerProfile ensureProfileFromHistory(String playerName,
                                                          String defaultAvatarId,
                                                          Map<String, PlayerProfile> existing) {
@@ -183,6 +225,49 @@ public class PlayerProfileManager {
                 safe(record.getResult()) + "|" +
                 record.getScore() + "|" +
                 safe(record.getDifficulty());
+    }
+
+    private static boolean nameMatches(String raw, String target) {
+        if (raw == null) {
+            return false;
+        }
+        String candidate = raw.trim();
+        if (candidate.isEmpty()) {
+            return false;
+        }
+        return candidate.equalsIgnoreCase(target);
+    }
+
+    private static String[] parseCsvLine(String line) {
+        List<String> cols = new ArrayList<>();
+        StringBuilder current = new StringBuilder();
+        boolean inQuotes = false;
+        for (int i = 0; i < line.length(); i++) {
+            char ch = line.charAt(i);
+            if (inQuotes) {
+                if (ch == '"') {
+                    if (i + 1 < line.length() && line.charAt(i + 1) == '"') {
+                        current.append('"');
+                        i++;
+                    } else {
+                        inQuotes = false;
+                    }
+                } else {
+                    current.append(ch);
+                }
+            } else {
+                if (ch == '"') {
+                    inQuotes = true;
+                } else if (ch == ',') {
+                    cols.add(current.toString());
+                    current.setLength(0);
+                } else {
+                    current.append(ch);
+                }
+            }
+        }
+        cols.add(current.toString());
+        return cols.toArray(new String[0]);
     }
 
     private static String safe(String value) {

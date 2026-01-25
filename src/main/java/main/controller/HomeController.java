@@ -499,6 +499,12 @@ public class HomeController {
                 tf.setText(existing);
                 return;
             }
+            if (PlayerProfileManager.appearedInHistory(actual)) {
+                error.setVisible(false);
+                error.setManaged(false);
+                tf.setText(actual == null ? "" : actual.trim());
+                return;
+            }
             error.setVisible(true);
             error.setManaged(true);
             e.consume();
