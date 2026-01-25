@@ -54,7 +54,10 @@ public class HomeController {
 
     }
 
-
+    /**
+     * Starts the horizontal scrolling ticker message at the bottom/top area.
+     * The ticker text is duplicated to create a more continuous loop effect.
+     */
     private void startTicker() {
         String tickerText =
                 "🦁 Every move shapes your destiny.   •   " +
@@ -63,7 +66,7 @@ public class HomeController {
                         "🐾 Choose wisely before the sun sets.   •   " +
                         "🏆 Build your legend in the savanna!   •   ";
 
-        // כדי שיהיה “רציף”, נשכפל פעמיים
+        // Duplicate text to simulate a continuous loop
         tickerLabel.setText(tickerText + tickerText);
 
         double clipW = tickerClip.getWidth();
@@ -78,7 +81,7 @@ public class HomeController {
         tt.setToX(-textW);
         tt.setInterpolator(javafx.animation.Interpolator.LINEAR);
 
-        // לופ אינסופי
+        // Infinite loop
         tt.setCycleCount(javafx.animation.Animation.INDEFINITE);
         tt.play();
     }
@@ -365,7 +368,6 @@ public class HomeController {
             return; // user bailed out; do nothing
         }
 
-        // 2) אם נכון -> נכנסים למסך
         try {
             var url = ResourceUtils.url(getClass(), "/view/question-manager-view.fxml");
             if (url == null) {
@@ -418,7 +420,7 @@ public class HomeController {
 
         DialogPane dp = dialog.getDialogPane();
 
-        // משתמשים באותו CSS כמו ה-Confirmation שיש לך
+        // Reuse alert dialog styling
         String alertCss = ResourceUtils.externalForm(getClass(), "/css/alert.css");
         if (alertCss != null) {
             dp.getStylesheets().add(alertCss);
@@ -438,7 +440,7 @@ public class HomeController {
         box.setPadding(new Insets(10, 10, 10, 10));
         dp.setContent(box);
 
-        // מחזיר את הטקסט רק אם לחצו Enter
+        // Return text only if Enter was clicked
         dialog.setResultConverter(bt -> bt == enterBtn ? pf.getText() : null);
 
         Optional<String> result = dialog.showAndWait();
@@ -451,6 +453,13 @@ public class HomeController {
                 : AccessResult.DENIED;
     }
 
+
+    /**
+     * Prompts the user to enter a username, and validates that the username exists
+     * in the stored profiles list (case-insensitive).
+     *
+     * @return the normalized existing profile name if valid; otherwise null.
+     */
     private String requestPlayerAccess() {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Pride Rock — Player Profile Access");
@@ -504,10 +513,27 @@ public class HomeController {
         return result.get().trim();
     }
 
+
+    /**
+     * Result of an access request dialog.
+     */
     private enum AccessResult {
-        GRANTED, DENIED, CANCELED
+        /** Access granted (validation passed). */
+        GRANTED,
+        /** Access denied (validation failed). */
+        DENIED,
+        /** Dialog was canceled or closed. */
+        CANCELED
     }
 
+
+    /**
+     * Attempts to find an existing profile name that matches the given input (case-insensitive).
+     * Returns the stored profile name (original casing) when found.
+     *
+     * @param name user input name
+     * @return stored profile name if found; otherwise null
+     */
     private String findExistingProfileName(String name) {
         if (name == null || name.isBlank()) return null;
         String target = name.trim();

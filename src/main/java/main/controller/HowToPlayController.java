@@ -56,6 +56,11 @@ public class HowToPlayController {
     @FXML private Label tipsTitleLabel;
     @FXML private Label tipsTextLabel;
 
+
+    /**
+     * Called automatically by JavaFX after the FXML is loaded.
+     * Initializes the screen by applying theme, language, and entrance animations.
+     */
     @FXML
     private void initialize() {
         SettingsController.applyThemeToRoot(rootPane);
@@ -115,7 +120,7 @@ public class HowToPlayController {
             if (tipsTextLabel != null)
                 tipsTextLabel.setText("• השתמשו בדגלים כדי לעקוב אחרי מוקשים חשודים.\n• אל תמהרו — נקו אזורים בטוחים שלב אחר שלב.\n• שמרו רמזים לרגעים קשים.");
 
-            // RTL
+            // RTL layout
             if (rootPane != null)
                 rootPane.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
             if (contentCard != null) {
@@ -130,6 +135,7 @@ public class HowToPlayController {
             if (closeButton != null) closeButton.setText("✕");
             if (startButton != null) startButton.setText("Got it, let's start! 🦁");
 
+            // LTR layout
             if (rootPane != null)
                 rootPane.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
             if (contentCard != null) {

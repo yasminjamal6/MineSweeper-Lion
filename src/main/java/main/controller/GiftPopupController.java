@@ -16,7 +16,7 @@ public class GiftPopupController {
 
     @FXML
     private void initialize() {
-        // כניסה יפה: pop + fade
+        // Nice entrance: pop + fade (animation is applied after setData is called)
         var root = titleLabel.getScene() == null ? null : titleLabel.getScene().getRoot();
     }
 
@@ -26,7 +26,7 @@ public class GiftPopupController {
         rewardTitle.setText(rewardTitleText);
         rewardDesc.setText(desc);
 
-        // אנימציה אחרי שהנתונים הוזנו
+        // Animate after data has been set
         var card = titleLabel.getParent().getParent(); // VBox card
         card.setOpacity(0);
         card.setScaleX(0.96);
@@ -44,6 +44,9 @@ public class GiftPopupController {
         st.play();
     }
 
+    /**
+     * Closes the popup window.
+     */
     @FXML
     private void onClose() {
         Stage stage = (Stage) titleLabel.getScene().getWindow();
