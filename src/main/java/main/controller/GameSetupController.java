@@ -7,12 +7,16 @@ import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -25,6 +29,9 @@ import model.Theme;
 import model.ThemeColors;
 import model.Session;
 
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 public class GameSetupController {
 
@@ -45,8 +52,18 @@ public class GameSetupController {
 
     private static final String USERNAME_REGEX = "^[a-zA-Z][a-zA-Z0-9._-]{2,19}$";
 
+    private static final List<LevelRuleSpec> LEVEL_RULES = List.of(
+            new LevelRuleSpec(Difficulty.EASY, "Easy", "🟢",
+                    9, 9, 10, 6, 2, 10, 5, 8, -8),
+            new LevelRuleSpec(Difficulty.MEDIUM, "Medium", "🟠",
+                    13, 13, 26, 7, 3, 8, 8, 12, -12),
+            new LevelRuleSpec(Difficulty.HARD, "Hard", "🔴",
+                    16, 16, 44, 11, 4, 6, 12, 16, -16)
+    );
+
     @FXML private ToggleButton easyBtn, mediumBtn, hardBtn;
     @FXML private TextField playerAName, playerBName;
+    @FXML private ToggleGroup difficultyGroup;
 
     @FXML private HBox themePickerA, themePickerB;
     @FXML private HBox avatarPickerA, avatarPickerB;
@@ -54,12 +71,16 @@ public class GameSetupController {
     @FXML private VBox mainCard;
     @FXML private HBox playersRow;
     @FXML private VBox difficultyBox;
+    @FXML private VBox levelRulesBox;
+    @FXML private Accordion levelRulesAccordion;
 
     // אם אין fx:id="startRow" ב-FXML אז זה יהיה null וזה בסדר
     @FXML private HBox startRow;
 
     @FXML private CheckBox playerBAICheckbox;
     @FXML private StackPane root;
+
+    private final Map<Difficulty, TitledPane> rulePanes = new EnumMap<>(Difficulty.class);
 
     @FXML
     private void initialize() {
@@ -74,6 +95,9 @@ public class GameSetupController {
 
         rebuildAvatarPicker(avatarPickerA, selectedAvatarA, true);
         rebuildAvatarPicker(avatarPickerB, selectedAvatarB, false);
+
+        setupDifficultySync();
+        buildLevelRulesAccordion();
 
         // אם המסך נפתח כשהצ׳קבוקס כבר מסומן
         onTogglePlayerBAI();
@@ -114,11 +138,13 @@ public class GameSetupController {
         mainCard.setOpacity(0);
         playersRow.setOpacity(0);
         difficultyBox.setOpacity(0);
+        if (levelRulesBox != null) levelRulesBox.setOpacity(0);
         if (startRow != null) startRow.setOpacity(0);
 
         mainCard.setTranslateY(-30);
         playersRow.setTranslateY(20);
         difficultyBox.setTranslateY(30);
+        if (levelRulesBox != null) levelRulesBox.setTranslateY(32);
         if (startRow != null) startRow.setTranslateY(40);
 
         FadeTransition mainFade = new FadeTransition(Duration.millis(520), mainCard);
@@ -153,6 +179,21 @@ public class GameSetupController {
         diffSlide.setDelay(Duration.millis(240));
 
         ParallelTransition pt = new ParallelTransition(mainFade, mainSlide, playersFade, playersSlide, diffFade, diffSlide);
+
+        if (levelRulesBox != null) {
+            FadeTransition rulesFade = new FadeTransition(Duration.millis(580), levelRulesBox);
+            rulesFade.setFromValue(0);
+            rulesFade.setToValue(1);
+            rulesFade.setDelay(Duration.millis(300));
+
+            TranslateTransition rulesSlide = new TranslateTransition(Duration.millis(580), levelRulesBox);
+            rulesSlide.setFromY(32);
+            rulesSlide.setToY(0);
+            rulesSlide.setInterpolator(Interpolator.EASE_OUT);
+            rulesSlide.setDelay(Duration.millis(300));
+
+            pt.getChildren().addAll(rulesFade, rulesSlide);
+        }
 
         if (startRow != null) {
             FadeTransition startFade = new FadeTransition(Duration.millis(580), startRow);
@@ -426,6 +467,194 @@ public class GameSetupController {
         if (selectedAvatarA == null) selectedAvatarA = Avatar.SIMBA;
         if (selectedAvatarB == null || selectedAvatarB == selectedAvatarA) {
             selectedAvatarB = (selectedAvatarA == Avatar.NALA) ? Avatar.MUFASA : Avatar.NALA;
+        }
+    }
+
+    private void setupDifficultySync() {
+        if (difficultyGroup == null) return;
+        difficultyGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+            Difficulty diff = Difficulty.EASY;
+            if (newToggle == mediumBtn) diff = Difficulty.MEDIUM;
+            if (newToggle == hardBtn) diff = Difficulty.HARD;
+            selectedDifficulty = diff;
+            expandRuleFor(diff);
+        });
+    }
+
+    private void buildLevelRulesAccordion() {
+        if (levelRulesAccordion == null) return;
+
+        levelRulesAccordion.getPanes().clear();
+        rulePanes.clear();
+
+        for (LevelRuleSpec spec : LEVEL_RULES) {
+            TitledPane pane = createRulePane(spec);
+            rulePanes.put(spec.difficulty, pane);
+            levelRulesAccordion.getPanes().add(pane);
+        }
+
+        levelRulesAccordion.expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
+            updateRuleHighlight(newPane);
+            if (newPane != null) {
+                Difficulty match = findDifficultyForPane(newPane);
+                if (match != null) selectDifficultyButton(match);
+            }
+        });
+
+        expandRuleFor(selectedDifficulty != null ? selectedDifficulty : Difficulty.EASY);
+    }
+
+    private void expandRuleFor(Difficulty difficulty) {
+        if (levelRulesAccordion == null || difficulty == null) return;
+        TitledPane pane = rulePanes.get(difficulty);
+        if (pane != null) {
+            levelRulesAccordion.setExpandedPane(pane);
+        }
+        updateRuleHighlight(levelRulesAccordion.getExpandedPane());
+    }
+
+    private void updateRuleHighlight(TitledPane expandedPane) {
+        for (TitledPane pane : rulePanes.values()) {
+            pane.getStyleClass().remove("level-rule-card-selected");
+        }
+        if (expandedPane != null) {
+            expandedPane.getStyleClass().add("level-rule-card-selected");
+        }
+    }
+
+    private Difficulty findDifficultyForPane(TitledPane pane) {
+        for (Map.Entry<Difficulty, TitledPane> entry : rulePanes.entrySet()) {
+            if (entry.getValue() == pane) return entry.getKey();
+        }
+        return null;
+    }
+
+    private void selectDifficultyButton(Difficulty difficulty) {
+        if (difficulty == null) return;
+        if (difficulty == Difficulty.EASY && easyBtn != null) easyBtn.setSelected(true);
+        if (difficulty == Difficulty.MEDIUM && mediumBtn != null) mediumBtn.setSelected(true);
+        if (difficulty == Difficulty.HARD && hardBtn != null) hardBtn.setSelected(true);
+        selectedDifficulty = difficulty;
+    }
+
+    private TitledPane createRulePane(LevelRuleSpec spec) {
+        TitledPane pane = new TitledPane();
+        pane.setAnimated(true);
+        pane.setCollapsible(true);
+        pane.setFocusTraversable(true);
+        pane.getStyleClass().add("level-rule-card");
+
+        HBox header = new HBox(8);
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.getStyleClass().add("level-rule-header");
+
+        Label icon = new Label(spec.icon);
+        icon.getStyleClass().add("level-rule-header-icon");
+        Label title = new Label(spec.title);
+        title.getStyleClass().add("level-rule-header-title");
+
+        header.getChildren().addAll(icon, title);
+        pane.setText("");
+        pane.setGraphic(header);
+
+        VBox content = new VBox(6);
+        content.setPadding(new Insets(10, 12, 12, 12));
+        content.getStyleClass().add("level-rule-content");
+
+        content.getChildren().addAll(
+                createRuleRow("🧩", "Board", spec.rows + "x" + spec.cols),
+                createRuleRow("💣", "Mines", String.valueOf(spec.mines)),
+                createRuleRow("❓", "Question", String.valueOf(spec.questions)),
+                createRuleRow("🎁", "Surprise", String.valueOf(spec.surprises)),
+                createRuleRow("❤️", "Hearts", String.valueOf(spec.hearts)),
+                createRuleRow("💰", "Cost", spec.activationCost + " points"),
+                createRuleRow("🎲", "Surprise effect",
+                        "Good: +1 heart, +" + spec.surpriseGood + " points\nBad: -1 heart, " + spec.surpriseBad + " points")
+        );
+
+        pane.setContent(content);
+        pane.expandedProperty().addListener((obs, wasExpanded, isExpanded) -> {
+            if (isExpanded) {
+                content.setOpacity(0);
+                FadeTransition ft = new FadeTransition(Duration.millis(220), content);
+                ft.setFromValue(0);
+                ft.setToValue(1);
+                ft.play();
+            } else {
+                content.setOpacity(0);
+            }
+        });
+
+        pane.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.SPACE) {
+                if (pane.isExpanded()) {
+                    pane.setExpanded(false);
+                } else if (levelRulesAccordion != null) {
+                    levelRulesAccordion.setExpandedPane(pane);
+                } else {
+                    pane.setExpanded(true);
+                }
+                event.consume();
+            }
+        });
+
+        return pane;
+    }
+
+    private HBox createRuleRow(String iconText, String labelText, String valueText) {
+        HBox row = new HBox(8);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.getStyleClass().add("level-rule-row");
+
+        Label icon = new Label(iconText);
+        icon.getStyleClass().add("level-rule-row-icon");
+
+        Label text = new Label(labelText + ": " + valueText);
+        text.setWrapText(true);
+        text.getStyleClass().add("level-rule-row-text");
+
+        row.getChildren().addAll(icon, text);
+        return row;
+    }
+
+    private static final class LevelRuleSpec {
+        private final Difficulty difficulty;
+        private final String title;
+        private final String icon;
+        private final int rows;
+        private final int cols;
+        private final int mines;
+        private final int questions;
+        private final int surprises;
+        private final int hearts;
+        private final int activationCost;
+        private final int surpriseGood;
+        private final int surpriseBad;
+
+        private LevelRuleSpec(Difficulty difficulty,
+                              String title,
+                              String icon,
+                              int rows,
+                              int cols,
+                              int mines,
+                              int questions,
+                              int surprises,
+                              int hearts,
+                              int activationCost,
+                              int surpriseGood,
+                              int surpriseBad) {
+            this.difficulty = difficulty;
+            this.title = title;
+            this.icon = icon;
+            this.rows = rows;
+            this.cols = cols;
+            this.mines = mines;
+            this.questions = questions;
+            this.surprises = surprises;
+            this.hearts = hearts;
+            this.activationCost = activationCost;
+            this.surpriseGood = surpriseGood;
+            this.surpriseBad = surpriseBad;
         }
     }
 }

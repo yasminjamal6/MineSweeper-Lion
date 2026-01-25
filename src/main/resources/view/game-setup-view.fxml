@@ -154,6 +154,12 @@
                             </HBox>
                         </VBox>
 
+                        <!-- Level Rules -->
+                        <VBox fx:id="levelRulesBox" alignment="CENTER" spacing="10" styleClass="level-rules-box">
+                            <Label styleClass="section-title" text="Level Rules" />
+                            <Accordion fx:id="levelRulesAccordion" styleClass="level-rules-accordion" />
+                        </VBox>
+
                         <!-- Start button -->
                         <HBox fx:id="startRow" alignment="CENTER">
                             <Button id="startAdventureButton"

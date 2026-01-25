@@ -237,6 +237,69 @@ GLOBAL FONT
     -fx-effect: dropshadow(gaussian, rgba(249,115,22,0.85), 18, 0.6, 0, 3);
 }
 
+/* Level Rules accordion */
+.level-rules-box {
+    -fx-padding: 2 0 6 0;
+}
+
+.level-rules-accordion {
+    -fx-background-color: transparent;
+}
+
+.level-rule-card {
+    -fx-background-color: transparent;
+}
+
+.level-rule-card > .title {
+    -fx-background-color: rgba(255, 247, 228, 0.96);
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: rgba(222, 170, 60, 0.85);
+    -fx-border-width: 1.4;
+    -fx-padding: 6 12;
+}
+
+.level-rule-card > .content {
+    -fx-background-color: rgba(255, 244, 224, 0.95);
+    -fx-background-radius: 0 0 16 16;
+    -fx-border-radius: 0 0 16 16;
+    -fx-border-color: rgba(222, 170, 60, 0.7);
+    -fx-border-width: 0 1.2 1.2 1.2;
+}
+
+.level-rule-card-selected > .title {
+    -fx-background-color: linear-gradient(#ffe58f, #f9a826);
+    -fx-border-color: rgba(180, 116, 16, 0.95);
+    -fx-effect: dropshadow(gaussian, rgba(248,181,0,0.7), 14, 0.6, 0, 2);
+}
+
+.level-rule-header {
+    -fx-padding: 2 4;
+}
+
+.level-rule-header-icon {
+    -fx-font-size: 14;
+}
+
+.level-rule-header-title {
+    -fx-text-fill: #3b2304;
+    -fx-font-size: 13.5;
+    -fx-font-weight: bold;
+}
+
+.level-rule-content {
+    -fx-background-color: transparent;
+}
+
+.level-rule-row-icon {
+    -fx-font-size: 13;
+}
+
+.level-rule-row-text {
+    -fx-text-fill: #4b3213;
+    -fx-font-size: 12.5;
+}
+
 /* מסגרת לוח – בהיר */
 .board-frame {
     -fx-background-color: transparent;
@@ -457,6 +520,49 @@ GLOBAL FONT
     -fx-background-color: linear-gradient(#f59e0b, #f97316);
     -fx-text-fill: #451a03;
     -fx-effect: dropshadow(gaussian, rgba(249,115,22,0.8), 18, 0.6, 0, 3);
+}
+
+.dark-mode .level-rules-box {
+    -fx-padding: 2 0 6 0;
+}
+
+.dark-mode .level-rules-accordion {
+    -fx-background-color: transparent;
+}
+
+.dark-mode .level-rule-card {
+    -fx-background-color: transparent;
+}
+
+.dark-mode .level-rule-card > .title {
+    -fx-background-color: rgba(22, 14, 8, 0.9);
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: rgba(250, 204, 21, 0.55);
+    -fx-border-width: 1.4;
+    -fx-padding: 6 12;
+}
+
+.dark-mode .level-rule-card > .content {
+    -fx-background-color: rgba(18, 10, 6, 0.9);
+    -fx-background-radius: 0 0 16 16;
+    -fx-border-radius: 0 0 16 16;
+    -fx-border-color: rgba(250, 204, 21, 0.45);
+    -fx-border-width: 0 1.2 1.2 1.2;
+}
+
+.dark-mode .level-rule-card-selected > .title {
+    -fx-background-color: linear-gradient(#facc15, #f97316);
+    -fx-border-color: rgba(161,98,7,0.9);
+    -fx-effect: dropshadow(gaussian, rgba(250,204,21,0.85), 16, 0.7, 0, 3);
+}
+
+.dark-mode .level-rule-header-title {
+    -fx-text-fill: #fef9c3;
+}
+
+.dark-mode .level-rule-row-text {
+    -fx-text-fill: #f8fafc;
 }
 
 .dark-mode .board-frame {
