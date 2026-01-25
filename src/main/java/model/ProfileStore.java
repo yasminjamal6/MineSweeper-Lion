@@ -7,7 +7,7 @@ package model;
 public class ProfileStore {
 
     /**
-     * טוען פרופיל קיים או יוצר חדש אם לא קיים
+     * Loads an existing player profile or creates a new one if it does not exist.
      */
     public static PlayerProfile loadOrCreate(String playerName) {
         if (playerName == null || playerName.isBlank()) {
@@ -21,22 +21,21 @@ public class ProfileStore {
             profile = new PlayerProfile(playerName);
         }
 
-        // ודא שכל שדות ברירת המחדל קיימים
-        profile.ensureDefaults();
+        // Ensure all default fields are initialized        profile.ensureDefaults();
 
         return profile;
     }
 
     /**
-     * שמירת שינויים בפרופיל (Coins, Avatars, SelectedAvatar, Emojis וכו')
-     * לא נוגע בהיסטוריית משחקים
+     Persists changes to a player profile (coins, avatars, emojis, selected avatar, etc.).
      */
     public static void save(PlayerProfile profile) {
         if (profile == null) return;
 
+        // Ensure profile integrity before saving
         profile.ensureDefaults();
 
-        // מעדכן את הנתונים בפרופיל הקיים ושומר ל־JSON
+        // Update or insert profile data and persist to JSON storage
         PlayerProfileManager.upsertProfileData(profile);
     }
 }

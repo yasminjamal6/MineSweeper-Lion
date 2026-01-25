@@ -6,5 +6,4 @@ public enum CellType {
     REGULAR,
     SURPRISE,
     QUESTION,
-    QUESTION_USED
 }

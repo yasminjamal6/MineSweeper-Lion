@@ -1,5 +1,11 @@
 package model;
 
+
+/**
+ * Represents a player avatar with an internal id, display name, and image resource path.
+ * Allows restoring an avatar by a saved id, with a fallback when no match is found.
+ */
+
 public enum Avatar {
     SIMBA("simba", "Simba", "/images/avatars/simba.png"),
     NALA("nala", "Nala", "/images/avatars/nala.png"),
