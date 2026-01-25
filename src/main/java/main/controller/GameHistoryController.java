@@ -456,6 +456,10 @@ public class GameHistoryController implements GameHistoryObserver {
         return fallback;
     }
 
+    /**
+     * DTO representing a saved game (resume) snapshot.
+     * Fields are populated from JSON. Transient fields are computed after parsing.
+     */
     private static class ResumeInfo {
         String status;
         String playerAName;
@@ -469,6 +473,11 @@ public class GameHistoryController implements GameHistoryObserver {
         transient GameSetupController.Difficulty difficultyEnum;
         transient long lastUpdatedMillis;
 
+        /**
+         * Parses the stored difficulty string into {@link GameSetupController.Difficulty}.
+         *
+         * @return parsed enum, or null if invalid
+         */
         GameSetupController.Difficulty parseDifficulty() {
             try {
                 return GameSetupController.Difficulty.valueOf(difficulty);

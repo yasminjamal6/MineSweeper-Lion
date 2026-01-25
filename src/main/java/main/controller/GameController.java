@@ -12,7 +12,6 @@ import javafx.animation.Timeline;
 import javafx.animation.ScaleTransition;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
-
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -82,7 +81,6 @@ import javafx.scene.media.AudioClip;
 import model.PlayerProfile;
 import model.ProfileStore;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.geometry.Side;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Interpolator;
@@ -161,7 +159,6 @@ public class GameController {
 
     @FXML
     private void onPause() {
-
         // If already paused -> RESUME
         if (gamePaused) {
             resumeGame();
@@ -179,7 +176,7 @@ public class GameController {
         if (pauseCss != null) {
             dialogPane.getStylesheets().add(pauseCss);
         }
-        dialogPane.getStyleClass().add("pause-dialog"); // ⭐ השורה הקריטית ⭐
+        dialogPane.getStyleClass().add("pause-dialog");
 
         alert.setTitle("Pause Game");
         alert.setHeaderText("Are you sure you want to pause the game?");
@@ -295,10 +292,6 @@ public class GameController {
         }
         updateBoardHighlight();
     }
-
-
-
-
 
     private Board boardA;
     private Board boardB;
@@ -730,16 +723,15 @@ public class GameController {
         }
     }
     private void showFloatingEmoji(String emojiChar) {
-        if (rootStack == null) return; // אצלך rootStack קיים וזה הכי טוב להשתמש בו
+        if (rootStack == null) return;
 
         Label l = new Label(emojiChar);
         l.setStyle("-fx-font-size: 44px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 14, 0.2, 0, 4);");
         l.setMouseTransparent(true);
 
-        // מוסיפים למסך
         rootStack.getChildren().add(l);
 
-        // מיקום התחלתי ליד הכפתור 😀 (כמעט)
+
         l.setTranslateX(380);
         l.setTranslateY(-260);
 
@@ -838,13 +830,12 @@ public class GameController {
 
         ContextMenu menu = new ContextMenu();
 
-        // ✅ עיצוב של ה-popup עצמו
+
         menu.getStyleClass().add("emoji-menu");
 
-        // ✅ להוסיף CSS לתפריט
+
         String css = ResourceUtils.externalForm(getClass(), "/css/emoji-menu.css");
         if (css != null && !menu.getScene().getStylesheets().contains(css)) {
-            // workaround: לטעון ל-scene של הכפתור (בטוח עובד)
             Scene scene = emojiBtn.getScene();
             if (scene != null && !scene.getStylesheets().contains(css)) {
                 scene.getStylesheets().add(css);
@@ -907,13 +898,13 @@ public class GameController {
     private void loadActiveProfileIfNeeded() {
         if (activeProfile != null) return;
 
-        // אם המשחק כבר התחיל ויש פרופילים – קח לפי התור
+
         if (profileA != null && profileB != null) {
             activeProfile = isPlayerATurn ? profileA : profileB;
             return;
         }
 
-        // fallback (אם משום מה עוד לא נטענו)
+        // fallback
         String name = GameSetupController.selectedPlayerAName;
         if (name == null || name.isBlank()) name = "Player";
         activeProfile = ProfileStore.loadOrCreate(name);
@@ -1230,7 +1221,7 @@ public class GameController {
             });
         }
         Platform.runLater(() -> {
-            Scene scene = boardAGrid.getScene(); // או כל Node אחר שיש לך בטוח בסצנה
+            Scene scene = boardAGrid.getScene();
             String pauseCss = ResourceUtils.externalForm(getClass(), "/css/pause-style.css");
             if (pauseCss != null && !scene.getStylesheets().contains(pauseCss)) {
                 scene.getStylesheets().add(pauseCss);
@@ -1383,9 +1374,6 @@ public class GameController {
         startNewGameFlow();
     }
 
-
-
-
     private void startTimer() {
         if (timerLabel == null) {
             return;
@@ -1520,8 +1508,8 @@ public class GameController {
 
 
         if (result == RevealResult.HIT_MINE) {
-            playBoomSound();                // 🔊 סאונד
-            playBoomAnimation(cellButton, isBoardA); // 💥 אנימציה
+            playBoomSound();
+            playBoomAnimation(cellButton, isBoardA);
 
 
             lives--;
@@ -1937,7 +1925,7 @@ public class GameController {
             dialog.initOwner(scoreLabel.getScene().getWindow());
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initStyle(StageStyle.UNDECORATED);
-            dialog.setTitle("שאלת טריוויה");
+            dialog.setTitle("Trivia question");
 
             Scene scene = new Scene(root);
             dialog.setScene(scene);
@@ -2290,7 +2278,7 @@ public class GameController {
             boolean wasFull = i < previousLives;
             boolean isFullNow = i < lives;
 
-            // לב שעכשיו הפך ממלא לריק
+
             if (wasFull && !isFullNow) {
                 playHeartLostAnimation(node);
             }
@@ -2322,7 +2310,7 @@ public class GameController {
         }
         updateDangerBanner();
 
-        // לזכור למהלך הבא
+
         previousLives = lives;
     }
 
@@ -2390,7 +2378,7 @@ public class GameController {
         updateLivesUI(diff);
 
 
-        // אם ההפתעה גמרה את כל הלבבות – מיד מסיימים משחק, בלי פופאפ
+
         checkGameOver();
         if (lives <= 0) {
             return;
@@ -2415,7 +2403,7 @@ public class GameController {
                 controller.setData(change);
 
                 Stage dialog = new Stage();
-                dialog.initOwner(this.root.getScene().getWindow()); // יותר בטוח מ-scoreLabel
+                dialog.initOwner(this.root.getScene().getWindow());
                 dialog.initModality(Modality.APPLICATION_MODAL);
                 dialog.initStyle(StageStyle.UNDECORATED);
 
@@ -2549,7 +2537,6 @@ public class GameController {
     // GAME OVER + RESULT SCREEN
     // -------------------------------------------------------------------------
 
-    /** כמה נקודות שווה כל לב שנשאר בסוף המשחק לפי רמת קושי */
     private int getHeartToPointsValue(model.Difficulty diff) {
         return switch (diff) {
             case EASY   -> 5;
@@ -2558,7 +2545,7 @@ public class GameController {
         };
     }
 
-    /** האם כל המוקשים על לוח מסוים נחשפו (דגלים על מוקשים נספרים כחשופים) */
+
     private boolean areAllMinesRevealed(Board board) {
         int rows = board.getRows();
         int cols = board.getCols();
@@ -2600,7 +2587,7 @@ public class GameController {
         if (!noHeartsLeft && !win) {
             return;
         }
-        // ⬅️ עדכון מתנת פרופיל רק כשבאמת ניצחון (ולא כל פעם שלוח אחד נסגר)
+
         if (win) {
             awardWinForGiftProgress();
         }
@@ -2669,7 +2656,7 @@ public class GameController {
             Stage dialog = new Stage();
             dialog.setTitle("Game Result");
 
-            // הבעלים הוא חלון המשחק
+
             dialog.initOwner(root.getScene().getWindow());
             dialog.initModality(Modality.WINDOW_MODAL);
 
@@ -3191,7 +3178,7 @@ public class GameController {
         ft.play();
         rotate.play();
 
-        // בסוף נחזיר שקיפות/רוטציה למצב תקין
+
         ft.setOnFinished(e -> {
             boomNode.setOpacity(1.0);
             boomNode.setRotate(0);

@@ -80,6 +80,7 @@ public class GameSetupController {
     @FXML private CheckBox playerBAICheckbox;
     @FXML private StackPane root;
 
+    /** Mapping between difficulty and its accordion pane for fast lookup/highlight. */
     private final Map<Difficulty, TitledPane> rulePanes = new EnumMap<>(Difficulty.class);
 
     @FXML
@@ -99,7 +100,7 @@ public class GameSetupController {
         setupDifficultySync();
         buildLevelRulesAccordion();
 
-        // אם המסך נפתח כשהצ׳קבוקס כבר מסומן
+        // If AI checkbox is already selected when screen opens
         onTogglePlayerBAI();
 
         if (root != null) {
@@ -111,6 +112,9 @@ public class GameSetupController {
         playIntroAnimation();
     }
 
+    /**
+     * Navigates back to the Home screen with a short fade-in transition.
+     */
     @FXML
     private void onBack(ActionEvent event) {
         try {
@@ -256,6 +260,9 @@ public class GameSetupController {
         switchSceneWithFade(event, "/view/game.fxml");
     }
 
+    /**
+     * Checks if a username string matches the allowed format.
+     */
     private boolean isValidUsernameFormat(String s) {
         return s != null && s.matches(USERNAME_REGEX);
     }
@@ -281,6 +288,10 @@ public class GameSetupController {
         return null;
     }
 
+    /**
+     * Toggles Player B AI mode:
+     * when enabled, Player B's name + avatar/theme pickers become locked and set to "Lion AI".
+     */
     @FXML
     private void onTogglePlayerBAI() {
         playerBIsAI = playerBAICheckbox != null && playerBAICheckbox.isSelected();
@@ -303,6 +314,10 @@ public class GameSetupController {
         }
     }
 
+    /**
+     * Loads an FXML view and switches the current scene root with a fade-in transition.
+     * Also locks minimum window size to prevent shrinking below the new scene's size.
+     */
     private void switchSceneWithFade(ActionEvent event, String fxmlPath) {
         try {
             var url = ResourceUtils.url(getClass(), fxmlPath);
@@ -329,6 +344,9 @@ public class GameSetupController {
         }
     }
 
+    /**
+     * Shows a styled warning alert using the project's alert CSS.
+     */
     private void showAlert(String msg) {
         Alert alert = new Alert(Alert.AlertType.WARNING, msg, ButtonType.OK);
         alert.setHeaderText(null);
@@ -345,6 +363,10 @@ public class GameSetupController {
     }
 
 
+    /**
+     * Creates a single theme button preview.
+     * Highlights the selected theme and disables themes already used by the other player.
+     */
     private Button createThemeButton(Theme theme, boolean isSelected) {
         Button btn = new Button();
         btn.setPrefSize(40, 40);
@@ -386,6 +408,10 @@ public class GameSetupController {
         }
     }
 
+    /**
+     * Rebuilds the avatar picker UI for a player.
+     * Uses ToggleButtons so only one avatar can be selected at a time.
+     */
     private void rebuildAvatarPicker(HBox box, Avatar selected, boolean isPlayerA) {
         if (box == null) return;
 
@@ -409,10 +435,14 @@ public class GameSetupController {
         }
     }
 
+    /**
+     * Creates an avatar ToggleButton with a fixed size, image/icon, and tooltip.
+     * Selecting an avatar triggers rebuilding both pickers to enforce uniqueness.
+     */
     private ToggleButton createAvatarButton(Avatar avatar, boolean isSelected, boolean isPlayerA, ToggleGroup group) {
         ToggleButton btn = new ToggleButton();
 
-        // ✅ Keep fixed size (prevents shrinking)
+        // Keep fixed size (prevents shrinking)
         btn.setPrefSize(56, 56);
         btn.setMinSize(56, 56);
         btn.setMaxSize(56, 56);
@@ -428,7 +458,7 @@ public class GameSetupController {
             btn.setText(avatar.displayName);
         }
 
-        // ✅ Tooltip back (nice UX)
+        // Tooltip back (nice UX)
         btn.setTooltip(new Tooltip(avatar.displayName));
 
         btn.setOnAction(e -> {
@@ -463,6 +493,9 @@ public class GameSetupController {
         }
     }
 
+    /**
+     * Ensures default avatars are valid and not duplicated between Player A and Player B.
+     */
     private void ensureAvatarDefaults() {
         if (selectedAvatarA == null) selectedAvatarA = Avatar.SIMBA;
         if (selectedAvatarB == null || selectedAvatarB == selectedAvatarA) {
@@ -504,6 +537,9 @@ public class GameSetupController {
         expandRuleFor(selectedDifficulty != null ? selectedDifficulty : Difficulty.EASY);
     }
 
+    /**
+     * Expands the rule pane that matches the given difficulty and updates highlight styling.
+     */
     private void expandRuleFor(Difficulty difficulty) {
         if (levelRulesAccordion == null || difficulty == null) return;
         TitledPane pane = rulePanes.get(difficulty);
@@ -513,6 +549,9 @@ public class GameSetupController {
         updateRuleHighlight(levelRulesAccordion.getExpandedPane());
     }
 
+    /**
+     * Adds/removes a CSS style class to visually highlight the currently expanded rule pane.
+     */
     private void updateRuleHighlight(TitledPane expandedPane) {
         for (TitledPane pane : rulePanes.values()) {
             pane.getStyleClass().remove("level-rule-card-selected");
@@ -522,6 +561,9 @@ public class GameSetupController {
         }
     }
 
+    /**
+     * Finds the difficulty enum that corresponds to a given accordion pane.
+     */
     private Difficulty findDifficultyForPane(TitledPane pane) {
         for (Map.Entry<Difficulty, TitledPane> entry : rulePanes.entrySet()) {
             if (entry.getValue() == pane) return entry.getKey();
@@ -529,6 +571,10 @@ public class GameSetupController {
         return null;
     }
 
+    /**
+     * Selects the correct difficulty ToggleButton programmatically
+     * (used when the user expands a rule pane directly).
+     */
     private void selectDifficultyButton(Difficulty difficulty) {
         if (difficulty == null) return;
         if (difficulty == Difficulty.EASY && easyBtn != null) easyBtn.setSelected(true);
@@ -537,6 +583,11 @@ public class GameSetupController {
         selectedDifficulty = difficulty;
     }
 
+    /**
+     * Creates a styled accordion pane describing a difficulty's rules.
+     * Includes keyboard accessibility (Enter/Space toggles expand/collapse)
+     * and a fade animation for the content when expanding.
+     */
     private TitledPane createRulePane(LevelRuleSpec spec) {
         TitledPane pane = new TitledPane();
         pane.setAnimated(true);
@@ -601,6 +652,10 @@ public class GameSetupController {
         return pane;
     }
 
+
+    /**
+     * Creates a single "rule row" line in the accordion content (icon + label/value text).
+     */
     private HBox createRuleRow(String iconText, String labelText, String valueText) {
         HBox row = new HBox(8);
         row.setAlignment(Pos.CENTER_LEFT);
@@ -617,6 +672,11 @@ public class GameSetupController {
         return row;
     }
 
+
+    /**
+     * Immutable rule specification for a difficulty level.
+     * Holds both UI metadata (title/icon) and gameplay parameters (board size, mines, etc.).
+     */
     private static final class LevelRuleSpec {
         private final Difficulty difficulty;
         private final String title;
