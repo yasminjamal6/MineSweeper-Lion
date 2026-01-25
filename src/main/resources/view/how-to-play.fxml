@@ -58,94 +58,106 @@
                             <Label fx:id="objectiveTextLabel"
                                    wrapText="true"
                                    styleClass="how-box-text"
-                                   text="Clear all safe tiles without hitting hidden bombs! Two players share hearts – stay sharp and protect your lives together."/>
+                                   text="• Reveal safe cells and avoid mines.\n• Each player has their own board and takes turns.\n• Protect your hearts and aim for the highest score."/>
                         </VBox>
 
-                        <!-- Game Elements title -->
-                        <VBox spacing="8.0">
-                            <Label fx:id="elementsTitleLabel"
-                                   text="📦  Game Elements:"
-                                   styleClass="how-section-title"/>
-                        </VBox>
-
-                        <!-- Bombs -->
+                        <!-- Controls -->
                         <VBox spacing="8.0" styleClass="bomb-box">
-                            <Label fx:id="bombsTitleLabel"
-                                   text="💣 Bombs"
+                            <Label fx:id="controlsTitleLabel"
+                                   text="🕹  Controls"
                                    styleClass="how-box-title"/>
-                            <Label fx:id="bombsTextLabel"
+                            <Label fx:id="controlsTextLabel"
                                    wrapText="true"
                                    styleClass="how-box-text"
-                                   text="Avoid bombs — revealing one loses hearts. Flagging a real bomb gives points."/>
-                        </VBox>
-
-                        <!-- Trivia questions -->
-                        <VBox spacing="8.0" styleClass="trivia-box">
-                            <Label fx:id="triviaTitleLabel"
-                                   text="❓ Trivia Questions"
-                                   styleClass="how-box-title"/>
-                            <Label fx:id="triviaTextLabel"
-                                   wrapText="true"
-                                   styleClass="how-box-text"
-                                   text="Trivia questions give rewards for correct answers and penalties for wrong ones. The impact changes by difficulty level."/>
-                        </VBox>
-
-                        <!-- Surprises -->
-                        <VBox spacing="8.0" styleClass="surprise-box">
-                            <Label fx:id="surprisesTitleLabel"
-                                   text="🎁 Surprises"
-                                   styleClass="how-box-title"/>
-                            <Label fx:id="surprisesTextLabel"
-                                   wrapText="true"
-                                   styleClass="how-box-text"
-                                   text="Surprise tiles give a random good or bad effect. They can add or remove hearts or points. Each surprise can be used once, and the effect depends on the game difficulty."/>
+                                   text="• Left click = reveal a cell.\n• Right click = place or remove Simba's Mark/flag (paw mark) on suspected mines."/>
                         </VBox>
 
                         <!-- Numbers -->
                         <VBox spacing="8.0" styleClass="numbers-box">
                             <Label fx:id="numbersTitleLabel"
-                                   text="🔢 Numbers"
+                                   text="🔢  Numbers"
                                    styleClass="how-box-title"/>
                             <Label fx:id="numbersTextLabel"
                                    wrapText="true"
                                    styleClass="how-box-text"
-                                   text="Numbers show how many bombs are around the tile. Use them to plan your moves."/>
+                                   text="• A number shows how many mines are adjacent to that cell."/>
                         </VBox>
 
-                        <!-- How to play steps -->
+                        <!-- Lives -->
+                        <VBox spacing="8.0" styleClass="trivia-box">
+                            <Label fx:id="livesTitleLabel"
+                                   text="❤️  Lives"
+                                   styleClass="how-box-title"/>
+                            <Label fx:id="livesTextLabel"
+                                   wrapText="true"
+                                   styleClass="how-box-text"
+                                   text="• You start with hearts; hitting a mine removes 1 heart.\n• When your hearts run out, you lose."/>
+                        </VBox>
+
+                        <!-- Score / Points -->
                         <VBox spacing="10.0" styleClass="how-howplay-box">
-                            <Label fx:id="howPlayTitleLabel"
-                                   text="⚡ How to Play"
+                            <Label fx:id="scoreTitleLabel"
+                                   text="🏆  Score / Points"
                                    styleClass="how-section-title"/>
-                            <VBox spacing="4.0" styleClass="how-list">
-                                <Label fx:id="step1Label"
-                                       text="1. Each player has their own board and plays on their turn."/>
-                                <Label fx:id="step2Label"
-                                       text="2. Left click = reveal a tile."/>
-                                <Label fx:id="step3Label"
-                                       text="3. Right click = place or remove a flag on a suspected bomb."/>
-                                <Label fx:id="step4Label"
-                                       text="4. Try to keep the shared hearts alive as long as possible."/>
-                                <Label fx:id="step5Label"
-                                       text="5. The winner is the player who correctly marks all bombs first."/>
-                            </VBox>
+                            <Label fx:id="scoreTextLabel"
+                                   wrapText="true"
+                                   styleClass="how-box-text"
+                                   text="• Safe reveals and steady progress add points.\n• Correct flags add points; wrong flags reduce points.\n• Trivia Questions can add or subtract points (impact scales with difficulty).\n• Mines, Risky Surprises, and using a hint reduce points."/>
                         </VBox>
 
-                        <!-- Tips -->
+                        <!-- Hints -->
+                        <VBox spacing="8.0" styleClass="objective-box">
+                            <Label fx:id="hintsTitleLabel"
+                                   text="💡  Hints"
+                                   styleClass="how-box-title"/>
+                            <Label fx:id="hintsTextLabel"
+                                   wrapText="true"
+                                   styleClass="how-box-text"
+                                   text="• Each player has exactly 2 hints per game.\n• Use the Hint button to highlight a safe cell; hints are limited and cost points."/>
+                        </VBox>
+
+                        <!-- Gift / Surprise system -->
+                        <VBox spacing="8.0" styleClass="surprise-box">
+                            <Label fx:id="surpriseTitleLabel"
+                                   text="🎁  Gift / Surprise System"
+                                   styleClass="how-box-title"/>
+                            <Label fx:id="surpriseTextLabel"
+                                   wrapText="true"
+                                   styleClass="how-box-text"
+                                   text="• Lucky Surprise can give +Lives and/or +Points.\n• Risky Surprise can subtract Lives/Points."/>
+                        </VBox>
+
+                        <!-- Difficulty -->
+                        <VBox spacing="8.0" styleClass="numbers-box">
+                            <Label fx:id="difficultyTitleLabel"
+                                   text="🧭  Difficulty"
+                                   styleClass="how-box-title"/>
+                            <Label fx:id="difficultyTextLabel"
+                                   wrapText="true"
+                                   styleClass="how-box-text"
+                                   text="• Easy / Medium / Hard — more mines means a harder game."/>
+                        </VBox>
+
+                        <!-- Profiles -->
+                        <VBox spacing="8.0" styleClass="trivia-box">
+                            <Label fx:id="profilesTitleLabel"
+                                   text="👤  Profiles"
+                                   styleClass="how-box-title"/>
+                            <Label fx:id="profilesTextLabel"
+                                   wrapText="true"
+                                   styleClass="how-box-text"
+                                   text="• Enter your profile from the Home screen.\n• Change your avatar inside the Profile page.\n• Profiles show match history and stats."/>
+                        </VBox>
+
+                        <!-- Quick tips -->
                         <VBox spacing="10.0" styleClass="how-tips-box">
                             <Label fx:id="tipsTitleLabel"
-                                   text="🏁 Tips to Win"
+                                   text="🏁  Quick Tips"
                                    styleClass="how-section-title"/>
-                            <VBox spacing="4.0" styleClass="how-list">
-                                <Label fx:id="tip1Label"
-                                       text="• Use the numbers to deduce where bombs are hidden."/>
-                                <Label fx:id="tip2Label"
-                                       text="• Think before you click — one mistake can cost a heart."/>
-                                <Label fx:id="tip3Label"
-                                       text="• Prepare for trivia questions to gain extra points."/>
-                                <Label fx:id="tip4Label"
-                                       text="• Surprises can turn the game around, so be ready!"/>
-                            </VBox>
+                            <Label fx:id="tipsTextLabel"
+                                   wrapText="true"
+                                   styleClass="how-box-text"
+                                   text="• Use flags to track suspected mines.\n• Don't rush—clear safe areas step by step.\n• Save hints for tough moments."/>
                         </VBox>
 
                         <!-- Bottom button -->

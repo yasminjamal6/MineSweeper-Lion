@@ -46,7 +46,7 @@ public class ResultController {
 
     @FXML
     private void initialize() {
-        // אנימציית Fade-In קלה לכל המסך
+        // Subtle fade-in for the result dialog.
         if (root != null) {
             root.setOpacity(0);
             FadeTransition ft = new FadeTransition(Duration.millis(250), root);
@@ -205,7 +205,7 @@ public class ResultController {
     // ============================
     private void switchMainStageScene(String fxmlPath) {
         try {
-            // זה חלון התוצאה הקטן (dialog)
+            // This is the small result dialog window.
             Stage dialogStage = (Stage) root.getScene().getWindow();
             Window owner = dialogStage.getOwner();
 
@@ -225,15 +225,15 @@ public class ResultController {
                     scene.setRoot(newRoot);
                 }
 
-                // להתאים גודל חלון לגודל המסך החדש
+                // Match window size to the new scene.
                 mainStage.sizeToScene();
                 mainStage.setMinWidth(mainStage.getWidth());
                 mainStage.setMinHeight(mainStage.getHeight());
 
-                // לסגור את חלון התוצאה
+                // Close the result dialog.
                 dialogStage.close();
             } else {
-                // במקרה שאין owner (למשל כשמריצים רק את ה־FXML לבד)
+                // Fallback when there is no owner (e.g., standalone FXML).
                 Scene scene = dialogStage.getScene();
                 scene.setRoot(newRoot);
                 dialogStage.sizeToScene();

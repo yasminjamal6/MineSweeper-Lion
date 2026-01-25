@@ -131,14 +131,14 @@ public class QuestionManagerController {
                             if (alertCss != null) {
                                 dp.getStylesheets().add(alertCss);
                             }
-                            dp.getStyleClass().add("del-dialog");   // זה ה-class שנעצב ב-CSS
+                            dp.getStyleClass().add("del-dialog");   // Styled in CSS.
 
-// כפתורים עם טקסט ברור
+                            // Use explicit button labels.
                             ButtonType deleteType = new ButtonType("Delete", ButtonBar.ButtonData.YES);
                             ButtonType cancelType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
                             confirm.getButtonTypes().setAll(cancelType, deleteType);
 
-// לתת "Delete" כ-default (אם את רוצה ש-Enter ימחק) - אופציונלי:
+                            // Default to "Delete" so Enter confirms.
                             Button deleteBtnNode = (Button) dp.lookupButton(deleteType);
                             deleteBtnNode.setDefaultButton(true);
 
@@ -190,7 +190,7 @@ public class QuestionManagerController {
     }
 
     /**
-     * Temporary placeholder for add question button.
+     * Handles adding a new question via the dialog.
      */
     @FXML
     private void onAddQuestion(ActionEvent e) {
