@@ -1,8 +1,13 @@
 package main.controller;
 
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
+import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
+import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -11,7 +16,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.util.ResourceUtils;
 import model.Question;
-import javafx.animation.*;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -118,7 +122,7 @@ public class QuestionController {
             secondsLeft--;
             timerLabel.setText(String.valueOf(secondsLeft));
 
-            // ⚠️ Pressure mode: 10 seconds left
+            // Pressure mode starts at 10 seconds.
             if (secondsLeft <= 10) {
                 activateTimerPressure();
             }
@@ -133,12 +137,12 @@ public class QuestionController {
         timeline.play();
     }
     private void activateTimerPressure() {
-        // צבע אדום (רק פעם אחת)
+        // Apply the warning color once.
         if (!timerLabel.getStyleClass().contains("timer-danger")) {
             timerLabel.getStyleClass().add("timer-danger");
         }
 
-        // אם האנימציה כבר רצה – לא ליצור שוב
+        // Avoid recreating the pulse animation if it is already active.
         if (timerPulse != null) return;
 
         timerPulse = new ScaleTransition(Duration.millis(300), timerLabel);

@@ -79,8 +79,8 @@ public class ProfileController {
     private final ObservableList<MatchRecord> matches = FXCollections.observableArrayList();
     private static final DateTimeFormatter DISPLAY_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    private PlayerProfile viewerProfile;     // השחקן המחובר (Session)
-    private PlayerProfile opponentProfile;   // יריב אחרון מהיסטוריה
+    private PlayerProfile viewerProfile;     // Active session player
+    private PlayerProfile opponentProfile;   // Last opponent from history
 
     @FXML
     private void initialize() {
@@ -189,7 +189,7 @@ public class ProfileController {
                 if (profile.selectAvatar(avatarId)) {
                     ProfileStore.save(profile);
 
-                    // גם לשמור ב-PlayerProfileManager כדי שהאווטאר יוצג נכון במסך עצמו
+                    // Keep PlayerProfileManager in sync so avatars render correctly across screens.
                     PlayerProfileManager.getOrCreateProfile(profile.getPlayerName(), profile.getSelectedAvatarId());
 
                     viewerProfile = ProfileStore.loadOrCreate(profile.getPlayerName());
@@ -263,7 +263,7 @@ public class ProfileController {
     // ================= NAV =================
     @FXML
     private void onOpenShop(ActionEvent event) {
-        // חשוב: החנות תטען לפי Session, אז מעדכנים אותו לפי השחקן שנבחר
+        // The shop loads the active session player, so keep it in sync.
         if (viewerProfile != null) {
             Session.setActivePlayerName(viewerProfile.getPlayerName());
         }
@@ -405,9 +405,9 @@ public class ProfileController {
         p.ensureDefaults();
         if (!p.isGiftReady()) return;
 
-        giveRandomGiftTo(p); // אותה לוגיקה כמו ב-HomeController
+        giveRandomGiftTo(p); // Same reward logic as HomeController.
 
-        p.consumeGift();     // מאפס winsSinceGift ל-0
+        p.consumeGift();     // Reset winsSinceGift after redeeming.
         ProfileStore.save(p);
         renderProfileAreaFor(p, coinsLabel, selectedAvatarLabel, avatarsHintLabel, avatarsFlow, shopBtn, true);
         refreshGiftArea(p, giftProgressLabel, giftProgressBar, openGiftBtn, true);

@@ -48,8 +48,8 @@ public class ShopController {
 
     @FXML
     private void initialize() {
-        // אם יש לכם root ב-FXML אפשר גם להחיל עליו theme כמו אצלכם.
-        // כאן אנחנו לא צריכים fx:id לשורש, כי אתם מחילים Theme על newRoot אחרי load.
+        // If there is a root in FXML, theme can be applied there as well.
+        // Here the theme is applied after loading the new root, so no fx:id is required.
 
 
         String name = Session.getActivePlayerName();
@@ -129,7 +129,7 @@ public class ShopController {
             tileItems.getChildren().add(createCard(item));
         }
 
-        // אם היה נבחר קודם – נעדכן preview
+        // Keep the preview in sync if an item was already selected.
         if (selectedItem != null) {
             setSelectedItem(selectedItem);
         }
@@ -223,7 +223,7 @@ public class ShopController {
         if (result == PurchaseResult.SUCCESS) {
             ProfileStore.save(profile);
 
-            // ✅ חשוב: לעדכן גם את ה-Manager בזיכרון כדי שהProfileController יראה את זה מיד
+            // Keep the in-memory manager in sync so ProfileController updates immediately.
             PlayerProfileManager.upsertProfileData(profile);
         }
 
@@ -258,11 +258,11 @@ public class ShopController {
 
     @FXML
     private void onBack(ActionEvent event) {
-        // חוזרים ל-Setup באותה צורה כמו אצלכם
+        // Return to setup using the same flow as other screens.
         switchSceneWithFade(event, "/view/game-setup-view.fxml");
     }
 
-    // אותו helper כמו אצלכם (בסגנון GameSetupController)
+    // Helper aligned with GameSetupController's transition style.
     private void switchSceneWithFade(ActionEvent event, String fxmlPath) {
         try {
             var url = ResourceUtils.url(getClass(), fxmlPath);
@@ -270,7 +270,7 @@ public class ShopController {
 
             Parent newRoot = new FXMLLoader(url).load();
 
-            // theme + language כמו בשאר המסכים
+            // Apply theme and language settings like other screens.
             SettingsController.applyThemeToRoot(newRoot);
             SettingsController.refreshLanguageOnAllWindows();
 

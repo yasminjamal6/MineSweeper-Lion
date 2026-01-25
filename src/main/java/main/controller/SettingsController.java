@@ -95,14 +95,14 @@ public class SettingsController {
         }
     }
 
-    /** משנה טקסטים *בכל* החלונות לפי השפה שנבחרה */
+    /** Updates UI text in all open windows based on the selected language. */
     public static void refreshLanguageOnAllWindows() {
         for (Window window : Window.getWindows()) {
             Scene scene = window.getScene();
             if (scene == null) continue;
 
             Parent root = scene.getRoot();
-// אם זה חלון ההגדרות – להפוך כיוון לימין-לשמאל בעברית
+            // If this is the settings window, flip direction for Hebrew.
             Parent settingsRootNode = (Parent) root.lookup("#settingsRoot");
             if (settingsRootNode != null) {
                 settingsRootNode.setNodeOrientation(
@@ -110,7 +110,7 @@ public class SettingsController {
                 );
             }
 
-            // ----- מסך הבית -----
+            // ----- Home screen -----
             Label title = (Label) root.lookup("#titleLabel");
             Label subtitle = (Label) root.lookup("#subtitleLabel");
             Button startBtn = (Button) root.lookup("#startButton");
@@ -119,7 +119,7 @@ public class SettingsController {
             Button profilesBtn = (Button) root.lookup("#profilesButton");
             Button howBtn = (Button) root.lookup("#howButton");
 
-            // ----- חלון ההגדרות -----
+            // ----- Settings window -----
             Label settingsTitle = (Label) root.lookup("#settingsTitleLabel");
             Label soundLabel = (Label) root.lookup("#soundLabel");
             Label themeLabel = (Label) root.lookup("#themeLabel");
@@ -128,7 +128,7 @@ public class SettingsController {
             Label brightnessLabel = (Label) root.lookup("#brightnessLabel");
             Button closeSettingsBtn = (Button) root.lookup("#closeSettingsBtn");
 
-            // ===== מסך ה-Game Setup =====
+            // ===== Game Setup screen =====
             Parent gameSetupRoot = (Parent) root.lookup("#gameSetupRoot");
             if (gameSetupRoot != null) {
                 gameSetupRoot.setNodeOrientation(
@@ -160,7 +160,7 @@ public class SettingsController {
 
 
             if (hebrew) {
-                // בית
+                // Home
                 if (title != null)      title.setText("מיינסוויפר חכם");
                 if (subtitle != null)   subtitle.setText("🌟 טריוויה אגדה מהסוואנה! 🌟");
                 if (startBtn != null)   startBtn.setText("התחל הרפתקה");
@@ -169,7 +169,7 @@ public class SettingsController {
                 if (profilesBtn != null) profilesBtn.setText("פרופילי שחקן");
                 if (howBtn != null)     howBtn.setText("איך משחקים?");
 
-                // הגדרות
+                // Settings
                 if (settingsTitle != null)   settingsTitle.setText("הגדרות ⚙");
                 if (soundLabel != null)      soundLabel.setText("צליל:");
                 if (themeLabel != null)      themeLabel.setText("ערכת נושא:");
@@ -178,7 +178,7 @@ public class SettingsController {
                 if (brightnessLabel != null) brightnessLabel.setText("בהירות");
                 if (closeSettingsBtn != null) closeSettingsBtn.setText("סגור");
 
-                // ---- Game Setup – עברית ----
+                // ---- Game Setup (Hebrew) ----
                 if (setupTitleLabel != null)     setupTitleLabel.setText("הכנת המאורה");
                 if (setupSubtitleLabel != null)  setupSubtitleLabel.setText("הכינו את האריות לאתגר!");
                 if (playerATitleLabel != null)   playerATitleLabel.setText("שחקן א' 🦁");
@@ -202,7 +202,7 @@ public class SettingsController {
 
 
             } else {
-                // בית
+                // Home
                 if (title != null)      title.setText("Mine Sweeper Smart");
                 if (subtitle != null)   subtitle.setText("🌟 Legendary trivia from the savanna! 🌟");
                 if (startBtn != null)   startBtn.setText("Start Adventure");
@@ -211,7 +211,7 @@ public class SettingsController {
                 if (profilesBtn != null) profilesBtn.setText("Player Profiles");
                 if (howBtn != null)     howBtn.setText("How to Play?");
 
-                // הגדרות
+                // Settings
                 if (settingsTitle != null)   settingsTitle.setText("Settings ⚙");
                 if (soundLabel != null)      soundLabel.setText("Sound:");
                 if (themeLabel != null)      themeLabel.setText("Theme:");
@@ -221,7 +221,7 @@ public class SettingsController {
                 if (closeSettingsBtn != null) closeSettingsBtn.setText("Close");
 
 
-                // ---- Game Setup – English ----
+                // ---- Game Setup (English) ----
                 if (setupTitleLabel != null)     setupTitleLabel.setText("Prepare the Den");
                 if (setupSubtitleLabel != null)  setupSubtitleLabel.setText("Get your lions ready for the challenge!");
                 if (playerATitleLabel != null)   playerATitleLabel.setText("Player A 🦁");
@@ -246,7 +246,7 @@ public class SettingsController {
         }
     }
 
-    /* ---------- מוזיקה ---------- */
+    /* ---------- Audio ---------- */
 
     private void initClipIfNeeded() {
         if (bgClip != null) return;
@@ -294,7 +294,7 @@ public class SettingsController {
         }
     }
 
-    /* ---------- עזר לכפתור שפה ---------- */
+    /* ---------- Language toggle helper ---------- */
 
     private void updateLanguageToggleText() {
         if (languageToggle != null) {
@@ -342,7 +342,7 @@ public class SettingsController {
             });
         }
 
-        // Fullscreen (כרגע רק טקסט)
+        // Fullscreen (text-only toggle for now)
         if (fullscreenToggle != null) {
             fullscreenToggle.setSelected(false);
             fullscreenToggle.setText("OFF");
@@ -391,7 +391,7 @@ public class SettingsController {
             });
         }
 
-        // כשנכנסים להגדרות – לעדכן טקסטים לפי השפה הנוכחית
+        // Sync text labels to the current language when entering settings.
         refreshLanguageOnAllWindows();
     }
 
