@@ -28,6 +28,8 @@ import model.Theme;
 import model.ThemeColors;
 import model.Session;
 
+import java.nio.file.Path;
+import java.util.EnumMap;
 import java.util.List;
 
 public class GameSetupController {
@@ -37,6 +39,7 @@ public class GameSetupController {
     public static Difficulty selectedDifficulty = Difficulty.EASY;
     public static String selectedPlayerAName;
     public static String selectedPlayerBName;
+    public static Path pendingResumePath;
 
     public static Avatar selectedAvatarA = Avatar.SIMBA;
     public static Avatar selectedAvatarB = Avatar.NALA;

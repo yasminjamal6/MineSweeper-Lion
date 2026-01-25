@@ -1,6 +1,5 @@
 package main.controller;
 
-import com.google.gson.Gson;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -18,16 +17,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import model.Avatar;
 import model.GameHistory;
 import model.GameHistoryManager;
 import model.Difficulty;
-import model.Theme;
-import model.ThemeColors;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -54,12 +47,9 @@ public class GameHistoryController implements GameHistoryObserver {
     @FXML private TableColumn<GameHistory, String> resultCol;
     @FXML private TableColumn<GameHistory, Number> durationCol;  //not yet implemented in this iteration
     @FXML private TextField searchField;
-    @FXML private HBox resumeCard;
-    @FXML private Button resumeBtn;
     @FXML private TableColumn<GameHistory, Void> actionsCol;
 
     private ObservableList<GameHistory> masterData;
-    private ResumeInfo availableResume;
 
 
     @FXML private Label totalGamesLabel;
@@ -217,15 +207,6 @@ public class GameHistoryController implements GameHistoryObserver {
         // ---- Entrance animations ----
         playEntranceAnimations();
 
-        availableResume = findResume();
-        boolean hasSaved = availableResume != null;
-        if (resumeCard != null) {
-            resumeCard.setVisible(hasSaved);
-            resumeCard.setManaged(hasSaved);
-        }
-        if (resumeBtn != null) {
-            resumeBtn.setDisable(!hasSaved);
-        }
     }
     private void setupActionsColumn() {
         if (actionsCol == null) return;
@@ -381,110 +362,6 @@ public class GameHistoryController implements GameHistoryObserver {
         Parent root = FXMLLoader.load(url);
         Scene scene = ((Node) event.getSource()).getScene();
         scene.setRoot(root);
-    }
-
-    @FXML
-    private void onResumeSavedGame(ActionEvent event) throws IOException {
-        if (availableResume == null) {
-            return;
-        }
-
-        GameSetupController.selectedPlayerAName = availableResume.playerAName;
-        GameSetupController.selectedPlayerBName = availableResume.playerBName;
-        GameSetupController.selectedDifficulty = availableResume.difficultyEnum;
-        GameSetupController.selectedThemeA = findThemeById(availableResume.playerAThemeId, GameSetupController.selectedThemeA);
-        GameSetupController.selectedThemeB = findThemeById(availableResume.playerBThemeId, GameSetupController.selectedThemeB);
-        GameSetupController.selectedAvatarA = Avatar.fromId(availableResume.playerAAvatarId, GameSetupController.selectedAvatarA);
-        GameSetupController.selectedAvatarB = Avatar.fromId(availableResume.playerBAvatarId, GameSetupController.selectedAvatarB);
-        GameSetupController.skipResumePrompt = true;
-
-        var url = ResourceUtils.url(getClass(), "/view/game.fxml");
-        if (url == null) {
-            return;
-        }
-        Parent root = FXMLLoader.load(url);
-        Scene scene = ((Node) event.getSource()).getScene();
-        scene.setRoot(root);
-    }
-
-    private ResumeInfo findResume() {
-        try {
-            Path dir = Paths.get(System.getProperty("user.home"), ".minesweeper-lion");
-            if (!Files.exists(dir)) {
-                return null;
-            }
-            try (var stream = Files.list(dir)) {
-                Optional<ResumeInfo> latest = stream
-                        .filter(p -> p.getFileName().toString().endsWith(".json"))
-                        .map(this::readResumeInfo)
-                        .filter(r -> r != null)
-                        .max((a, b) -> Long.compare(a.lastUpdatedMillis, b.lastUpdatedMillis));
-                return latest.orElse(null);
-            }
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private ResumeInfo readResumeInfo(Path path) {
-        try (var reader = Files.newBufferedReader(path)) {
-            Gson gson = new Gson();
-            ResumeInfo info = gson.fromJson(reader, ResumeInfo.class);
-            if (info == null || info.status == null || !"IN_PROGRESS".equalsIgnoreCase(info.status)) {
-                return null;
-            }
-            info.difficultyEnum = info.parseDifficulty();
-            try {
-                info.lastUpdatedMillis = Files.getLastModifiedTime(path).toMillis();
-            } catch (Exception ignored) {
-                info.lastUpdatedMillis = 0;
-            }
-            return info.difficultyEnum != null ? info : null;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private Theme findThemeById(String id, Theme fallback) {
-        if (id != null) {
-            for (Theme t : ThemeColors.themes) {
-                if (id.equals(t.id)) {
-                    return t;
-                }
-            }
-        }
-        return fallback;
-    }
-
-    /**
-     * DTO representing a saved game (resume) snapshot.
-     * Fields are populated from JSON. Transient fields are computed after parsing.
-     */
-    private static class ResumeInfo {
-        String status;
-        String playerAName;
-        String playerBName;
-        String difficulty;
-        String playerAThemeId;
-        String playerBThemeId;
-        String playerAAvatarId;
-        String playerBAvatarId;
-
-        transient GameSetupController.Difficulty difficultyEnum;
-        transient long lastUpdatedMillis;
-
-        /**
-         * Parses the stored difficulty string into {@link GameSetupController.Difficulty}.
-         *
-         * @return parsed enum, or null if invalid
-         */
-        GameSetupController.Difficulty parseDifficulty() {
-            try {
-                return GameSetupController.Difficulty.valueOf(difficulty);
-            } catch (Exception e) {
-                return null;
-            }
-        }
     }
 
 }

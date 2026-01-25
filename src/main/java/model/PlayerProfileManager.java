@@ -21,7 +21,8 @@ import java.util.Map;
 
 public class PlayerProfileManager {
 
-    private static final Path PROFILE_PATH = Paths.get("data", "player-profiles.json");
+    private static final Path DATA_DIR = Paths.get(System.getProperty("user.home"), ".minesweeper-lion");
+    private static final Path PROFILE_PATH = DATA_DIR.resolve("player-profiles.json");
     private static final Path HISTORY_PATH = Paths.get("data", "game-history.csv");
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -277,7 +278,7 @@ public class PlayerProfileManager {
     private static void loadFromFile() {
         try {
             if (!Files.exists(PROFILE_PATH)) {
-                Files.createDirectories(PROFILE_PATH.getParent());
+                Files.createDirectories(DATA_DIR);
                 saveToFile();
                 return;
             }
@@ -298,7 +299,7 @@ public class PlayerProfileManager {
 
     private static void saveToFile() {
         try {
-            Files.createDirectories(PROFILE_PATH.getParent());
+            Files.createDirectories(DATA_DIR);
             try (BufferedWriter writer = Files.newBufferedWriter(PROFILE_PATH, StandardCharsets.UTF_8)) {
                 GSON.toJson(new ArrayList<>(PROFILES.values()), writer);
             }

@@ -65,6 +65,27 @@
     -fx-background-color: rgba(0, 0, 0, 0.75);
 }
 
+.resume-alert .graphic-container {
+    -fx-padding: 0;
+    visibility: hidden;
+}
+
+.resume-alert .header-panel > .graphic-container {
+    visibility: hidden;
+    -fx-max-width: 0;
+    -fx-max-height: 0;
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+}
+
+.resume-alert .header-panel {
+    -fx-background-color: transparent;
+}
+
+.resume-alert .content {
+    -fx-background-color: transparent;
+}
+
 /* =========================
    DELETE CONFIRMATION ALERT
    ========================= */
