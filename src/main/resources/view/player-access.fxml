@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/23"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="main.controller.PlayerAccessController"
+      stylesheets="@/css/alert.css"
+      styleClass="admin-dialog"
+      spacing="12"
+      prefWidth="420.0">
+
+    <children>
+        <VBox styleClass="header-panel" spacing="4">
+            <Label text="Only the rightful owner may enter."/>
+        </VBox>
+
+        <VBox styleClass="content" spacing="8">
+            <Label text="Enter your username to view your profile:"/>
+            <PasswordField fx:id="usernameField" promptText="Username"/>
+            <Label fx:id="errorLabel" text="Incorrect username." styleClass="access-error"/>
+        </VBox>
+
+        <HBox alignment="CENTER_RIGHT" spacing="10">
+            <Button text="Cancel" onAction="#onCancel"/>
+            <Button text="Enter" defaultButton="true" onAction="#onEnter"/>
+        </HBox>
+    </children>
+</VBox>
