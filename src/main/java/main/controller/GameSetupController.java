@@ -579,6 +579,12 @@ public class GameSetupController {
     private void showRulesPopup(String title, LevelQuestionRules rules) {
         helpPopupTitle.setText(title);
         helpPopupContent.getChildren().clear();
+        helpPopupContent.getChildren().addAll(
+                createSectionTitle("Level Overview"),
+                createLevelOverview(rules.difficulty),
+                createSectionDivider(),
+                createSectionTitle("Question Types Effects")
+        );
         for (QuestionTypeRule rule : rules.rules) {
             helpPopupContent.getChildren().add(createQuestionRuleCard(rule));
         }
@@ -596,13 +602,13 @@ public class GameSetupController {
     }
 
     private VBox createQuestionRuleCard(QuestionTypeRule rule) {
-        VBox card = new VBox(6);
+        VBox card = new VBox(5);
         card.getStyleClass().add("question-rule-card");
 
         Label title = new Label(rule.type.displayName);
         title.getStyleClass().add("question-rule-title");
 
-        VBox rows = new VBox(6);
+        VBox rows = new VBox(5);
         rows.getChildren().addAll(
                 createOutcomeRow(rule.correct),
                 createOutcomeRow(rule.wrong)
@@ -628,6 +634,84 @@ public class GameSetupController {
 
         row.getChildren().addAll(tag, text);
         return row;
+    }
+
+    private Label createSectionTitle(String text) {
+        Label label = new Label(text);
+        label.getStyleClass().add("help-popup-subtitle");
+        return label;
+    }
+
+    private Separator createSectionDivider() {
+        Separator separator = new Separator();
+        separator.getStyleClass().add("help-popup-divider");
+        return separator;
+    }
+
+    private VBox createLevelOverview(Difficulty difficulty) {
+        VBox box = new VBox(4);
+        box.getStyleClass().add("help-popup-overview");
+
+        model.Difficulty modelDifficulty = toModelDifficulty(difficulty);
+        String board = "—";
+        String mines = "—";
+        String questions = "—";
+        String surprises = "—";
+        String hearts = "—";
+        String cost = "—";
+        String surpriseEffect = "—";
+
+        if (modelDifficulty != null) {
+            board = modelDifficulty.getRows() + "x" + modelDifficulty.getCols();
+            mines = String.valueOf(modelDifficulty.getMines());
+            questions = String.valueOf(modelDifficulty.getQuestionCells());
+            surprises = String.valueOf(modelDifficulty.getSurpriseCells());
+            hearts = String.valueOf(modelDifficulty.getInitialLives());
+            cost = modelDifficulty.getActivationCostPoints() + " points";
+            int goodPoints = modelDifficulty.getSurpriseGoodPoints();
+            int badPoints = Math.abs(modelDifficulty.getSurpriseBadPoints());
+            surpriseEffect = "+1 heart & +" + goodPoints + " points, or -1 heart & -" + badPoints + " points";
+        } else {
+            // TODO: Fill missing overview values if model difficulty cannot be resolved.
+        }
+
+        box.getChildren().addAll(
+                createOverviewRow("🧩", "Board: " + board),
+                createOverviewRow("💣", "Mines: " + mines),
+                createOverviewRow("❓", "Questions: " + questions),
+                createOverviewRow("🎁", "Surprise: " + surprises),
+                createOverviewRow("❤️", "Hearts: " + hearts),
+                createOverviewRow("💰", "Cost: " + cost),
+                createOverviewRow("✨", "Surprise effect: " + surpriseEffect)
+        );
+        return box;
+    }
+
+    private HBox createOverviewRow(String iconText, String valueText) {
+        HBox row = new HBox(10);
+        row.getStyleClass().add("help-popup-row");
+        row.setAlignment(Pos.CENTER_LEFT);
+
+        Label icon = new Label(iconText);
+        icon.getStyleClass().add("help-popup-row-icon");
+
+        Label text = new Label(valueText);
+        text.getStyleClass().add("help-popup-row-text");
+        text.setWrapText(true);
+        text.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(text, Priority.ALWAYS);
+
+        row.getChildren().addAll(icon, text);
+        return row;
+    }
+
+    private model.Difficulty toModelDifficulty(Difficulty difficulty) {
+        if (difficulty == null) return null;
+        try {
+            return model.Difficulty.valueOf(difficulty.name());
+        } catch (IllegalArgumentException ignored) {
+            return null;
+        }
     }
 
 

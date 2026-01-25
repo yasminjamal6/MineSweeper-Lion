@@ -193,7 +193,7 @@
                    styleClass="help-popup-root"
                    visible="false"
                    managed="false">
-            <VBox fx:id="helpPopupCard" styleClass="help-popup-card" spacing="12">
+            <VBox fx:id="helpPopupCard" styleClass="help-popup-card" spacing="10">
                 <HBox alignment="CENTER_LEFT" spacing="12">
                     <Label fx:id="helpPopupTitle"
                            styleClass="help-popup-title"
@@ -210,7 +210,7 @@
                             hbarPolicy="NEVER"
                             vbarPolicy="AS_NEEDED">
                     <content>
-                        <VBox fx:id="helpPopupContent" spacing="8" styleClass="help-popup-content"/>
+                        <VBox fx:id="helpPopupContent" spacing="6" styleClass="help-popup-content"/>
                     </content>
                 </ScrollPane>
             </VBox>

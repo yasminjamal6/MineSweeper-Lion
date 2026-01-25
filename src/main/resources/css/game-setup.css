@@ -282,9 +282,10 @@ GLOBAL FONT
     -fx-border-radius: 18;
     -fx-border-color: rgba(222, 170, 60, 0.9);
     -fx-border-width: 1.6;
-    -fx-padding: 16 18 18 18;
+    -fx-padding: 14 16 16 16;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 24, 0.55, 0, 6);
     -fx-max-width: 520;
+    -fx-max-height: 460;
 }
 
 .help-popup-title {
@@ -293,10 +294,25 @@ GLOBAL FONT
     -fx-font-weight: bold;
 }
 
+.help-popup-subtitle {
+    -fx-text-fill: #4b3213;
+    -fx-font-size: 12.5;
+    -fx-font-weight: bold;
+}
+
+.help-popup-divider {
+    -fx-opacity: 0.45;
+    -fx-padding: 2 0 2 0;
+}
+
+.help-popup-divider .line {
+    -fx-border-color: rgba(222, 170, 60, 0.6);
+}
+
 .help-popup-row {
     -fx-background-color: rgba(255, 244, 224, 0.8);
     -fx-background-radius: 10;
-    -fx-padding: 6 10;
+    -fx-padding: 5 8;
 }
 
 .help-popup-row-icon {
@@ -328,15 +344,41 @@ GLOBAL FONT
 
 .help-popup-card .scroll-pane {
     -fx-background-color: transparent;
-    -fx-max-height: 360;
+    -fx-max-height: 330;
 }
 
 .help-popup-card .scroll-pane .viewport {
     -fx-background-color: transparent;
 }
 
+.help-popup-card .scroll-bar:vertical {
+    -fx-pref-width: 8;
+    -fx-background-color: transparent;
+}
+
+.help-popup-card .scroll-bar:vertical .track {
+    -fx-background-color: rgba(222, 170, 60, 0.12);
+    -fx-background-radius: 999;
+}
+
+.help-popup-card .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(120, 53, 15, 0.35);
+    -fx-background-radius: 999;
+}
+
+.help-popup-card .scroll-bar:vertical .increment-button,
+.help-popup-card .scroll-bar:vertical .decrement-button {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.help-popup-card .scroll-bar:vertical .increment-arrow,
+.help-popup-card .scroll-bar:vertical .decrement-arrow {
+    -fx-opacity: 0;
+}
+
 .help-popup-content {
-    -fx-padding: 4 2 6 2;
+    -fx-padding: 2 2 4 2;
 }
 
 /* Question rules cards */
@@ -346,7 +388,7 @@ GLOBAL FONT
     -fx-border-radius: 12;
     -fx-border-color: rgba(222, 170, 60, 0.7);
     -fx-border-width: 1.2;
-    -fx-padding: 8 10 10 10;
+    -fx-padding: 7 9 8 9;
 }
 
 .question-rule-title {
@@ -360,7 +402,7 @@ GLOBAL FONT
     -fx-background-radius: 8;
     -fx-border-radius: 8;
     -fx-border-width: 1;
-    -fx-padding: 6 8;
+    -fx-padding: 5 8;
 }
 
 .question-rule-row-correct {
@@ -376,7 +418,7 @@ GLOBAL FONT
     -fx-text-fill: #5c3a12;
     -fx-font-size: 11.5;
     -fx-font-weight: bold;
-    -fx-padding: 2 8;
+    -fx-padding: 2 7;
     -fx-background-radius: 999;
     -fx-border-radius: 999;
     -fx-min-width: 54;
@@ -781,6 +823,14 @@ GLOBAL FONT
     -fx-text-fill: #fef9c3;
 }
 
+.dark-mode .help-popup-subtitle {
+    -fx-text-fill: #f1d7a6;
+}
+
+.dark-mode .help-popup-divider .line {
+    -fx-border-color: rgba(250, 204, 21, 0.4);
+}
+
 .dark-mode .help-popup-row {
     -fx-background-color: rgba(14, 10, 6, 0.75);
 }
@@ -793,6 +843,14 @@ GLOBAL FONT
     -fx-background-color: rgba(250, 204, 21, 0.1);
     -fx-text-fill: #facc15;
     -fx-border-color: rgba(250, 204, 21, 0.6);
+}
+
+.dark-mode .help-popup-card .scroll-bar:vertical .track {
+    -fx-background-color: rgba(250, 204, 21, 0.12);
+}
+
+.dark-mode .help-popup-card .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(250, 204, 21, 0.35);
 }
 
 .dark-mode .level-rules-box {
